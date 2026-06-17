@@ -5,7 +5,7 @@ description: James Littlewood CV
 
 # James Littlewood
 
-Data Analyst  
+Technical Data Analyst  
 Reading, Berkshire  
 contact@jameslittlewood.net
 
