@@ -5,7 +5,7 @@ import { Icon } from 'astro-icon/components'
 ---
 
 <BaseLayout>
-	<main class="app-container pt-32 md:pt-40 pb-14 md:pb-20">
+	<main class="app-container pt-32 md:pt-40 pb-12 md:pb-16">
 		<div class="max-w-5xl">
 			<h1 class="text-6xl md:text-8xl font-bold leading-none">
 				James Littlewood
@@ -17,36 +17,36 @@ import { Icon } from 'astro-icon/components'
 		</div>
 	</main>
 
-	<section class="app-container pb-20 md:pb-28 grid lg:grid-cols-2 gap-12 lg:gap-16">
-	<div class="grid grid-rows-[auto_96px_auto]">
-		<h2 class="section-title">About Me</h2>
+	<section class="app-container pb-20 md:pb-24 grid lg:grid-cols-2 gap-12 lg:gap-16">
+		<div class="grid grid-rows-[auto_96px_auto]">
+			<h2 class="section-title">About Me</h2>
 
-		<p class="mt-6 text-lg max-w-xl">
-			Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
-			dashboard development.
-		</p>
+			<p class="mt-6 text-lg max-w-xl">
+				Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
+				dashboard development.
+			</p>
 
-		<a class="btn-secondary w-fit mt-6" href={`${SITE_BASE}/about`}>
-			Go to About
-			<Icon size={20} name="mdi:arrow-right" />
-		</a>
-	</div>
+			<a class="btn-secondary w-fit mt-6" href={`${SITE_BASE}/about`}>
+				Go to About
+				<Icon size={20} name="mdi:arrow-right" />
+			</a>
+		</div>
 
-	<div class="grid grid-rows-[auto_96px_auto]">
-		<h2 class="section-title">Get in touch</h2>
+		<div class="grid grid-rows-[auto_96px_auto]">
+			<h2 class="section-title">Get in touch</h2>
 
-		<p class="mt-6 text-lg max-w-xl">
-			Use the button below to contact me by email.
-		</p>
+			<p class="mt-6 text-lg max-w-xl">
+				Use the button below to contact me by email.
+			</p>
 
-		<a
-			class="btn-primary w-fit mt-6"
-			href="mailto:example@email.com"
-			target="_blank"
-		>
-			Get in touch
-			<Icon height={20} name="mdi:email" />
-		</a>
-	</div>
-</section>
+			<a
+				class="btn-primary w-fit mt-6"
+				href="mailto:example@email.com"
+				target="_blank"
+			>
+				Get in touch
+				<Icon height={20} name="mdi:email" />
+			</a>
+		</div>
+	</section>
 </BaseLayout>
