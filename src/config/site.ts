@@ -20,13 +20,11 @@ const site = {
 
   // --- Navigation ---
   navigation: [
-  { name: "Home", subtitle: "Index", href: "/" },
-  { name: "Projects", subtitle: "Work", href: "/projects" },
-  { name: "Writing", subtitle: "Notes", href: "/posts" },
-  { name: "Stack", subtitle: "Tools", href: "/tools" },
-  { name: "About", subtitle: "Bio", href: "/about" },
-  { name: "CV", subtitle: "Resume", href: "/cv" },
-],
+    { name: "Home", subtitle: "Index", href: "/" },
+    { name: "CV", subtitle: "Resume", href: "/cv" },
+    { name: "Projects", subtitle: "Work", href: "/projects" },
+    { name: "Stack", subtitle: "Tools", href: "/tools" },
+  ]
 
   // --- Social Links ---
   social: [
@@ -34,11 +32,6 @@ const site = {
       name: "GitHub",
       href: "https://github.com/jameslittlewood",
       icon: "mdi:github",
-    },
-    {
-      name: "DataCamp",
-      href: "https://www.datacamp.com/portfolio/jameslittlewood",
-      icon: "mdi:chart-box-outline",
     },
     {
       name: "Email",
