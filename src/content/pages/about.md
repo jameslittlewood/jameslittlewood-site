@@ -1,25 +1,15 @@
 ---
 title: About
-description: About this site and its author
+description: About James Littlewood
 ---
 
 ## About Me
 
-Hello! I'm a developer who loves building things for the web.
+I’m James Littlewood, a Data Analyst based in Reading, Berkshire. I’m interested in using data, analysis and technology to solve problems, improve processes and make information easier to understand.
 
-I created this site using [Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com), and I'm sharing it as a theme called **Breeze** so others can use it too.
+I’m currently building my skills in Python, Docker, SQL, PostgreSQL, Tableau and Power BI, with a focus on practical data analytics, automation and dashboard projects.
 
-## Tech Stack
-
-- Astro + Tailwind CSS
-- TypeScript
-- Markdown / MDX
-
-## What I Write About
-
-- Web development tips and tutorials
-- Tools and workflows I find useful
-- Thoughts on technology and design
+This website is where I share my learning, projects and progress as I continue developing towards more advanced data analytics and Python development.
 
 ## Contact
 
