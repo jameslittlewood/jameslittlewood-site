@@ -3,7 +3,6 @@ import NavbarLink from './NavbarLink.astro'
 import { Icon } from 'astro-icon/components'
 import ThemeSelector from './ThemeSelector.astro'
 import { WebsiteLinks } from '../consts'
-import LogoSVG from '../assets/logo.svg'
 
 const getHref = (url: string) => {
 	if (url === '') return '/'
@@ -19,9 +18,7 @@ const getTarget = (url: string) => {
 <header class="fixed top-0 w-full z-40 bg-background dark:bg-background-dark">
 	<nav>
 		<div class="app-container flex justify-between items-center py-5">
-			<a href="/" aria-label="Home">
-				<LogoSVG height={36} width={36} />
-			</a>
+			<div></div>
 
 			<div class="gap-8 hidden md:flex items-center">
 				{
