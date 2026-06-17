@@ -18,35 +18,35 @@ import { Icon } from 'astro-icon/components'
 	</main>
 
 	<section class="app-container pb-20 md:pb-28 grid lg:grid-cols-2 gap-12 lg:gap-16">
-		<div class="flex flex-col min-h-64">
-			<h2 class="section-title">About Me</h2>
+	<div class="grid grid-rows-[auto_96px_auto]">
+		<h2 class="section-title">About Me</h2>
 
-			<p class="mt-6 text-lg max-w-xl">
-				Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
-				dashboard development.
-			</p>
+		<p class="mt-6 text-lg max-w-xl">
+			Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
+			dashboard development.
+		</p>
 
-			<a class="btn-secondary w-fit mt-10 lg:mt-auto" href={`${SITE_BASE}/about`}>
-				Go to About
-				<Icon size={20} name="mdi:arrow-right" />
-			</a>
-		</div>
+		<a class="btn-secondary w-fit mt-6" href={`${SITE_BASE}/about`}>
+			Go to About
+			<Icon size={20} name="mdi:arrow-right" />
+		</a>
+	</div>
 
-		<div class="flex flex-col min-h-64">
-			<h2 class="section-title">Get in touch</h2>
+	<div class="grid grid-rows-[auto_96px_auto]">
+		<h2 class="section-title">Get in touch</h2>
 
-			<p class="mt-6 text-lg max-w-xl">
-				Use the button below to contact me by email.
-			</p>
+		<p class="mt-6 text-lg max-w-xl">
+			Use the button below to contact me by email.
+		</p>
 
-			<a
-				class="btn-primary w-fit mt-10 lg:mt-auto"
-				href="mailto:example@email.com"
-				target="_blank"
-			>
-				Get in touch
-				<Icon height={20} name="mdi:email" />
-			</a>
-		</div>
-	</section>
+		<a
+			class="btn-primary w-fit mt-6"
+			href="mailto:example@email.com"
+			target="_blank"
+		>
+			Get in touch
+			<Icon height={20} name="mdi:email" />
+		</a>
+	</div>
+</section>
 </BaseLayout>
