@@ -89,5 +89,3 @@ Jun 2022 – May 2025
 - BSc (Hons) Audio Engineering and Music Production, SAE Institute / Middlesex University — 2:1
 - Apple iOS / Mac Certified Technician
 - The Curious Academy — Data Analysis Certification
-
-References available on request.
