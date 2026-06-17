@@ -24,7 +24,7 @@ const site = {
     { name: "CV", subtitle: "Resume", href: "/cv" },
     { name: "Projects", subtitle: "Work", href: "/projects" },
     { name: "Stack", subtitle: "Tools", href: "/tools" },
-  ]
+  ],
 
   // --- Social Links ---
   social: [
