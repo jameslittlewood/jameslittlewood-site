@@ -3,75 +3,200 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
 <BaseLayout>
-	<main class="app-container pt-36">
-		<h1 class="text-6xl pb-2 font-bold">About Me</h1>
-	</main>
-	<section class="app-container py-12 mb-8">
-		<div
-			class="prose prose-neutral prose-lg md:prose-xl dark:prose-invert prose-img:rounded-xl prose-figure:text-center prose-img:mx-auto"
-		>
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Amet purus gravida
-				quis blandit turpis cursus in hac. Nisi est sit amet facilisis magna
-				etiam tempor orci eu. Egestas dui id ornare arcu odio ut sem. Cras
-				semper auctor neque vitae tempus quam pellentesque nec nam. Faucibus a
-				pellentesque sit amet porttitor eget dolor morbi. At tempor commodo
-				ullamcorper a lacus vestibulum sed arcu non. Justo nec ultrices dui
-				sapien eget mi proin sed. Nunc sed velit dignissim sodales ut eu sem
-				integer.
-			</p>
-			<p>
-				Viverra aliquet eget sit amet tellus cras adipiscing enim. Eget aliquip
-				nibh praesent tristique magna sit amet purus gravida. Nisl tincidunt
-				eget nullam non. Amet justo donec enim diam vulputate ut pharetra sit.
-				Eu sem integer vitae justo eget magna fermentum iaculis. Sit amet
-				consectetur adipiscing elit duis tristique. Faucibus a pellentesque sit
-				amet porttitor eget dolor morbi non. Ornare lectus sit amet est placerat
-				in egestas erat. Sagittis eu volutpat odio facilisis mauris sit amet.
-				Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et.
-			</p>
-			<p>
-				Nunc consequat interdum varius sit amet mattis. Semper auctor neque
-				vitae tempus quam pellentesque nec nam. Blandit libero volutpat sed cras
-				ornare arcu dui vivamus arcu. Sed viverra tellus in hac habitasse platea
-				dictumst vestibulum. Nibh praesent tristique magna sit amet purus
-				gravida. Congue nisi vitae suscipit tellus mauris a. Tincidunt augue
-				interdum velit euismod in pellentesque massa placerat duis. Lectus nulla
-				at volutpat diam ut venenatis. Dignissim suspendisse in est ante in.
-				Velit sed ullamcorper morbi tincidunt ornare massa eget egestas purus.
-			</p>
-			<p>
-				Risus commodo viverra maecenas accumsan lacus vel. Vitae purus faucibus
-				ornare suspendisse sed nisi lacus sed. Consequat mauris nunc congue nisi
-				vitae suscipit tellus mauris. Sed id semper risus in hendrerit gravida
-				rutrum. Elementum sagittis vitae et leo duis ut diam quam. Eget nunc
-				scelerisque viverra mauris in aliquam. Adipiscing commodo elit at
-				imperdiet dui accumsan sit amet. Sit amet est placerat in egestas erat
-				imperdiet sed euismod. Bibendum arcu vitae elementum curabitur vitae
-				nunc sed. Tincidunt praesent semper feugiat nibh sed pulvinar proin.
-			</p>
-			<p>
-				Massa placerat duis ultricies lacus sed turpis tincidunt id. Arcu cursus
-				vitae congue mauris rhoncus aenean vel elit. Mattis pellentesque id nibh
-				tortor id aliquet lectus proin nibh. Aliquet sagittis id consectetur
-				purus ut faucibus pulvinar elementum. Vitae aliquet nec ullamcorper sit
-				amet risus nullam. Ultrices in iaculis nunc sed augue lacus viverra
-				vitae congue. Amet consectetur adipiscing elit pellentesque habitant
-				morbi. Ut sem nulla pharetra diam sit amet nisl. Ac turpis egestas
-				integer eget aliquet nibh praesent tristique. Nunc eget lorem dolor sed
-				viverra ipsum nunc aliquet.
-			</p>
-			<p>
-				Quis lectus nulla at volutpat diam ut venenatis tellus in. Tellus
-				pellentesque eu tincidunt tortor aliquam nulla. Nulla facilisi etiam
-				dignissim diam quis enim lobortis scelerisque fermentum. Urna molestie
-				at elementum eu facilisis sed odio morbi quis. In est ante in nibh
-				mauris. Dui id ornare arcu odio ut. Pharetra vel turpis nunc eget lorem
-				dolor sed. Eu scelerisque felis imperdiet proin fermentum leo vel. Orci
-				phasellus egestas tellus rutrum tellus pellentesque eu tincidunt.
-				Feugiat in fermentum posuere urna nec tincidunt praesent semper.
-			</p>
-		</div>
-	</section>
+  <main class="app-container pt-32 md:pt-40 pb-14 md:pb-20">
+    <section class="max-w-4xl">
+      <h1 class="text-5xl md:text-7xl font-bold leading-none">
+        About Me
+      </h1>
+
+      <p class="mt-8 text-xl leading-relaxed">
+        I’m James Littlewood, a Technical Data Analyst based in Reading, Berkshire.
+        I work with product data, structured validation, categorisation, taxonomy
+        application, SQL analysis and stakeholder communication, with a focus on
+        accurate eCommerce product data delivery across BAU operations, client
+        implementation activity and SLA-driven workflows.
+      </p>
+
+      <p class="mt-6 text-xl leading-relaxed">
+        I’m currently developing my skills in SQL, Excel, Tableau, Python, Git,
+        Shell, Snowflake fundamentals, PostgreSQL, Docker and remote development
+        workflows. Alongside my day-to-day role, I maintain a personal Ubuntu-based
+        development environment using PostgreSQL, Docker, VS Code Remote SSH and
+        DBeaver to practise database administration, containerised workflows and
+        hands-on technical development.
+      </p>
+    </section>
+
+    <section class="mt-16 max-w-4xl">
+      <h2 class="section-title">Core Skills</h2>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-2xl font-semibold">Data and Reporting</h3>
+          <p class="mt-3 text-lg leading-relaxed">
+            Excel, Google Sheets, SQL, PostgreSQL, Snowflake fundamentals,
+            Tableau, data cleaning and reporting support.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-2xl font-semibold">Product and Operations Data</h3>
+          <p class="mt-3 text-lg leading-relaxed">
+            Product data validation, categorisation, taxonomy application,
+            attribute QA, exception handling, quality checks and SLA-driven delivery.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-2xl font-semibold">Analysis Concepts</h3>
+          <p class="mt-3 text-lg leading-relaxed">
+            Joining and structuring data, data literacy, data modelling fundamentals,
+            basic statistical thinking, dashboard design and communicating insights clearly.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-2xl font-semibold">Technical Tools</h3>
+          <p class="mt-3 text-lg leading-relaxed">
+            Python fundamentals, pandas, regex, Git, Shell, Docker concepts,
+            DBeaver and VS Code.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-16 max-w-4xl">
+      <h2 class="section-title">Professional Experience</h2>
+
+      <div class="mt-8 space-y-10">
+        <article>
+          <h3 class="text-2xl font-semibold">Technical Data Analyst — Profitero</h3>
+          <p class="mt-1 text-lg opacity-80">August 2025 – Present</p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            In my current role, I manage product data tasks across assigned clients,
+            markets and implementation activity, supporting both day-to-day operations
+            and new setup work.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            My work includes maintaining and validating product identifiers, titles,
+            brands, manufacturers, pack sizes and structured attributes to help ensure
+            accurate product records. I also apply client-specific taxonomies,
+            categorisation rules and data standards across multiple retailers and markets.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            I use Excel and structured validation checks to review product data at scale,
+            identify inconsistencies, support exception handling and improve accuracy
+            across operational workflows. I also track workload in JIRA and internal tools,
+            monitor progress against SLAs, and communicate blockers, dependencies and risks.
+          </p>
+        </article>
+
+        <article>
+          <h3 class="text-2xl font-semibold">Team Lead Temporary Secondment — Apple</h3>
+          <p class="mt-1 text-lg opacity-80">October 2021 – April 2022</p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            During my temporary secondment as Team Lead, I supported a multifunctional team
+            in a fast-paced technical retail environment, balancing customer escalations,
+            operational priorities and service standards.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            I monitored performance indicators and operational patterns to improve customer
+            flow, reduce wait times and support decision-making. I also helped identify
+            coaching opportunities, support training, and maintain consistency and service
+            quality across the team.
+          </p>
+        </article>
+
+        <article>
+          <h3 class="text-2xl font-semibold">Technical Expert / Expert — Apple</h3>
+          <p class="mt-1 text-lg opacity-80">April 2015 – June 2022</p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            In my Apple technical roles, I handled troubleshooting, diagnostics and repair
+            workflows while working to appointment schedules and service expectations.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            This involved structured problem-solving, evidence gathering, pattern recognition,
+            accurate service notes and clear communication with customers and colleagues.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="mt-16 max-w-4xl">
+      <h2 class="section-title">Projects and Professional Development</h2>
+
+      <div class="mt-8 space-y-10">
+        <article>
+          <h3 class="text-2xl font-semibold">Data Analytics Course — The Curious Academy</h3>
+          <p class="mt-1 text-lg opacity-80">16-week programme | May 2025 – July 2025</p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            As part of my data analytics training, I worked on practical projects using
+            PostgreSQL and Tableau. I analysed approximately 24 million Chicago bike share
+            records in PostgreSQL to identify usage patterns, behavioural differences and
+            seasonality by member type.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            I also investigated around 350,000 Land Registry records for RG postcode house
+            prices, using PostgreSQL for analysis and Tableau to present findings clearly.
+            Another project involved creating a Tableau dashboard analysing the performance
+            of the NHL team Anaheim Ducks in comparison with other NHL teams.
+          </p>
+        </article>
+
+        <article>
+          <h3 class="text-2xl font-semibold">Personal Projects and Learning</h3>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            I continue to build practical skills through DataCamp learning, personal projects
+            and independent technical experimentation. My current focus areas include SQL,
+            Excel, data analysis, visualisation, Tableau dashboard development, Snowflake,
+            data modelling fundamentals, Python basics, statistics, data literacy and
+            communicating insights.
+          </p>
+
+          <p class="mt-4 text-lg leading-relaxed">
+            I also use a personal Ubuntu-based mini-server environment to build experience
+            with PostgreSQL, Docker, VS Code Remote SSH, DBeaver and remote development workflows.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="mt-16 max-w-4xl">
+      <h2 class="section-title">Education and Certifications</h2>
+
+      <ul class="mt-6 list-disc list-inside text-lg leading-relaxed space-y-2">
+        <li>BSc (Hons) Audio Engineering and Music Production, SAE Institute / Middlesex University — 2:1</li>
+        <li>Apple iOS / Mac Certified Technician</li>
+        <li>The Curious Academy — Data Analysis Certification</li>
+      </ul>
+    </section>
+
+    <section class="mt-16 max-w-4xl">
+      <h2 class="section-title">Contact</h2>
+
+      <p class="mt-6 text-lg leading-relaxed">
+        You can view my portfolio and projects through this website, or visit my
+        DataCamp portfolio:
+      </p>
+
+      <a
+        href="https://www.datacamp.com/portfolio/jameslittlewood"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block mt-4 text-lg underline"
+      >
+        datacamp.com/portfolio/jameslittlewood
+      </a>
+    </section>
+  </main>
 </BaseLayout>
