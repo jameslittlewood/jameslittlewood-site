@@ -20,12 +20,13 @@ const site = {
 
   // --- Navigation ---
   navigation: [
-    { name: "Home", subtitle: "Index", href: "/" },
-    { name: "Projects", subtitle: "Work", href: "/projects" },
-    { name: "Writing", subtitle: "Notes", href: "/posts" },
-    { name: "Stack", subtitle: "Tools", href: "/tools" },
-    { name: "About", subtitle: "CV", href: "/about" },
-  ],
+  { name: "Home", subtitle: "Index", href: "/" },
+  { name: "Projects", subtitle: "Work", href: "/projects" },
+  { name: "Writing", subtitle: "Notes", href: "/posts" },
+  { name: "Stack", subtitle: "Tools", href: "/tools" },
+  { name: "About", subtitle: "Bio", href: "/about" },
+  { name: "CV", subtitle: "Resume", href: "/cv" },
+],
 
   // --- Social Links ---
   social: [
