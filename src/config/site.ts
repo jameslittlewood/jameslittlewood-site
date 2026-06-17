@@ -52,7 +52,7 @@ const site = {
   hero: {
     greeting: "👋 Hi, I’m James",
     description:
-      'I’m a <span class="font-medium text-foreground underline decoration-primary/30">Data Analyst</span> building practical projects with <span class="font-medium text-foreground underline decoration-primary/30">Python</span>, <span class="font-medium text-foreground underline decoration-primary/30">SQL</span>, <span class="font-medium text-foreground underline decoration-primary/30">PostgreSQL</span>, <span class="font-medium text-foreground underline decoration-primary/30">Docker</span> and <span class="font-medium text-foreground underline decoration-primary/30">Tableau</span>.',
+      "",
     cards: [
       {
         icon: "mdi:database-search",
