@@ -50,7 +50,7 @@ const site = {
 
   // --- Homepage Hero ---
   hero: {
-    greeting: "👋 Hi, I’m James",
+    greeting: "👋 Hi, I’m James.",
     description:
       "",
     cards: [
