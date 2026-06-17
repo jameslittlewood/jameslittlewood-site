@@ -1,58 +1,53 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { SITE_BASE, SocialLinks } from '../consts'
+import { SITE_BASE } from '../consts'
 import { Icon } from 'astro-icon/components'
-import BlogCard from '../components/BlogCard.astro'
-import { getCollection } from 'astro:content'
-
-const posts = (await getCollection('blogs'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 4)
 ---
 
 <BaseLayout>
 	<main
-		class="app-container flex flex-col gap-12 justify-center py-36 md:py-48 pt-44 md:pt-56 relative"
+		class="app-container flex flex-col gap-8 justify-center py-20 md:py-28 pt-32 md:pt-36 relative"
 	>
 		<div>
 			<p class="block text-3xl opacity-70 mt-9 mb-4">Welcome to</p>
 			<h1 class="text-8xl font-bold leading-none">James Littlewood</h1>
 		</div>
+
 		<p class="text-2xl max-w-2xl font-light leading-normal">
 			I build data analytics projects using Python, SQL, PostgreSQL, Docker and Tableau.
 		</p>
 	</main>
 
-	<!-- Recent Posts Section -->
-	<section class="app-container py-42 grid lg:grid-cols-2 gap-14 lg:gap-10">
+	<section class="app-container py-16 grid lg:grid-cols-2 gap-16 lg:gap-10">
 		<div class="space-y-6">
 			<h2 class="section-title">About Me</h2>
+
 			<p class="text-lg max-w-xl pb-4">
-				A brief introduction about yourself. You can include your profession,
-				hobbies, interests, or anything you'd like visitors to know about you.
+				I am a Technical Data Analyst building my skills in Python, SQL,
+				PostgreSQL, Docker, Tableau and data dashboard development.
 			</p>
-			<a class="btn-secondary" href={`${SITE_BASE}/about`}
-				>Go to About
+
+			<a class="btn-secondary" href={`${SITE_BASE}/about`}>
+				Go to About
 				<Icon size={20} name="mdi:arrow-right" />
 			</a>
 		</div>
+
 		<div class="space-y-6">
 			<h2 class="section-title">Get in touch</h2>
+
 			<p class="text-lg max-w-xl">
-				Use the buttons below for my resume & email.
+				Use the button below to contact me by email.
 			</p>
+
 			<div class="flex flex-wrap mt-auto space-x-4">
 				<a
 					class="btn-primary"
 					href="mailto:example@email.com"
-					download
 					target="_blank"
-					>Get in touch
+				>
+					Get in touch
 					<Icon height={20} name="mdi:email" />
-				</a>
-				<a class="btn-secondary" href="https://example.com" target="_blank"
-					>Download Resume
-					<Icon height={20} name="mdi:arrow-collapse-down" />
 				</a>
 			</div>
 		</div>
