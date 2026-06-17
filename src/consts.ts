@@ -15,7 +15,7 @@ export const SocialLinks = [
 export const WebsiteLinks = [
 	{
 		name: 'Home',
-		url: 'https://jameslittlewood.net',
+		url: '',
 	},
 	{
 		name: 'About',
