@@ -1,33 +1,55 @@
-import { defineConfig } from 'astro/config'
-import tailwindcss from '@tailwindcss/vite'
-import mdx from '@astrojs/mdx'
-import sitemap from '@astrojs/sitemap'
-import partytown from '@astrojs/partytown'
-import icon from 'astro-icon'
-import rehypeFigureTitle from 'rehype-figure-title'
-import { rehypeAccessibleEmojis } from 'rehype-accessible-emojis'
-import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
-import { remarkModifiedTime } from './src/plugins/remark-modified-time.mjs'
+// @ts-check
+import { defineConfig, envField, fontProviders } from "astro/config";
+
+import mdx from "@astrojs/mdx";
+import icon from "astro-icon";
+import expressiveCode from "astro-expressive-code";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://jameslittlewood.net',
-	base: '',
-	integrations: [
-		mdx(),
-		sitemap(),
-		icon(),
-		partytown({
-			config: {
-				forward: ['dataLayer.push'],
-			},
-		}),
-	],
-	vite: {
-		plugins: [tailwindcss()],
-	},
-	markdown: {
-		remarkPlugins: [remarkReadingTime, remarkModifiedTime],
-		rehypePlugins: [rehypeFigureTitle, rehypeAccessibleEmojis],
-	},
-})
+  site: "https://jameslittlewood.net",
+
+  integrations: [
+    expressiveCode({
+      themeCssSelector: (theme) => `.${theme.type}`,
+      themes: ["material-theme-darker", "material-theme-lighter"],
+    }),
+    mdx(),
+    icon(),
+    sitemap(),
+  ],
+
+  env: {
+    schema: {
+      UMAMI_URL: envField.string({
+        context: "server",
+        access: "public",
+        optional: true,
+      }),
+      UMAMI_WEBSITE_ID: envField.string({
+        context: "server",
+        access: "public",
+        optional: true,
+      }),
+      PUBLIC_ARTALK_SERVER: envField.string({
+        context: "server",
+        access: "public",
+        optional: true,
+      }),
+      PUBLIC_ARTALK_ENABLED: envField.boolean({
+        context: "server",
+        access: "public",
+        optional: true,
+      }),
+    },
+  },
+
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "Space Grotesk",
+      cssVariable: "--font-display",
+    },
+  ],
+});

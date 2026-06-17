@@ -1,11 +1,13 @@
 {
-	"extends": "astro/tsconfigs/strict",
-	"compilerOptions": {
-		"strictNullChecks": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["src/*"],
-			"@blogimages/*": ["src/assets/blogimages/*"]
-		}
-	}
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strictNullChecks": true,
+    "allowJs": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
 }

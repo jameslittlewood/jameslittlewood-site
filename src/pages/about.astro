@@ -1,27 +1,35 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import site from "@/config/site";
+import Layout from "@/layouts/Layout.astro";
+import { getEntry, render } from "astro:content";
+
+const about = await getEntry("pages", "about");
+const { Content } = await render(about!);
 ---
 
-<BaseLayout>
-  <main class="app-container pt-32 md:pt-40 pb-14 md:pb-20">
-    <section class="max-w-4xl">
-      <h1 class="text-5xl md:text-7xl font-bold leading-none">
-        About Me
-      </h1>
+<Layout title={site.labels.aboutTitle} description={site.labels.aboutDescription}>
+  <div class="animate-in fade-in mx-auto max-w-2xl p-8 duration-700 md:p-16">
+    <div class="prose dark:prose-invert">
+      <Content />
+    </div>
 
-      <p class="mt-8 text-xl leading-relaxed">
-        I’m James, a Data Analyst based in Reading, Berkshire.
-        I’m interested in using data, analysis and technology to solve problems,
-        improve processes and make information easier to understand.
-      </p>
-
-      <p class="mt-6 text-xl leading-relaxed">
-        I’m currently building and refining my skills in Python, Docker, SQL, PostgreSQL, Tableau and Power BI, 
-				with a focus on practical data analytics, automation
-        and dashboard projects. This website is where I share my learning,
-        projects and progress as I continue developing towards more advanced
-        data analytics and Python development.
-      </p>
-    </section>
-  </main>
-</BaseLayout>
+    <footer class="mt-14 space-y-6">
+      <h4 class="text-[10px] font-bold tracking-[0.3em] text-primary uppercase">
+        Contact
+      </h4>
+      <div class="flex flex-wrap gap-4">
+        {
+          site.social.map((item) => (
+            <a
+              href={item.href}
+              class="border-b border-border pb-0.5 text-sm text-muted-foreground hover:border-primary hover:text-primary"
+              title={item.name}
+            >
+              {item.name}
+            </a>
+          ))
+        }
+      </div>
+    </footer>
+  </div>
+</Layout>

@@ -1,52 +1,17 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
-import { SITE_BASE } from '../consts'
-import { Icon } from 'astro-icon/components'
+import Hero from "@/components/blocks/Hero.astro";
+import RecentPosts from "@/components/blocks/RecentPosts.astro";
+import Footer from "@/components/layout/Footer.astro";
+import site from "@/config/site";
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<BaseLayout>
-	<main class="app-container pt-32 md:pt-40 pb-12 md:pb-16">
-		<div class="max-w-5xl">
-			<h1 class="text-6xl md:text-8xl font-bold leading-none">
-				James Littlewood
-			</h1>
+<Layout title={site.meta.title} description={site.meta.description}>
+  <div
+    class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl p-8 md:p-16"
+  >
+    <Hero />
 
-			<p class="mt-8 text-2xl max-w-2xl font-light leading-normal">
-				I build data analytics projects using Python, SQL, PostgreSQL, Docker and Tableau.
-			</p>
-		</div>
-	</main>
-
-	<section class="app-container pb-20 md:pb-24 grid lg:grid-cols-2 gap-12 lg:gap-16">
-		<div class="grid grid-rows-[auto_96px_auto]">
-			<h2 class="section-title">About Me</h2>
-
-			<p class="mt-6 text-lg max-w-xl">
-				Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
-				dashboard development.
-			</p>
-
-			<a class="btn-secondary w-fit mt-6" href={`${SITE_BASE}/about`}>
-				Go to About
-				<Icon size={20} name="mdi:arrow-right" />
-			</a>
-		</div>
-
-		<div class="grid grid-rows-[auto_96px_auto]">
-			<h2 class="section-title">Get in touch</h2>
-
-			<p class="mt-6 text-lg max-w-xl">
-				Use the button below to contact me by email.
-			</p>
-
-			<a
-				class="btn-primary w-fit mt-6"
-				href="mailto:contact@jameslittlewood.net"
-				target="_blank"
-			>
-				Get in touch
-				<Icon height={20} name="mdi:email" />
-			</a>
-		</div>
-	</section>
-</BaseLayout>
+    <RecentPosts />
+  </div>
+</Layout>

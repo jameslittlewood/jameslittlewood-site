@@ -1,50 +1,148 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-	--font-sans: 'Inter Variable', sans-serif;
-	--font-mono: 'JetBrains Mono Variable', monospace;
+:root {
+  --background: oklch(0.98 0.008 165);
+  --foreground: oklch(0.25 0.02 165);
+  --card: oklch(0.99 0.005 165);
+  --card-foreground: oklch(0.25 0.02 165);
+  --primary: oklch(0.5 0.12 165);
+  --primary-foreground: oklch(0.98 0.01 165);
+  --muted: oklch(0.94 0.01 165);
+  --muted-foreground: oklch(0.35 0.02 165);
+  --border: oklch(0.92 0.01 165);
+  --shadow-main: 0 10px 40px -10px oklch(0.3 0.05 165 / 0.05);
 
-	--color-foreground: #0c0c0c;
-	--color-foreground-dark: #fafafa;
-	--color-background: #ffffff;
-	--color-background-dark: #2b2b2b;
-	--color-primary: #0784b5;
-	--color-primary-dark: #9bd4e4;
+  --callout-info: oklch(0.65 0.12 250);
+  --callout-warning: oklch(0.7 0.15 85);
+  --callout-danger: oklch(0.62 0.18 28);
+  --callout-success: oklch(0.6 0.14 160);
 }
 
-html {
-	scroll-padding-top: 6.5rem;
-	scroll-behavior: smooth;
+.dark {
+  --background: oklch(0.14 0.02 165);
+  --foreground: oklch(0.92 0.005 165);
+  --card: oklch(0.18 0.02 165);
+  --card-foreground: oklch(0.88 0.01 165);
+  --primary: oklch(0.75 0.15 160);
+  --primary-foreground: oklch(0.1 0.02 165);
+  --muted: oklch(0.28 0.02 160);
+  --muted-foreground: oklch(0.75 0.015 165);
+  --border: oklch(0.26 0.02 165);
+  --shadow-main: 0 30px 60px -15px oklch(0 0 0 / 0.5);
+
+  --callout-info: oklch(0.75 0.12 250);
+  --callout-warning: oklch(0.8 0.15 85);
+  --callout-danger: oklch(0.75 0.18 28);
+  --callout-success: oklch(0.72 0.14 160);
 }
 
-.app-container {
-	@apply container mx-auto px-6 sm:px-12 2xl:px-16;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --shadow-main: var(--shadow-main);
+  --font-display: var(--font-display);
 }
 
-#mobile-menu.mobile-nav-open {
-	@apply translate-x-0 shadow-xl/30;
+/* Focus indicators for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-.btn-primary {
-	@apply w-fit flex gap-2 bg-foreground text-background dark:bg-foreground-dark dark:text-background-dark px-5 py-3 md:px-4 md:py-2 rounded-lg items-center mt-4 hover:opacity-75 transition-opacity;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-.btn-secondary {
-	@apply w-fit flex gap-2 bg-foreground/10 text-foreground dark:bg-foreground-dark/10 dark:text-foreground-dark px-5 py-3 md:px-4 md:py-2 rounded-lg items-center mt-4 hover:opacity-75 transition-opacity;
+@layer components {
+  .prose {
+    & table {
+      @apply my-8 w-full border-collapse border-spacing-0 overflow-hidden rounded-md border border-border/50 shadow-sm;
+    }
+
+    & thead {
+      @apply border-b border-border bg-muted/50;
+    }
+
+    & th {
+      @apply px-6 py-4 text-left text-xs font-bold tracking-widest text-primary/80 uppercase;
+    }
+
+    & td {
+      @apply border-b border-border/30 px-6 py-4 text-sm text-muted-foreground;
+    }
+
+    & tr:last-child td {
+      @apply border-b-0;
+    }
+
+    & tr:hover td {
+      @apply bg-primary/5 transition-colors;
+    }
+  }
 }
 
-.section-title {
-	@apply text-4xl font-semibold pb-3;
+.prose table td,
+.prose table th {
+  padding-left: 6px;
 }
 
-.posts-grid-container {
-	@apply grid my-6 md:grid-cols-2 xl:grid-cols-4 gap-6;
+/* task list */
+.prose ul.contains-task-list {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  white-space: nowrap;
 }
 
-/* Post content */
-.prose iframe {
-	@apply my-16 mx-auto w-11/12 aspect-video rounded-xl;
+.prose ul.contains-task-list li {
+  padding-left: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+@keyframes animate-in-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-in {
+  animation: animate-in-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+html[data-astro-transition] *,
+html[data-astro-transition-fallback] * {
+  transition: none !important;
 }
