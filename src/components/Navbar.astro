@@ -2,23 +2,34 @@
 import NavbarLink from './NavbarLink.astro'
 import { Icon } from 'astro-icon/components'
 import ThemeSelector from './ThemeSelector.astro'
-import { SITE_BASE, WebsiteLinks } from '../consts'
+import { WebsiteLinks } from '../consts'
 import LogoSVG from '../assets/logo.svg'
+
+const getHref = (url: string) => {
+	if (url === '') return '/'
+	if (url.startsWith('http')) return url
+	return `/${url}`
+}
+
+const getTarget = (url: string) => {
+	return url.startsWith('http') ? '_blank' : '_self'
+}
 ---
 
 <header class="fixed top-0 w-full z-40 bg-background dark:bg-background-dark">
-	<nav class="">
+	<nav>
 		<div class="app-container flex justify-between items-center py-5">
-			<a href={`${SITE_BASE}/`} aria-label="Home">
+			<a href="/" aria-label="Home">
 				<LogoSVG height={36} width={36} />
 			</a>
+
 			<div class="gap-8 hidden md:flex items-center">
 				{
 					WebsiteLinks.map((link) => (
 						<NavbarLink
 							class="text-lg"
-							href={`${SITE_BASE}/${link.url}`}
-							target={link.url.charAt(0) === 'h' ? '_blank' : '_self'}
+							href={getHref(link.url)}
+							target={getTarget(link.url)}
 						>
 							{link.name}
 						</NavbarLink>
@@ -26,6 +37,7 @@ import LogoSVG from '../assets/logo.svg'
 				}
 				<ThemeSelector />
 			</div>
+
 			<button
 				class="md:hidden cursor-pointer"
 				id="nav-open-btn"
@@ -35,7 +47,6 @@ import LogoSVG from '../assets/logo.svg'
 				<Icon aria-hidden name="mdi:menu" size={32} />
 			</button>
 
-			<!-- Mobile nav -->
 			<div
 				class="translate-x-full md:hidden fixed top-0 right-0 bg-background dark:bg-background-dark h-screen w-5/6 px-8 py-6 transition-transform z-40 border-l-[1px] border-background"
 				id="mobile-menu"
@@ -48,12 +59,14 @@ import LogoSVG from '../assets/logo.svg'
 				>
 					<Icon aria-hidden name="mdi:close" size={32} />
 				</button>
+
 				<div class="flex flex-col h-full items-start gap-8 pt-16">
 					{
 						WebsiteLinks.map((link) => (
 							<NavbarLink
 								class="text-4xl font-light"
-								href={`${SITE_BASE}/${link.url}`}
+								href={getHref(link.url)}
+								target={getTarget(link.url)}
 							>
 								{link.name}
 							</NavbarLink>
@@ -100,11 +113,13 @@ import LogoSVG from '../assets/logo.svg'
 	}
 
 	function addThemeEventListeners() {
-		themeButtons = document.querySelectorAll('.theme-button')
+		const themeButtons = document.querySelectorAll('.theme-button')
+
 		themeButtons.forEach((button) => {
 			button.addEventListener('click', () => {
 				themeButtons.forEach((btn) => btn.classList.remove('active'))
 				button.classList.add('active')
+
 				if (button.dataset.theme === 'theme-auto') {
 					localStorage.removeItem('theme')
 					reComputeTheme()
@@ -119,22 +134,19 @@ import LogoSVG from '../assets/logo.svg'
 		})
 	}
 
-	// Set active class on OS theme change
 	window
 		.matchMedia('(prefers-color-scheme: dark)')
-		.addEventListener('change', (_e) => {
+		.addEventListener('change', () => {
 			reComputeTheme()
 		})
 
-	// run recomputeTheme when screen crosses 768px
-	window.matchMedia('(min-width: 768px)').addEventListener('change', (_e) => {
+	window.matchMedia('(min-width: 768px)').addEventListener('change', () => {
 		addThemeEventListeners()
 		reComputeTheme()
 	})
 
 	reComputeTheme()
 
-	// Run on page load
 	window.addEventListener('DOMContentLoaded', () => {
 		addThemeEventListeners()
 		reComputeTheme()
