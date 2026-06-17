@@ -5,50 +5,48 @@ import { Icon } from 'astro-icon/components'
 ---
 
 <BaseLayout>
-	<main
-		class="app-container flex flex-col gap-8 justify-center py-20 md:py-28 pt-32 md:pt-36 relative"
-	>
-		<div>
-			<h1 class="text-8xl font-bold leading-none">James Littlewood</h1>
-		</div>
+	<main class="app-container pt-32 md:pt-40 pb-14 md:pb-20">
+		<div class="max-w-5xl">
+			<h1 class="text-6xl md:text-8xl font-bold leading-none">
+				James Littlewood
+			</h1>
 
-		<p class="text-2xl max-w-2xl font-light leading-normal">
-			I build data analytics projects using Python, SQL, PostgreSQL, Docker and Tableau.
-		</p>
+			<p class="mt-8 text-2xl max-w-2xl font-light leading-normal">
+				I build data analytics projects using Python, SQL, PostgreSQL, Docker and Tableau.
+			</p>
+		</div>
 	</main>
 
-	<section class="app-container py-16 grid lg:grid-cols-2 gap-16 lg:gap-10">
-		<div class="space-y-6">
+	<section class="app-container pb-20 md:pb-28 grid lg:grid-cols-2 gap-12 lg:gap-16">
+		<div class="flex flex-col min-h-64">
 			<h2 class="section-title">About Me</h2>
 
-			<p class="text-lg max-w-xl pb-4">
-				Data Analyst building skills in Python, SQL,
-				PostgreSQL, Docker and dashboard development.
+			<p class="mt-6 text-lg max-w-xl">
+				Data Analyst building skills in Python, SQL, PostgreSQL, Docker and
+				dashboard development.
 			</p>
 
-			<a class="btn-secondary" href={`${SITE_BASE}/about`}>
+			<a class="btn-secondary w-fit mt-10 lg:mt-auto" href={`${SITE_BASE}/about`}>
 				Go to About
 				<Icon size={20} name="mdi:arrow-right" />
 			</a>
 		</div>
 
-		<div class="space-y-6">
+		<div class="flex flex-col min-h-64">
 			<h2 class="section-title">Get in touch</h2>
 
-			<p class="text-lg max-w-xl">
+			<p class="mt-6 text-lg max-w-xl">
 				Use the button below to contact me by email.
 			</p>
 
-			<div class="flex flex-wrap mt-auto space-x-4">
-				<a
-					class="btn-primary"
-					href="mailto:example@email.com"
-					target="_blank"
-				>
-					Get in touch
-					<Icon height={20} name="mdi:email" />
-				</a>
-			</div>
+			<a
+				class="btn-primary w-fit mt-10 lg:mt-auto"
+				href="mailto:example@email.com"
+				target="_blank"
+			>
+				Get in touch
+				<Icon height={20} name="mdi:email" />
+			</a>
 		</div>
 	</section>
 </BaseLayout>
