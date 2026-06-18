@@ -30,8 +30,7 @@ description="A selection of photography by James Littlewood."
   </h1>
 
   <p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-    A selection of photographs taken while exploring places, events and
-    everyday moments.
+    My incredibly amatuer photography!
   </p>
 </header>
 
@@ -77,6 +76,15 @@ description="A selection of photography by James Littlewood."
     </button>
 
 ```
+<button
+  id="previous-photo"
+  type="button"
+  class="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 text-2xl font-medium text-foreground shadow-md backdrop-blur transition hover:scale-105 md:left-8"
+  aria-label="Previous photograph"
+>
+  ←
+</button>
+
 <div class="relative z-10 max-h-full max-w-full">
   <button
     id="close-photo-modal"
@@ -91,9 +99,18 @@ description="A selection of photography by James Littlewood."
     id="expanded-photo"
     src=""
     alt=""
-    class="block max-h-[90vh] max-w-[94vw] rounded-xl object-contain shadow-2xl"
+    class="block max-h-[90vh] max-w-[82vw] rounded-xl object-contain shadow-2xl md:max-w-[88vw]"
   />
 </div>
+
+<button
+  id="next-photo"
+  type="button"
+  class="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-background/90 text-2xl font-medium text-foreground shadow-md backdrop-blur transition hover:scale-105 md:right-8"
+  aria-label="Next photograph"
+>
+  →
+</button>
 ```
 
   </div>
@@ -103,15 +120,55 @@ description="A selection of photography by James Littlewood."
     const expandedPhoto = document.getElementById("expanded-photo");
     const closeButton = document.getElementById("close-photo-modal");
     const backdropButton = document.getElementById("photo-modal-backdrop");
-    const photoButtons = document.querySelectorAll("[data-photo-src]");
+    const previousButton = document.getElementById("previous-photo");
+    const nextButton = document.getElementById("next-photo");
+    const photoButtons = Array.from(
+      document.querySelectorAll("[data-photo-src]"),
+    );
 
     if (
       modal instanceof HTMLElement &&
       expandedPhoto instanceof HTMLImageElement &&
       closeButton instanceof HTMLButtonElement &&
-      backdropButton instanceof HTMLButtonElement
+      backdropButton instanceof HTMLButtonElement &&
+      previousButton instanceof HTMLButtonElement &&
+      nextButton instanceof HTMLButtonElement
     ) {
+      let currentIndex = 0;
       let previousBodyOverflow = "";
+
+      const showPhoto = (index) => {
+        if (photoButtons.length === 0) {
+          return;
+        }
+
+        currentIndex =
+          (index + photoButtons.length) % photoButtons.length;
+
+        const button = photoButtons[currentIndex];
+        const photoSource = button.getAttribute("data-photo-src");
+        const photoAlt = button.getAttribute("data-photo-alt") || "";
+
+        if (photoSource === null) {
+          return;
+        }
+
+        expandedPhoto.src = photoSource;
+        expandedPhoto.alt = photoAlt;
+      };
+
+      const openPhotoModal = (index) => {
+        previousBodyOverflow = document.body.style.overflow;
+
+        showPhoto(index);
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        modal.setAttribute("aria-hidden", "false");
+
+        document.body.style.overflow = "hidden";
+        closeButton.focus();
+      };
 
       const closePhotoModal = () => {
         modal.classList.add("hidden");
@@ -124,38 +181,40 @@ description="A selection of photography by James Littlewood."
         document.body.style.overflow = previousBodyOverflow;
       };
 
-      photoButtons.forEach((button) => {
-        if (!(button instanceof HTMLButtonElement)) {
-          return;
-        }
-
+      photoButtons.forEach((button, index) => {
         button.addEventListener("click", () => {
-          const photoSource = button.getAttribute("data-photo-src");
-          const photoAlt = button.getAttribute("data-photo-alt") || "";
-
-          if (photoSource === null) {
-            return;
-          }
-
-          previousBodyOverflow = document.body.style.overflow;
-
-          expandedPhoto.src = photoSource;
-          expandedPhoto.alt = photoAlt;
-
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-          modal.setAttribute("aria-hidden", "false");
-
-          document.body.style.overflow = "hidden";
+          openPhotoModal(index);
         });
+      });
+
+      previousButton.addEventListener("click", () => {
+        showPhoto(currentIndex - 1);
+      });
+
+      nextButton.addEventListener("click", () => {
+        showPhoto(currentIndex + 1);
       });
 
       closeButton.addEventListener("click", closePhotoModal);
       backdropButton.addEventListener("click", closePhotoModal);
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && modal.classList.contains("flex")) {
+        const modalIsOpen = modal.classList.contains("flex");
+
+        if (!modalIsOpen) {
+          return;
+        }
+
+        if (event.key === "Escape") {
           closePhotoModal();
+        }
+
+        if (event.key === "ArrowLeft") {
+          showPhoto(currentIndex - 1);
+        }
+
+        if (event.key === "ArrowRight") {
+          showPhoto(currentIndex + 1);
         }
       });
     }
