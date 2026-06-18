@@ -121,7 +121,7 @@ const site = {
         {
           name: "pandas",
           link: "https://pandas.pydata.org/",
-          icon: "simple-icons:pandas",
+          icon: "mdi:table",
         },
         {
           name: "Snowflake",
@@ -193,12 +193,12 @@ const site = {
         {
           name: "OpenAI",
           link: "https://openai.com/",
-          icon: "simple-icons:openai",
+          icon: "mdi:robot-outline",
         },
         {
           name: "Claude",
           link: "https://claude.ai/",
-          icon: "simple-icons:anthropic",
+          icon: "mdi:brain",
         },
       ],
     },
