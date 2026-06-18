@@ -232,7 +232,7 @@ const site = {
       "The page you're looking for may have been removed or the link is broken.",
     endOfPost: "End of Post",
     tableOfContents: "Table of Contents",
-    searchPlaceholder: "Search posts, projects, tags or commands...",
+    searchPlaceholder: "Search CV, projects, skills or tools...",
     searchNavigate: "Navigate",
     commentSuccess: "Comment submitted",
   },

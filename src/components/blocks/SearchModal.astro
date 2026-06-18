@@ -4,6 +4,7 @@ import site from "@/config/site";
 
 <div
   id="search-modal"
+  data-pagefind-ignore="all"
   data-placeholder={site.labels.searchPlaceholder}
   class="group pointer-events-none fixed inset-0 z-100 flex items-start justify-center px-4 pt-[12vh]"
 >
@@ -12,6 +13,7 @@ import site from "@/config/site";
     class="backdrop-blur-1 absolute inset-0 bg-background/0 transition-all duration-500 ease-out group-[.is-active]:pointer-events-auto group-[.is-active]:bg-background/60 group-[.is-active]:backdrop-blur-lg"
   >
   </div>
+
   <div
     id="modal-content"
     class="relative w-full max-w-xl translate-y-8 scale-95 overflow-hidden rounded-2xl border border-border bg-card opacity-0 shadow-main transition-all duration-500 ease-out group-[.is-active]:pointer-events-auto group-[.is-active]:translate-y-0 group-[.is-active]:scale-100 group-[.is-active]:opacity-100"
@@ -24,14 +26,15 @@ import site from "@/config/site";
       >
         {site.labels.searchNavigate}
       </p>
+
       <div class="flex flex-wrap gap-2">
         {
-          ["categories", "tags", "tools"].map((item) => (
+          site.navigation.map((item) => (
             <a
-              href={`/${item}`}
-              class="rounded-xl border border-border bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground capitalize transition-all hover:text-primary"
+              href={item.href}
+              class="rounded-xl border border-border bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground transition-all hover:text-primary"
             >
-              {item}
+              {item.name}
             </a>
           ))
         }
@@ -48,6 +51,7 @@ import site from "@/config/site";
 
     const placeholder =
       document.getElementById("search-modal")?.dataset.placeholder || "";
+
     if (
       // @ts-ignore
       typeof PagefindUI !== "undefined" &&
@@ -75,6 +79,7 @@ import site from "@/config/site";
       e.preventDefault();
       toggle(true);
     });
+
     overlay?.addEventListener("click", () => toggle(false));
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -82,8 +87,12 @@ import site from "@/config/site";
         e.preventDefault();
         toggle(true);
       }
-      if (e.key === "Escape") toggle(false);
+
+      if (e.key === "Escape") {
+        toggle(false);
+      }
     };
+
     window.addEventListener("keydown", onKeyDown);
   }
 
