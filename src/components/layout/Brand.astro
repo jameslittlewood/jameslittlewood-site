@@ -1,20 +1,11 @@
 ---
 import site from "@/config/site";
-
-const gifs = [
-  "/ani_lian.gif",
-  "/ani_ragnar-ezgif.com-crop.gif",
-  "/ani_uku.gif",
-  "/foulou.gif",
-  "/ichigo-kurusaki-hollow-ezgif-com-crop.gif",
-  "/ichigo.gif",
-];
 ---
 
 <div class="mt-4 mb-6 md:mt-4 md:mb-10">
   <img
     id="sidebar-gif"
-    src={gifs[0]}
+    src="/foulou.gif"
     alt=""
     aria-hidden="true"
     class="mb-4 h-29 w-29 object-contain"
@@ -34,18 +25,77 @@ const gifs = [
   </div>
 </div>
 
-<script define:vars={{ gifs }}>
-  function chooseRandomGif() {
-    const gifElement = document.getElementById(
-      "sidebar-gif",
-    ) as HTMLImageElement | null;
+<script>
+  const gifs = [
+    "/ani_lian.gif",
+    "/ani_ragnar-ezgif.com-crop.gif",
+    "/ani_uku.gif",
+    "/foulou.gif",
+    "/ichigo-kurusaki-hollow-ezgif-com-crop.gif",
+    "/ichigo.gif",
+  ];
 
-    if (!gifElement) return;
+  const queueKey = "sidebar-gif-queue";
+  const lastGifKey = "sidebar-last-gif";
 
-    const randomIndex = Math.floor(Math.random() * gifs.length);
+  function shuffle(items) {
+    const shuffled = [...items];
 
-    gifElement.src = gifs[randomIndex];
+    for (let index = shuffled.length - 1; index > 0; index--) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+
+      [shuffled[index], shuffled[randomIndex]] = [
+        shuffled[randomIndex],
+        shuffled[index],
+      ];
+    }
+
+    return shuffled;
   }
 
-  document.addEventListener("astro:page-load", chooseRandomGif);
+  function getNextGif() {
+    let queue = [];
+    let lastGif = null;
+
+    try {
+      queue = JSON.parse(sessionStorage.getItem(queueKey) || "[]");
+      lastGif = sessionStorage.getItem(lastGifKey);
+    } catch {
+      queue = [];
+      lastGif = null;
+    }
+
+    if (!Array.isArray(queue) || queue.length === 0) {
+      queue = shuffle(gifs);
+
+      if (queue.length > 1 && queue[0] === lastGif) {
+        [queue[0], queue[1]] = [queue[1], queue[0]];
+      }
+    }
+
+    const nextGif = queue.shift();
+
+    try {
+      sessionStorage.setItem(queueKey, JSON.stringify(queue));
+      sessionStorage.setItem(lastGifKey, nextGif);
+    } catch {
+      // The GIF still changes even if browser storage is unavailable.
+    }
+
+    return nextGif;
+  }
+
+  function updateSidebarGif() {
+    const gifElement = document.getElementById("sidebar-gif");
+
+    if (!(gifElement instanceof HTMLImageElement)) return;
+
+    gifElement.src = getNextGif();
+  }
+
+  // Runs on a normal browser refresh or standard page visit.
+  updateSidebarGif();
+
+  // Runs after Astro client-side page navigation, if enabled.
+  document.addEventListener("astro:after-swap", updateSidebarGif);
 </script>
