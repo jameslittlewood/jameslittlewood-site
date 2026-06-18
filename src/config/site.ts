@@ -188,6 +188,16 @@ const site = {
           icon: "mdi:linux",
         },
         {
+          name: "MacOS",
+          link: "https://www.apple.com/macos/",
+          icon: "mdi:apple",
+        },
+        {
+          name: "Windows",
+          link: "https://www.microsoft.com/windows",
+          icon: "mdi:microsoft-windows",
+        },
+        {
           name: "Tailscale",
           link: "https://tailscale.com",
           icon: "mdi:vpn",
