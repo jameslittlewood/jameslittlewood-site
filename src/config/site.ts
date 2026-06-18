@@ -52,8 +52,7 @@ const site = {
   // --- Homepage Hero ---
   hero: {
     greeting: "Hi, I’m James.",
-    description:
-      "",
+    description: "",
     cards: [
       {
         icon: "mdi:database-search",
@@ -115,12 +114,23 @@ const site = {
           icon: "mdi:database",
         },
         {
+          name: "DBeaver",
+          link: "https://dbeaver.io/",
+          icon: "mdi:database-cog-outline",
+        },
+        {
+          name: "pandas",
+          link: "https://pandas.pydata.org/",
+          icon: "simple-icons:pandas",
+        },
+        {
           name: "Snowflake",
           link: "https://www.snowflake.com",
           icon: "mdi:snowflake",
         },
       ],
     },
+
     {
       name: "dashboards",
       items: [
@@ -141,6 +151,7 @@ const site = {
         },
       ],
     },
+
     {
       name: "development",
       items: [
@@ -170,6 +181,28 @@ const site = {
         },
       ],
     },
+
+    {
+      name: "AI tools",
+      items: [
+        {
+          name: "Codex",
+          link: "https://openai.com/codex/",
+          icon: "mdi:code-braces",
+        },
+        {
+          name: "OpenAI",
+          link: "https://openai.com/",
+          icon: "simple-icons:openai",
+        },
+        {
+          name: "Claude",
+          link: "https://claude.ai/",
+          icon: "simple-icons:anthropic",
+        },
+      ],
+    },
+
     {
       name: "infrastructure",
       items: [
