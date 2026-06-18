@@ -4,10 +4,11 @@ import site from "@/config/site";
 
 <div class="mt-4 mb-6 md:mt-4 md:mb-10">
   <img
+    id="sidebar-gif"
     src="/foulou.gif"
     alt=""
     aria-hidden="true"
-    class="mb-4 h-29 w-auto object-contain"
+    class="mb-4 h-29 w-29 object-contain"
   />
 
   <div>
@@ -23,3 +24,23 @@ import site from "@/config/site";
     </p>
   </div>
 </div>
+
+<script>
+  const gifs = [
+    "/foulou.gif",
+    "/ichigo.gif",
+  ];
+
+  function chooseRandomGif() {
+    const gifElement = document.getElementById(
+      "sidebar-gif",
+    ) as HTMLImageElement | null;
+
+    if (!gifElement) return;
+
+    const randomIndex = Math.floor(Math.random() * gifs.length);
+    gifElement.src = gifs[randomIndex];
+  }
+
+  document.addEventListener("astro:page-load", chooseRandomGif);
+</script>
