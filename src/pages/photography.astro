@@ -1,0 +1,57 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const photos = Array.from({ length: 16 }, (_, index) => {
+  const number = index + 1;
+
+  return {
+    src: `/photos/${number}.JPG`,
+    alt: `Photography by James Littlewood - image ${number}`,
+  };
+});
+---
+
+<Layout
+  title="Photography | James Littlewood"
+  description="A selection of photography by James Littlewood."
+>
+  <div class="animate-in fade-in mx-auto w-full max-w-6xl p-8 duration-700 md:p-16">
+    <header class="mb-10">
+      <p class="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        Personal work
+      </p>
+
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
+        Photography
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+      My extremely amatuer photohraphy!
+      </p>
+    </header>
+
+    <section
+      aria-label="Photography gallery"
+      class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"
+    >
+      {
+        photos.map((photo) => (
+          <a
+            href={photo.src}
+            target="_blank"
+            rel="noreferrer"
+            class="group block overflow-hidden rounded-xl border border-border bg-muted"
+          >
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              loading="lazy"
+              decoding="async"
+              class="aspect-square w-full object-cover transition duration-500 ease-out group-hover:scale-105"
+            />
+          </a>
+        ))
+      }
+    </section>
+  </div>
+</Layout>
