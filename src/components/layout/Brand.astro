@@ -1,11 +1,20 @@
 ---
 import site from "@/config/site";
+
+const gifs = [
+  "/ani_lian.gif",
+  "/ani_ragnar-ezgif.com-crop.gif",
+  "/ani_uku.gif",
+  "/foulou.gif",
+  "/ichigo-kurusaki-hollow-ezgif-com-crop.gif",
+  "/ichigo.gif",
+];
 ---
 
 <div class="mt-4 mb-6 md:mt-4 md:mb-10">
   <img
     id="sidebar-gif"
-    src="/foulou.gif"
+    src={gifs[0]}
     alt=""
     aria-hidden="true"
     class="mb-4 h-29 w-29 object-contain"
@@ -25,12 +34,7 @@ import site from "@/config/site";
   </div>
 </div>
 
-<script>
-  const gifs = [
-    "/foulou.gif",
-    "/ichigo.gif",
-  ];
-
+<script define:vars={{ gifs }}>
   function chooseRandomGif() {
     const gifElement = document.getElementById(
       "sidebar-gif",
@@ -39,6 +43,7 @@ import site from "@/config/site";
     if (!gifElement) return;
 
     const randomIndex = Math.floor(Math.random() * gifs.length);
+
     gifElement.src = gifs[randomIndex];
   }
 
