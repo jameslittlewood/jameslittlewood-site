@@ -1,0 +1,164 @@
+---
+
+import Layout from "@/layouts/Layout.astro";
+
+const photos = Array.from({ length: 16 }, (_, index) => {
+const number = index + 1;
+
+return {
+src: "/photos/" + number + ".JPG",
+alt: "Photography by James Littlewood - image " + number,
+};
+});
+---
+
+<Layout
+title="Photography | James Littlewood"
+description="A selection of photography by James Littlewood."
+
+>
+
+  <div class="animate-in fade-in mx-auto w-full max-w-6xl p-8 duration-700 md:p-16">
+    <header class="mb-10">
+      <p class="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+        Personal work
+      </p>
+
+```
+  <h1 class="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
+    Photography
+  </h1>
+
+  <p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+    A selection of photographs taken while exploring places, events and
+    everyday moments.
+  </p>
+</header>
+
+<section
+  aria-label="Photography gallery"
+  class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4"
+>
+  {
+    photos.map((photo) => (
+      <button
+        type="button"
+        class="group block overflow-hidden rounded-xl border border-border bg-muted p-0 text-left"
+        data-photo-src={photo.src}
+        data-photo-alt={photo.alt}
+        aria-label={"Expand " + photo.alt}
+      >
+        <img
+          src={photo.src}
+          alt={photo.alt}
+          loading="lazy"
+          decoding="async"
+          class="block aspect-square w-full object-cover transition duration-500 ease-out group-hover:scale-105"
+        />
+      </button>
+    ))
+  }
+</section>
+```
+
+  </div>
+
+  <div
+    id="photo-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 p-4"
+    aria-hidden="true"
+  >
+    <button
+      id="photo-modal-backdrop"
+      type="button"
+      class="absolute inset-0 cursor-default"
+      aria-label="Close expanded photograph"
+    >
+    </button>
+
+```
+<div class="relative z-10 max-h-full max-w-full">
+  <button
+    id="close-photo-modal"
+    type="button"
+    class="absolute top-3 right-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-background/90 text-xl font-medium text-foreground shadow-md backdrop-blur transition hover:scale-105"
+    aria-label="Close expanded photograph"
+  >
+    ×
+  </button>
+
+  <img
+    id="expanded-photo"
+    src=""
+    alt=""
+    class="block max-h-[90vh] max-w-[94vw] rounded-xl object-contain shadow-2xl"
+  />
+</div>
+```
+
+  </div>
+
+  <script>
+    const modal = document.getElementById("photo-modal");
+    const expandedPhoto = document.getElementById("expanded-photo");
+    const closeButton = document.getElementById("close-photo-modal");
+    const backdropButton = document.getElementById("photo-modal-backdrop");
+    const photoButtons = document.querySelectorAll("[data-photo-src]");
+
+    if (
+      modal instanceof HTMLElement &&
+      expandedPhoto instanceof HTMLImageElement &&
+      closeButton instanceof HTMLButtonElement &&
+      backdropButton instanceof HTMLButtonElement
+    ) {
+      let previousBodyOverflow = "";
+
+      const closePhotoModal = () => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        modal.setAttribute("aria-hidden", "true");
+
+        expandedPhoto.removeAttribute("src");
+        expandedPhoto.alt = "";
+
+        document.body.style.overflow = previousBodyOverflow;
+      };
+
+      photoButtons.forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) {
+          return;
+        }
+
+        button.addEventListener("click", () => {
+          const photoSource = button.getAttribute("data-photo-src");
+          const photoAlt = button.getAttribute("data-photo-alt") || "";
+
+          if (photoSource === null) {
+            return;
+          }
+
+          previousBodyOverflow = document.body.style.overflow;
+
+          expandedPhoto.src = photoSource;
+          expandedPhoto.alt = photoAlt;
+
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          modal.setAttribute("aria-hidden", "false");
+
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      closeButton.addEventListener("click", closePhotoModal);
+      backdropButton.addEventListener("click", closePhotoModal);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("flex")) {
+          closePhotoModal();
+        }
+      });
+    }
+  </script>
+
+</Layout>
