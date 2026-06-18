@@ -1,3 +1,4 @@
+```markdown
 ---
 title: CV
 description: James Littlewood CV
@@ -5,24 +6,24 @@ description: James Littlewood CV
 
 # James Littlewood
 
-Reading, Berkshire  
+Reading, Berkshire   
 contact@jameslittlewood.net
 
 ## Professional Profile
 
-Detail-oriented Data Analyst with experience in product data quality, structured validation, categorisation, taxonomy application, SQL analysis and stakeholder communication. Currently supporting accurate eCommerce product data delivery across BAU operations, client implementation activity and SLA-driven workflows.
+Detail-oriented Data Analyst with experience in product data quality, structured validation, categorisation, taxonomy application, SQL analysis and stakeholder communication. Currently supporting accurate eCommerce product data delivery across BAU operations, client implementations and SLA-driven workflows.
 
-Developing and applying practical skills in SQL, Excel, Tableau, Python, Git, Shell and Snowflake through structured learning, self-directed projects and hands-on technical workflows. Maintain a personal Ubuntu-based development environment using PostgreSQL, Docker, VS Code Remote SSH and DBeaver to practise database administration, containerised workflows and remote development.
+Skilled in SQL, Excel, Tableau, Python, Git, Shell and Snowflake fundamentals, with hands-on experience across data analytics, reporting, quality assurance and technical problem-solving. Maintain a personal Ubuntu-based development environment using PostgreSQL, Docker, VS Code Remote SSH and DBeaver to practise database administration, containerised workflows and remote development.
 
 ## Core Skills, Tools and Technologies
 
-**Data and reporting:** Excel, Google Sheets, SQL, PostgreSQL, Snowflake fundamentals, Tableau, data cleaning, reporting support
+**Data and reporting:** Excel, Google Sheets, SQL, PostgreSQL, Snowflake fundamentals, Tableau, data cleaning, reporting support and dashboard development
 
 **Product and operations data:** Product data validation, categorisation, taxonomy application, attribute QA, exception handling, quality checks and SLA-driven delivery
 
-**Analysis concepts:** Joining and structuring data, data literacy, data modelling fundamentals, basic statistical thinking, dashboard design and communicating insights clearly
+**Analysis concepts:** Joining and structuring data, data literacy, data modelling fundamentals, statistical fundamentals, dashboard design and communicating insights clearly
 
-**Technical tools:** Python fundamentals, pandas, regex, Git, Shell, Docker concepts, DBeaver and VS Code
+**Technical tools:** Python fundamentals, pandas, regex, Git, Shell, Docker, DBeaver and VS Code
 
 **Environments:** macOS, Windows, Linux/Ubuntu and remote development workflows
 
@@ -32,10 +33,10 @@ Developing and applying practical skills in SQL, Excel, Tableau, Python, Git, Sh
 
 Aug 2025 – Present
 
-- Manage product data tasks across assigned clients, markets and implementation activity, supporting both day-to-day operations and new set-up work.
+- Manage product data tasks across assigned clients, markets and client implementations, supporting both day-to-day operations and new client setup work.
 - Maintain and validate identifiers, titles, brands, manufacturers, pack sizes and structured attributes to help ensure accurate product records.
-- Apply client-specific taxonomies, categorisation rules and data standards across multiple retailers and markets using careful quality checks.
-- Use Excel and structured validation checks to review product data at scale, identify inconsistencies, support exception handling and improve accuracy across operational workflows.
+- Apply client-specific taxonomies, categorisation rules and data standards across multiple retailers and markets, using structured quality checks to maintain consistency.
+- Use Excel and validation checks to review product data at scale, identify inconsistencies, support exception handling and improve accuracy across operational workflows.
 - Investigate inconsistent information, resolve routine discrepancies and escalate ambiguous issues with clear supporting detail.
 - Track workload in JIRA and internal tools, monitor progress against SLAs and communicate blockers, dependencies and risks through team channels.
 
@@ -57,15 +58,15 @@ Apr 2015 – Jun 2022
 - Organised workloads, balanced competing priorities and explained technical issues clearly to customers and colleagues.
 - Maintained accurate service notes, repair information and customer records in line with internal processes and quality standards.
 
-## Professional Development and Retraining
+## Data Analytics Development
 
 Jun 2022 – May 2025
 
-- Completed structured data analytics training, self-directed technical learning and project work while retraining towards data and analytics-focused roles.
-- Built practical foundations in SQL, Excel, Tableau, data analysis, data communication and technical problem-solving.
+- Completed structured data analytics training, self-directed technical learning and project work while transitioning towards data and analytics-focused roles.
+- Built foundations in SQL, Excel, Tableau, data analysis, data communication and technical problem-solving.
 - Developed hands-on experience through portfolio projects, online learning and independent technical experimentation.
 
-## Projects and Professional Development
+## Projects and Technical Development
 
 ### Data Analytics Course | The Curious Academy
 
@@ -78,14 +79,16 @@ Jun 2022 – May 2025
 
 ### Further Development | Personal Projects and Learning
 
-- Built further skills through DataCamp learning across SQL, Excel, data analysis and visualisation, Tableau dashboard development, Snowflake, data modelling fundamentals, Python basics, statistics, data literacy and communicating insights.
-- Maintain a personal Ubuntu-based mini-server environment to build practical experience with PostgreSQL, Docker, VS Code Remote SSH, DBeaver and remote development workflows.
+- Built further skills through DataCamp learning across SQL, Excel, data analysis and visualisation, Tableau dashboard development, Snowflake, data modelling fundamentals, Python fundamentals, statistics, data literacy and communicating insights.
+- Maintain a personal Ubuntu-based mini-server environment to build experience with PostgreSQL, Docker, VS Code Remote SSH, DBeaver and remote development workflows.
 - Practise Python fundamentals for data analysis and automation, including pandas, string handling, regex, functions, error handling and structured problem-solving.
 - Explored AI-assisted workflows, prompt design and automation concepts to support productivity, documentation and technical learning.
-- Continue to develop technical confidence across macOS, Windows and Ubuntu environments, with a focus on practical analytics, database and software development workflows.
+- Continue to build technical confidence across macOS, Windows and Ubuntu environments, with a focus on analytics, database and software development workflows.
 
 ## Education and Certifications
 
 - BSc (Hons) Audio Engineering and Music Production, SAE Institute / Middlesex University — 2:1
 - Apple iOS / Mac Certified Technician
 - The Curious Academy — Data Analysis Certification
+
+References available on request
