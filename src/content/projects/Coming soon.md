@@ -1,6 +1,6 @@
 ---
 title: FIFA World Cup 2026 Dashboard
-description: Interactive dashboard exploring World Cup 2026 fixtures, teams, players, venues and tournament statistics.
+description: Interactive dashboard exploring the 2026 World Cup
 tech:
   - Python
   - Streamlit
