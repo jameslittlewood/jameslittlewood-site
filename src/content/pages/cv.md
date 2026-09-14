@@ -5,89 +5,100 @@ description: James Littlewood CV
 
 # James Littlewood
 
-Reading, Berkshire   
-contact@jameslittlewood.net
-
 ## Professional Profile
 
-Detail-oriented Data Analyst with experience in product data quality, structured validation, categorisation, taxonomy application, SQL analysis and stakeholder communication. Currently supporting accurate eCommerce product data delivery across BAU operations, client implementations and SLA-driven workflows.
+Technology-focused data professional with experience in eCommerce product data, practical analytics and technical customer support.
 
-Skilled in SQL, Excel, Tableau, Python, Git, Shell and Snowflake fundamentals, with hands-on experience across data analytics, reporting, quality assurance and technical problem-solving. Maintain a personal Ubuntu-based development environment using PostgreSQL, Docker, VS Code Remote SSH and DBeaver to practise database administration, containerised workflows and remote development.
+Previous experience as a Technical Data Analyst at Profitero included maintaining structured product information across multiple clients, retailers and markets, applying taxonomies and investigating data-quality issues.
 
-## Core Skills, Tools and Technologies
+More than seven years at Apple provided extensive experience in technical diagnostics, customer service, operational coordination and temporary team leadership.
 
-**Data and reporting:** Excel, Google Sheets, SQL, PostgreSQL, Snowflake fundamentals, Tableau, data cleaning, reporting support and dashboard development
+Analytical project work includes large-scale PostgreSQL analysis and Tableau dashboards, supported by a methodical approach to problem-solving and clear communication.
 
-**Product and operations data:** Product data validation, categorisation, taxonomy application, attribute QA, exception handling, quality checks and SLA-driven delivery
+Currently developing Python programming, automation and data-analysis skills through practical projects, independent study and regular one-to-one tuition with an experienced software developer.
 
-**Analysis concepts:** Joining and structuring data, data literacy, data modelling fundamentals, statistical fundamentals, dashboard design and communicating insights clearly
+## Core Skills & Technologies
 
-**Technical tools:** Python fundamentals, pandas, regex, Git, Shell, Docker, DBeaver and VS Code
+**Data Analysis & Reporting**: Excel, Google Sheets, SQL, Tableau, Power BI; data cleaning, joins, reconciliation and dashboard reporting.
 
-**Environments:** macOS, Windows, Linux/Ubuntu and remote development workflows
+**eCommerce & Product Data**: Product validation, categorisation, taxonomy application, structured attributes, quality assurance, exception handling and SLA-driven delivery.
+
+**Python & Development**: Python, Git/GitHub, VS Code and Shell.
+
+**Databases & Technical Environments**: PostgreSQL, DBeaver, Docker, Linux/Ubuntu, Windows and macOS.
+
+**Analytical Skills**: Structured problem-solving, root-cause investigation, trend analysis, requirements gathering and communicating insights.
 
 ## Professional Experience
 
-### Technical Data Analyst | Profitero
+### Technical Data Analyst | Profitero – Publicis Groupe
 
-Aug 2025 – Present
+August 2025 – September 2026
 
-- Manage product data tasks across assigned clients, markets and client implementations, supporting both day-to-day operations and new client setup work.
-- Maintain and validate identifiers, titles, brands, manufacturers, pack sizes and structured attributes to help ensure accurate product records.
-- Apply client-specific taxonomies, categorisation rules and data standards across multiple retailers and markets, using structured quality checks to maintain consistency.
-- Use Excel and validation checks to review product data at scale, identify inconsistencies, support exception handling and improve accuracy across operational workflows.
-- Investigate inconsistent information, resolve routine discrepancies and escalate ambiguous issues with clear supporting detail.
-- Track workload in JIRA and internal tools, monitor progress against SLAs and communicate blockers, dependencies and risks through team channels.
+- Managed structured eCommerce product data across assigned clients, retailers and markets, supporting business-as-usual activity and new client implementations.
 
-### Team Lead Temporary Secondment | Apple, The Oracle, Reading
+- Maintained and validated EAN, UPC and RPC identifiers, titles, brands, sub-brands, manufacturers, pack sizes and structured product attributes.
 
-Oct 2021 – Apr 2022
+- Applied client-specific taxonomies and categorisation rules, using systematic quality checks to maintain consistent product records.
 
-- Led a multifunctional team in a fast-paced technical retail environment, balancing customer escalations, operational priorities and service standards.
-- Monitored performance indicators and operational patterns to improve customer flow, reduce wait times and support decision-making.
-- Collated feedback, identified coaching opportunities and supported training, consistency and service quality across the team.
-- Communicated priorities clearly between colleagues, managers and customers to support smooth daily operations.
+- Investigated missing, incorrect and inconsistent information, resolved discrepancies and escalated ambiguous cases with supporting evidence.
 
-### Technical Expert / Expert | Apple, The Oracle, Reading
+- Managed assigned work independently against agreed processes and SLAs, using JIRA and internal tools to track progress and communicate blockers, risks and dependencies with internal teams and international colleagues.
 
-Apr 2015 – Jun 2022
+## Apple | The Oracle, Reading
 
-- Handled complex troubleshooting, diagnostics and repair workflows while working to appointment schedules and service expectations.
-- Used pattern recognition, structured problem-solving and evidence gathering to identify root causes and improve resolution accuracy.
-- Organised workloads, balanced competing priorities and explained technical issues clearly to customers and colleagues.
-- Maintained accurate service notes, repair information and customer records in line with internal processes and quality standards.
+April 2015 – June 2022
 
-## Data Analytics Development
+### Expert / Technical Expert
 
-Jun 2022 – May 2025
+- Delivered technical troubleshooting, diagnostics and repair support across Apple devices, using structured investigation and evidence gathering to identify root causes and determine appropriate resolutions.
 
-- Completed structured data analytics training, self-directed technical learning and project work while transitioning towards data and analytics-focused roles.
-- Built foundations in SQL, Excel, Tableau, data analysis, data communication and technical problem-solving.
-- Developed hands-on experience through portfolio projects, online learning and independent technical experimentation.
+- Explained technical issues, repair options and product functionality clearly, adapting communication to customers with different levels of technical understanding.
 
-## Projects and Technical Development
+- Managed competing customer needs, appointment schedules and operational priorities while maintaining service standards and completing post-repair checks.
 
-### Data Analytics Course | The Curious Academy
+- Supported and coached colleagues, sharing technical knowledge and practical approaches to troubleshooting and customer service.
 
-16-week programme | May 2025 – July 2025
+### Team Lead — Temporary Secondment
 
-- Analysed approximately 24 million Chicago bike share records in PostgreSQL to identify usage patterns, behavioural differences and seasonality by member type.
-- Investigated around 350,000 Land Registry records for RG postcode house prices, using PostgreSQL for analysis and Tableau to present findings clearly.
-- Created a Tableau dashboard showing and analysing the performance of the NHL team Anaheim Ducks in comparison with other NHL teams.
-- Applied data cleaning, joins, structured querying, trend interpretation and communication of insights for non-technical audiences.
+October 2021 – April 2022
 
-### Further Development | Personal Projects and Learning
+- Coordinated day-to-day team activity, balancing customer demand, operational responsibilities and service standards in a busy customer-facing environment.
 
-- Built further skills through DataCamp learning across SQL, Excel, data analysis and visualisation, Tableau dashboard development, Snowflake, data modelling fundamentals, Python fundamentals, statistics, data literacy and communicating insights.
-- Maintain a personal Ubuntu-based mini-server environment to build experience with PostgreSQL, Docker, VS Code Remote SSH, DBeaver and remote development workflows.
-- Practise Python fundamentals for data analysis and automation, including pandas, string handling, regex, functions, error handling and structured problem-solving.
-- Explored AI-assisted workflows, prompt design and automation concepts to support productivity, documentation and technical learning.
-- Continue to build technical confidence across macOS, Windows and Ubuntu environments, with a focus on analytics, database and software development workflows.
+- Handled customer escalations, supported colleagues with complex situations and communicated priorities across the team.
 
-## Education and Certifications
+- Monitored performance indicators, customer flow and feedback to inform operational decisions, identify coaching opportunities and support consistent service.
 
-- BSc (Hons) Audio Engineering and Music Production, SAE Institute / Middlesex University — 2:1
-- Apple iOS / Mac Certified Technician
-- The Curious Academy — Data Analysis Certification
+## The Curious Academy — Data Analytics Bootcamp
 
-References available on request
+May 2025 – July 2025
+
+- Analysed approximately 24 million Chicago bike-share records in PostgreSQL to identify usage patterns, seasonal trends and behavioural differences between member types.
+
+- Analysed approximately 350,000 RG postcode Land Registry records using PostgreSQL to investigate historical house-price trends, with findings presented in Tableau.
+
+- Built a Tableau dashboard comparing Anaheim Ducks performance with other NHL teams, using data cleaning, joins and trend analysis to present key insights.
+
+## Current Technical Development
+
+- Developing practical Python programming, data analysis and automation through regular one-to-one tuition with an experienced software developer, independent practice and project building.
+
+- Continuing DataCamp study across Python, SQL, statistics, visualisation, databases and data modelling, with additional learning in machine learning, AI and automation concepts.
+
+- Maintaining a personal Ubuntu mini-server with PostgreSQL and Docker, using VS Code and remote-development workflows to support hands-on technical practice.
+
+## Career Development & Travel
+
+June 2022 – May 2025
+
+Travelled while retraining for data and analytics work through structured study, independent technical learning and project work.
+
+## Education & Certifications
+
+BSc (Hons) Audio Engineering and Music Production — 2:1
+
+SAE Institute / Middlesex University
+
+Apple iOS / Mac Certified Technician
+
+The Curious Academy — Data Analysis Certification
