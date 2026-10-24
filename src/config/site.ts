@@ -1,3 +1,4 @@
+
 import { PUBLIC_ARTALK_ENABLED, PUBLIC_ARTALK_SERVER } from "astro:env/server";
 
 const artalkServer = PUBLIC_ARTALK_SERVER?.trim() || "";
@@ -113,6 +114,16 @@ const site = {
           icon: "mdi:database",
         },
         {
+          name: "SQLite",
+          link: "https://www.sqlite.org/",
+          icon: "mdi:database-outline",
+        },
+        {
+          name: "Neon",
+          link: "https://neon.tech/",
+          icon: "mdi:cloud-outline",
+        },
+        {
           name: "DBeaver",
           link: "https://dbeaver.io/",
           icon: "mdi:database-cog-outline",
@@ -121,11 +132,6 @@ const site = {
           name: "pandas",
           link: "https://pandas.pydata.org/",
           icon: "mdi:table",
-        },
-        {
-          name: "Snowflake",
-          link: "https://www.snowflake.com",
-          icon: "mdi:snowflake",
         },
       ],
     },
@@ -182,8 +188,38 @@ const site = {
     },
 
     {
-      name: "AI tools",
+      name: "AI & LLMs",
       items: [
+        {
+          name: "Open WebUI",
+          link: "https://openwebui.com/",
+          icon: "mdi:robot-outline",
+        },
+        {
+          name: "OpenRouter",
+          link: "https://openrouter.ai/",
+          icon: "mdi:source-branch",
+        },
+        {
+          name: "Unsloth",
+          link: "https://unsloth.ai/",
+          icon: "mdi:brain",
+        },
+        {
+          name: "Qwen",
+          link: "https://huggingface.co/Qwen",
+          icon: "mdi:head-cog-outline",
+        },
+        {
+          name: "Gemma 4",
+          link: "https://deepmind.google/models/gemma/",
+          icon: "mdi:creation",
+        },
+        {
+          name: "Google DeepMind",
+          link: "https://deepmind.google/",
+          icon: "mdi:google",
+        },
         {
           name: "Codex",
           link: "https://openai.com/codex/",
@@ -211,6 +247,11 @@ const site = {
           icon: "mdi:docker",
         },
         {
+          name: "Docker Compose",
+          link: "https://docs.docker.com/compose/",
+          icon: "mdi:docker",
+        },
+        {
           name: "Ubuntu",
           link: "https://ubuntu.com",
           icon: "mdi:ubuntu",
@@ -221,7 +262,12 @@ const site = {
           icon: "mdi:linux",
         },
         {
-          name: "MacOS",
+          name: "SSH",
+          link: "https://www.openssh.com/",
+          icon: "mdi:console-line",
+        },
+        {
+          name: "macOS",
           link: "https://www.apple.com/macos/",
           icon: "mdi:apple",
         },
