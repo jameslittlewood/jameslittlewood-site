@@ -1,3 +1,4 @@
+
 ---
 title: CV
 description: James Littlewood CV
@@ -5,87 +6,91 @@ description: James Littlewood CV
 
 # James Littlewood
 
+Reading, Berkshire | 07713 047 068 | contact@jameslittlewood.net
+
 ## Professional Profile
 
-Technology-focused data professional with experience in eCommerce product data, practical analytics and technical customer support.
+Technology-focused data professional with experience in eCommerce product data, analytics and technical support. Previous experience at Profitero involved maintaining structured product data, applying taxonomies and investigating data-quality issues, supported by more than seven years at Apple in technical and customer-facing roles.
 
-Previous experience as a Technical Data Analyst at Profitero included maintaining structured product information across multiple clients, retailers and markets, applying taxonomies and investigating data-quality issues.
-
-More than seven years at Apple provided extensive experience in technical diagnostics, customer service, operational coordination and temporary team leadership.
-
-Analytical project work includes large-scale PostgreSQL analysis and Tableau dashboards, supported by a methodical approach to problem-solving and clear communication.
-
-Currently developing Python programming, automation and data-analysis skills through practical projects, independent study and regular one-to-one tuition with an experienced software developer.
+Currently developing Python, data analysis and automation skills through regular, self-funded, one-to-one tuition with an experienced software developer and practical projects, including the deployment of a self-hosted AI chatbot integrating local and cloud-based large language models.
 
 ## Core Skills & Technologies
 
-**Data Analysis & Reporting**: Excel, Google Sheets, SQL, Tableau, Power BI; data cleaning, joins, reconciliation and dashboard reporting.
+**SQL & Databases:** PostgreSQL, SQLite, Neon, DBeaver and Letos (SQLiteStudio); SELECT/WHERE, joins, GROUP BY/HAVING, aggregation, views, data validation and reconciliation.
 
-**eCommerce & Product Data**: Product validation, categorisation, taxonomy application, structured attributes, quality assurance, exception handling and SLA-driven delivery.
+**Python & Development:** Python fundamentals, data structures, conditional logic, loops, functions and practical programming; developing data analysis and automation skills. Git/GitHub and VS Code.
 
-**Python & Development**: Python, Git/GitHub, VS Code and Shell.
+**Data Analysis & Reporting:** Excel, Google Sheets, Tableau and Power BI; data cleaning, validation, trend analysis, dashboard development and reporting.
 
-**Databases & Technical Environments**: PostgreSQL, DBeaver, Docker, Linux/Ubuntu, Windows and macOS.
+**AI & LLM Technologies:** Open WebUI, OpenRouter, Unsloth, Qwen, open-weight LLMs, GGUF quantisation, local inference and OpenAI-compatible APIs.
 
-**Analytical Skills**: Structured problem-solving, root-cause investigation, trend analysis, requirements gathering and communicating insights.
+**Infrastructure & Tools:** Docker, Docker Compose, Ubuntu Linux, Cloudflare, SSH, Windows and macOS; practical experience with self-hosted services and cloud databases.
+
+**eCommerce & Product Data:** Product validation, categorisation, taxonomies, structured attributes, quality assurance, exception handling and SLA-driven delivery.
+
+**Analytical & Communication Skills:** Structured problem-solving, root-cause investigation, requirements gathering, stakeholder communication and communicating technical findings.
 
 ## Professional Experience
 
 ### Technical Data Analyst | Profitero – Publicis Groupe
 
-August 2025 – September 2026
+August 2025 – September 2026 | Fixed-term contract
 
-- Managed structured eCommerce product data across assigned clients, retailers and markets, supporting business-as-usual activity and new client implementations.
+- Managed structured eCommerce product data across multiple clients, retailers and markets, supporting business-as-usual operations and new client implementations.
 
-- Maintained and validated EAN, UPC and RPC identifiers, titles, brands, sub-brands, manufacturers, pack sizes and structured product attributes.
+- Maintained and validated EAN, UPC and RPC identifiers, titles, brands, manufacturers, pack sizes and structured attributes, applying client-specific taxonomies and categorisation rules.
 
-- Applied client-specific taxonomies and categorisation rules, using systematic quality checks to maintain consistent product records.
+- Investigated missing, incorrect and inconsistent data, resolving discrepancies and communicating directly with clients and internal teams regarding data requirements, validation and presentation.
 
-- Investigated missing, incorrect and inconsistent information, resolved discrepancies and escalated ambiguous cases with supporting evidence.
+- Managed assigned work against established processes and SLAs, using JIRA and internal tools to track progress, escalate issues and coordinate with international colleagues.
 
-- Managed assigned work independently against agreed processes and SLAs, using JIRA and internal tools to track progress and communicate blockers, risks and dependencies with internal teams and international colleagues.
-
-## Apple | The Oracle, Reading
+### Apple | The Oracle, Reading
 
 April 2015 – June 2022
 
-### Expert / Technical Expert
+**Expert / Technical Expert**
 
 - Delivered technical troubleshooting, diagnostics and repair support across Apple devices, using structured investigation and evidence gathering to identify root causes and determine appropriate resolutions.
 
-- Explained technical issues, repair options and product functionality clearly, adapting communication to customers with different levels of technical understanding.
+- Explained complex technical issues, repair options and device functionality to customers with varying levels of technical understanding.
 
-- Managed competing customer needs, appointment schedules and operational priorities while maintaining service standards and completing post-repair checks.
+- Managed competing customer and operational priorities while maintaining service standards, completing post-repair checks and supporting colleagues through technical coaching.
 
-- Supported and coached colleagues, sharing technical knowledge and practical approaches to troubleshooting and customer service.
-
-### Team Lead — Temporary Secondment
+**Team Lead — Temporary Secondment**
 
 October 2021 – April 2022
 
-- Coordinated day-to-day team activity, balancing customer demand, operational responsibilities and service standards in a busy customer-facing environment.
+- Coordinated daily team activity, operational priorities and customer escalations in a busy customer-facing environment.
 
-- Handled customer escalations, supported colleagues with complex situations and communicated priorities across the team.
+- Monitored performance indicators and customer feedback to support operational decisions, staff coaching and service improvements.
 
-- Monitored performance indicators, customer flow and feedback to inform operational decisions, identify coaching opportunities and support consistent service.
+## Projects & Technical Development
 
-## The Curious Academy — Data Analytics Bootcamp
+### Self-Hosted AI Chatbot & LLM Infrastructure | Personal Project
+
+*Open WebUI, OpenRouter, Unsloth, Qwen, GGUF, Docker, Ubuntu Linux, Cloudflare*
+
+- Built and deployed a self-hosted AI chatbot platform using Open WebUI and Docker, integrating cloud-hosted models through OpenRouter alongside locally hosted open-weight LLMs.
+
+- Configured local LLM inference using Unsloth and OpenAI-compatible APIs, gaining practical experience with quantised models, context windows and hardware limitations.
+
+- Configured authenticated remote access through Cloudflare Tunnel and Access, alongside practical experience in Ubuntu server administration, automated backups and recovery testing.
+
+### The Curious Academy — Data Analytics Bootcamp
 
 May 2025 – July 2025
 
-- Analysed approximately 24 million Chicago bike-share records in PostgreSQL to identify usage patterns, seasonal trends and behavioural differences between member types.
+- **Chicago Bike-Share Analysis:** Analysed approximately 24 million records in PostgreSQL to identify usage patterns, seasonal trends and differences between member types.
 
-- Analysed approximately 350,000 RG postcode Land Registry records using PostgreSQL to investigate historical house-price trends, with findings presented in Tableau.
+- **RG House-Price Analysis:** Analysed approximately 350,000 Land Registry records in PostgreSQL, visualising historical property price trends using Tableau.
 
-- Built a Tableau dashboard comparing Anaheim Ducks performance with other NHL teams, using data cleaning, joins and trend analysis to present key insights.
+- **NHL Performance Dashboard:** Developed a Tableau dashboard comparing Anaheim Ducks performance with other NHL teams through data cleaning, joins and trend analysis.
 
-## Current Technical Development
+## Ongoing Technical Development
 
-- Developing practical Python programming, data analysis and automation through regular one-to-one tuition with an experienced software developer, independent practice and project building.
+- Undertaking structured DataCamp learning across Python, SQL, statistics, data visualisation, databases and data modelling, alongside introductory AI and machine learning concepts.
 
-- Continuing DataCamp study across Python, SQL, statistics, visualisation, databases and data modelling, with additional learning in machine learning, AI and automation concepts.
-
-- Maintaining a personal Ubuntu mini-server with PostgreSQL and Docker, using VS Code and remote-development workflows to support hands-on technical practice.
+- Applying technical knowledge through independent study and hands-on projects involving data analysis, databases, automation and self-hosted applications.
 
 ## Career Development & Travel
 
@@ -95,10 +100,10 @@ Travelled while retraining for data and analytics work through structured study,
 
 ## Education & Certifications
 
-BSc (Hons) Audio Engineering and Music Production — 2:1
+**BSc (Hons) Audio Engineering and Music Production — 2:1**
 
 SAE Institute / Middlesex University
 
-Apple iOS / Mac Certified Technician
+**Apple iOS / Mac Certified Technician**
 
-The Curious Academy — Data Analysis Certification
+**The Curious Academy — Data Analysis Certification**
