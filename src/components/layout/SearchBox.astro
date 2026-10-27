@@ -7,6 +7,7 @@ import { Icon } from "astro-icon/components";
     id="search-trigger"
     class="group flex w-full items-center justify-between rounded-xl border border-border/50 bg-muted/30 px-3 py-3 text-muted-foreground transition-colors duration-300 hover:border-primary/30 hover:text-primary"
     title="search trigger"
+    aria-keyshortcuts="Control+K"
   >
     <div class="flex items-center gap-2">
       <Icon name="mdi:search" />
@@ -15,7 +16,24 @@ import { Icon } from "astro-icon/components";
     <kbd
       class="hidden items-center gap-1 rounded border border-border/50 px-1.5 py-0.5 font-display text-[12px] opacity-50 md:flex"
     >
-      <Icon name="mdi:apple-keyboard-command" size={12} /> K
+      <span data-search-modifier class="inline-flex w-6 justify-center">Ctrl</span> K
     </kbd>
   </button>
 </div>
+
+<script>
+  function updateSearchShortcut() {
+    const platform = (navigator as Navigator & {
+      userAgentData?: { platform?: string };
+    }).userAgentData?.platform || navigator.platform || "";
+    const isMac = /^mac/i.test(platform);
+    const modifier = document.querySelector("[data-search-modifier]");
+    if (modifier) modifier.textContent = isMac ? "⌘" : "Ctrl";
+    document.getElementById("search-trigger")?.setAttribute(
+      "aria-keyshortcuts", isMac ? "Meta+K" : "Control+K",
+    );
+  }
+
+  updateSearchShortcut();
+  document.addEventListener("astro:page-load", updateSearchShortcut);
+</script>

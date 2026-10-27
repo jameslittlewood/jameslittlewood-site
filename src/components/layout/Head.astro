@@ -20,8 +20,46 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg?v=3" />
 
   <!-- Theme Colour -->
-  <meta name="theme-color" content="#3F9C87" />
-  <meta name="msapplication-TileColor" content="#3F9C87" />
+  <!-- sRGB equivalents of the light/dark --background colours in global.css. -->
+  <meta name="theme-color" content="#f8f8fe" />
+  <meta name="msapplication-TileColor" content="#f8f8fe" />
+  <script is:inline>
+    (() => {
+      const themeColours = { light: "#f8f8fe", dark: "#080813" };
+      let preference;
+      try {
+        preference = localStorage.getItem("theme");
+      } catch {
+        // Fall back to the system preference if storage is unavailable.
+      }
+      const dark = preference === "dark" ||
+        (preference !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+
+      // Apply the preference before the first paint, including browser metadata.
+      document.documentElement.classList.toggle("dark", dark);
+      const syncThemeColour = (doc = document, isDark = document.documentElement.classList.contains("dark")) => {
+        const colour = themeColours[isDark ? "dark" : "light"];
+        for (const name of ["theme-color", "msapplication-TileColor"]) {
+          doc.querySelector(`meta[name="${name}"]`)?.setAttribute("content", colour);
+        }
+      };
+      syncThemeColour();
+
+      // Astro retains the document root. Register these observers/listeners once.
+      if (window.portfolioThemeMetadata) return;
+      window.portfolioThemeMetadata = true;
+      new MutationObserver(() => syncThemeColour()).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+      document.addEventListener("astro:before-swap", (event) => {
+        const isDark = document.documentElement.classList.contains("dark");
+        event.newDocument.documentElement.classList.toggle("dark", isDark);
+        syncThemeColour(event.newDocument, isDark);
+      });
+      document.addEventListener("astro:after-swap", () => syncThemeColour());
+    })();
+  </script>
 
   <meta name="generator" content={Astro.generator} />
 

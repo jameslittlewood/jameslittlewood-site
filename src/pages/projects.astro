@@ -10,7 +10,7 @@ const projects = await getCollection("projects");
 ---
 
 <Layout title={site.labels.projectsTitle} description={site.labels.projectsDescription}>
-  <div class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl p-8 duration-700 md:p-16">
+  <div class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl p-8 transition-[opacity,transform] duration-700 md:p-16">
     <header class="mb-16">
       <h2 class="mb-4 text-3xl font-bold tracking-tight">
         {site.labels.projectsTitle}
@@ -27,7 +27,7 @@ const projects = await getCollection("projects");
         </div>
       ) : (
         projects.map((project) => (
-          <div class="group flex h-full flex-col rounded-2xl border border-border/50 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-muted/40 motion-safe:hover:-translate-y-0.5 hover:shadow-sm">
+          <div class="group flex h-full flex-col rounded-2xl border border-border/50 bg-muted/20 p-5 transition-[background-color,border-color,box-shadow,transform,translate] duration-300 hover:border-primary/30 hover:bg-muted/40 motion-safe:hover:-translate-y-0.5 hover:shadow-sm">
 
             <div class="mb-4 flex items-start justify-between">
               <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary transition-all duration-300 group-hover:bg-primary/25">

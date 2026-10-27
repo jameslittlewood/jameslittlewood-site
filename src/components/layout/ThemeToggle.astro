@@ -46,14 +46,3 @@
     themeToggle?.addEventListener("click", handleToggleClick);
   });
 </script>
-
-<script is:inline>
-  function applyTheme() {
-    localStorage.theme === "dark"
-      ? document.documentElement.classList.add("dark")
-      : document.documentElement.classList.remove("dark");
-  }
-
-  document.addEventListener("astro:after-swap", applyTheme);
-  applyTheme();
-</script>
