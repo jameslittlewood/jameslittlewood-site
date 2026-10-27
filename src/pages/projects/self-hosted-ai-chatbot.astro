@@ -1,293 +1,291 @@
-
 ---
-import Layout from "@/layouts/Layout.astro";
+import Layout from '@/layouts/Layout.astro'
 
 const technologies = [
-  "Open WebUI",
-  "OpenRouter",
-  "Unsloth",
-  "Qwen",
-  "Gemma 4",
-  "Google DeepMind",
-  "Docker",
-  "Ubuntu Linux",
-  "Cloudflare",
-  "SearXNG",
-  "GGUF",
-];
+	'Open WebUI',
+	'OpenRouter',
+	'Unsloth',
+	'Qwen',
+	'Gemma 4',
+	'Google DeepMind',
+	'Docker',
+	'Ubuntu Linux',
+	'Cloudflare',
+	'SearXNG',
+	'GGUF',
+]
 
 const features = [
-  {
-    title: "Hybrid AI Models",
-    description:
-      "Cloud-hosted models through OpenRouter alongside locally hosted open-weight models using Unsloth and OpenAI-compatible APIs.",
-  },
-  {
-    title: "Secure Remote Access",
-    description:
-      "Cloudflare Tunnel and Access provide authenticated remote access without exposing the chatbot directly to the public internet.",
-  },
-  {
-    title: "Web Search",
-    description:
-      "DDGS and self-hosted SearXNG integration for AI-assisted web search.",
-  },
-  {
-    title: "Document Retrieval",
-    description:
-      "Built-in retrieval-augmented generation (RAG) for conversations grounded in uploaded documents.",
-  },
-  {
-    title: "Assistant Presets",
-    description:
-      "Specialised AI assistants for Python, SQL, data analytics, research and document analysis.",
-  },
-  {
-    title: "Self-Hosted Infrastructure",
-    description:
-      "Docker-based deployment on an Ubuntu mini PC with persistent storage, remote administration and external model connections.",
-  },
-];
+	{
+		title: 'Hybrid AI Models',
+		description:
+			'Cloud-hosted models through OpenRouter alongside locally hosted open-weight models using Unsloth and OpenAI-compatible APIs.',
+	},
+	{
+		title: 'Secure Remote Access',
+		description:
+			'Cloudflare Tunnel and Access provide authenticated remote access without exposing the chatbot directly to the public internet.',
+	},
+	{
+		title: 'Web Search',
+		description:
+			'DDGS and self-hosted SearXNG integration for AI-assisted web search.',
+	},
+	{
+		title: 'Document Retrieval',
+		description:
+			'Built-in retrieval-augmented generation (RAG) for conversations grounded in uploaded documents.',
+	},
+	{
+		title: 'Assistant Presets',
+		description:
+			'Specialised AI assistants for Python, SQL, data analytics, research and document analysis.',
+	},
+	{
+		title: 'Self-Hosted Infrastructure',
+		description:
+			'Docker-based deployment on an Ubuntu mini PC with persistent storage, remote administration and external model connections.',
+	},
+]
 
 // Add screenshots when ready.
 const screenshots: {
-  src: string;
-  alt: string;
-  caption: string;
-}[] = [];
+	src: string
+	alt: string
+	caption: string
+}[] = []
 ---
 
 <Layout
-  title="Self-Hosted AI Chatbot Platform"
-  description="A private self-hosted AI platform integrating local and cloud-based language models."
+	title="Self-Hosted AI Chatbot Platform"
+	description="A private self-hosted AI platform integrating local and cloud-based language models."
 >
-  <article
-    class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl space-y-10 p-8 duration-700 md:p-16"
-  >
-    <!-- Back Navigation -->
-    <a
-      href="/projects/"
-      class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-    >
-      ← Back to Projects
-    </a>
+	<article
+		class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl space-y-10 p-8 duration-700 md:p-16"
+	>
+		<!-- Back Navigation -->
+		<a
+			href="/projects/"
+			class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+		>
+			← Back to Projects
+		</a>
 
-    <!-- Header -->
-    <header class="space-y-4">
-      <div
-        class="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
-      >
-        In Development · Private Deployment
-      </div>
+		<!-- Header -->
+		<header class="space-y-4">
+			<div
+				class="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
+			>
+				In Development · Private Deployment
+			</div>
 
-      <h1 class="text-3xl font-bold tracking-tight">
-        Self-Hosted AI Chatbot Platform
-      </h1>
+			<h1 class="text-3xl font-bold tracking-tight">
+				Self-Hosted AI Chatbot Platform
+			</h1>
 
-      <p class="text-sm leading-relaxed text-muted-foreground">
-        A self-hosted AI platform combining local and cloud-based
-        language models, secure remote access, web search and
-        document retrieval.
-      </p>
-    </header>
+			<p class="text-sm leading-relaxed text-muted-foreground">
+				A self-hosted AI platform combining local and cloud-based language
+				models, secure remote access, web search and document retrieval.
+			</p>
+		</header>
 
-    <!-- System Architecture -->
-    <section class="space-y-5">
-      <h2 class="text-xl font-bold">System Architecture</h2>
+		<!-- System Architecture -->
+		<section class="space-y-5">
+			<h2 class="text-xl font-bold">System Architecture</h2>
 
-      <div
-        class="rounded-2xl border border-border/50 bg-muted/20 p-5"
-      >
-        <div class="flex flex-col items-center gap-3 text-center">
+			<div class="rounded-2xl border border-border/50 bg-muted/20 p-5">
+				<div class="flex flex-col items-center text-center">
+					<!-- Browser -->
+					<div
+						class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
+					>
+						<p class="text-sm font-semibold">Web Browser</p>
+						<p class="mt-1 text-xs text-muted-foreground">Authorised users</p>
+					</div>
 
-          <!-- Browser -->
-          <div
-            class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
-          >
-            <p class="text-sm font-semibold">Web Browser</p>
-            <p class="mt-1 text-xs text-muted-foreground">
-              Authorised users
-            </p>
-          </div>
+					<span aria-hidden="true" class="my-3 text-xl text-primary">↓</span>
 
-          <span class="text-xl text-primary">↓</span>
+					<!-- Cloudflare -->
+					<div
+						class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
+					>
+						<p class="text-sm font-semibold">Cloudflare Access + Tunnel</p>
+						<p class="mt-1 text-sm leading-relaxed text-muted-foreground">
+							Authentication and secure connectivity
+						</p>
+					</div>
 
-          <!-- Cloudflare -->
-          <div
-            class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
-          >
-            <p class="text-sm font-semibold">
-              Cloudflare Access + Tunnel
-            </p>
-            <p class="mt-1 text-xs text-muted-foreground">
-              Authentication and secure connectivity
-            </p>
-          </div>
+					<span aria-hidden="true" class="my-3 text-xl text-primary">↓</span>
 
-          <span class="text-xl text-primary">↓</span>
+					<!-- Central deployment and its supporting services -->
+					<div
+						class="w-full max-w-sm rounded-xl border border-primary/30 bg-card p-4"
+					>
+						<p class="text-sm font-semibold">Ubuntu Mini PC</p>
+						<p class="mt-1 text-base font-semibold text-primary">Open WebUI</p>
+						<p class="mt-1 text-sm text-muted-foreground">
+							Docker · Persistent Storage
+						</p>
+						<p class="mt-2 text-xs text-muted-foreground">
+							Central AI interface
+						</p>
 
-          <!-- Ubuntu Server -->
-          <div
-            class="w-full max-w-sm rounded-xl border border-primary/30 bg-card p-4"
-          >
-            <p class="text-sm font-semibold">
-              Ubuntu Mini PC
-            </p>
+						<div class="mt-4 border-t border-dashed border-border pt-4">
+							<p class="text-sm font-semibold">
+								Additional Open WebUI Services
+							</p>
+							<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+								SearXNG · DDGS · Document RAG · Assistant Presets
+							</p>
+						</div>
+					</div>
 
-            <p class="mt-1 text-xs text-muted-foreground">
-              Docker · Open WebUI · Persistent Storage
-            </p>
+					<p
+						id="model-inference-options"
+						class="mt-5 mb-3 text-sm font-semibold text-muted-foreground sm:mb-0"
+					>
+						Model Inference Options
+					</p>
 
-            <p class="mt-2 text-xs text-muted-foreground">
-              Central AI interface
-            </p>
-          </div>
+					<!-- Both inference routes connect to the same Open WebUI deployment. -->
+					<div
+						role="group"
+						aria-labelledby="model-inference-options"
+						class="w-full"
+					>
+						<div
+							aria-hidden="true"
+							class="mx-auto hidden h-5 w-px bg-primary/40 sm:block"
+						>
+						</div>
+						<div class="relative grid grid-cols-1 gap-3 sm:grid-cols-2">
+							<div
+								aria-hidden="true"
+								class="absolute top-0 right-[calc(25%_-_0.1875rem)] left-[calc(25%_-_0.1875rem)] hidden border-t border-primary/40 sm:block"
+							>
+							</div>
 
-          <span class="text-xl text-primary">↓</span>
+							<!-- Cloud inference -->
+							<div class="flex min-w-0 flex-col items-center">
+								<div
+									aria-hidden="true"
+									class="hidden h-4 w-px bg-primary/40 sm:block"
+								>
+								</div>
+								<span
+									aria-hidden="true"
+									class="mb-2 hidden text-lg text-primary sm:block">↓</span
+								>
+								<div
+									class="w-full flex-1 rounded-xl border border-border bg-card p-4"
+								>
+									<p class="text-sm font-semibold text-primary">OpenRouter</p>
+									<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+										Cloud-hosted language models
+									</p>
+									<p class="mt-2 text-xs text-muted-foreground">
+										Remote API requests
+									</p>
+								</div>
+							</div>
 
-          <p class="text-xs font-semibold text-muted-foreground">
-            Model Inference Options
-          </p>
+							<!-- Local inference -->
+							<div class="flex min-w-0 flex-col items-center">
+								<div
+									aria-hidden="true"
+									class="hidden h-4 w-px bg-primary/40 sm:block"
+								>
+								</div>
+								<span
+									aria-hidden="true"
+									class="mb-2 hidden text-lg text-primary sm:block">↓</span
+								>
+								<div
+									class="w-full flex-1 rounded-xl border border-border bg-card p-4"
+								>
+									<p class="text-sm font-semibold text-primary">Windows PC</p>
+									<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+										Local language models
+									</p>
+									<p class="mt-2 text-xs text-muted-foreground">
+										Unsloth · Qwen · Gemma 4
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-          <!-- Model Providers -->
-          <div class="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+		<!-- Technical Implementation -->
+		<section class="space-y-5">
+			<h2 class="text-xl font-bold">Technical Implementation</h2>
 
-            <div
-              class="rounded-xl border border-border bg-card p-4"
-            >
-              <p class="text-sm font-semibold text-primary">
-                OpenRouter
-              </p>
+			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+				{
+					features.map((feature) => (
+						<div class="rounded-xl border border-border/50 bg-muted/20 p-4">
+							<h3 class="mb-2 text-sm font-semibold">{feature.title}</h3>
 
-              <p class="mt-2 text-xs text-muted-foreground">
-                Cloud-hosted language models
-              </p>
+							<p class="text-sm leading-relaxed text-muted-foreground">
+								{feature.description}
+							</p>
+						</div>
+					))
+				}
+			</div>
+		</section>
 
-              <p class="mt-2 text-xs text-muted-foreground">
-                Remote API requests
-              </p>
-            </div>
+		<!-- Technology Stack -->
+		<section class="space-y-4">
+			<h2 class="text-xl font-bold">Technology Stack</h2>
 
-            <div
-              class="rounded-xl border border-border bg-card p-4"
-            >
-              <p class="text-sm font-semibold text-primary">
-                Local Inference
-              </p>
+			<div class="flex flex-wrap gap-2">
+				{
+					technologies.map((technology) => (
+						<span class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
+							{technology}
+						</span>
+					))
+				}
+			</div>
+		</section>
 
-              <p class="mt-2 text-xs text-muted-foreground">
-                Unsloth · Windows PC
-              </p>
+		<!-- Screenshots -->
+		{
+			screenshots.length > 0 && (
+				<section class="space-y-5">
+					<h2 class="text-xl font-bold">Interface Screenshots</h2>
 
-              <p class="mt-2 text-xs text-muted-foreground">
-                Qwen · Gemma 4
-              </p>
-            </div>
+					<div class="space-y-5">
+						{screenshots.map((screenshot) => (
+							<figure class="space-y-2">
+								<img
+									src={screenshot.src}
+									alt={screenshot.alt}
+									loading="lazy"
+									class="w-full rounded-xl border border-border"
+								/>
 
-          </div>
+								<figcaption class="text-xs text-muted-foreground">
+									{screenshot.caption}
+								</figcaption>
+							</figure>
+						))}
+					</div>
+				</section>
+			)
+		}
 
-          <!-- Additional Services -->
-          <div
-            class="mt-3 w-full rounded-xl border border-dashed border-border p-4"
-          >
-            <p class="text-sm font-semibold">
-              Additional Open WebUI Services
-            </p>
+		<!-- Private Deployment -->
+		<footer class="rounded-xl border border-border/50 bg-muted/20 p-4">
+			<p class="text-sm font-semibold">Private Deployment</p>
 
-            <p class="mt-2 text-xs text-muted-foreground">
-              SearXNG · DDGS · Document RAG · Assistant Presets
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Implementation -->
-    <section class="space-y-5">
-      <h2 class="text-xl font-bold">
-        Technical Implementation
-      </h2>
-
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {
-          features.map((feature) => (
-            <div
-              class="rounded-xl border border-border/50 bg-muted/20 p-4"
-            >
-              <h3 class="mb-2 text-sm font-semibold">
-                {feature.title}
-              </h3>
-
-              <p class="text-xs leading-relaxed text-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Technology Stack -->
-    <section class="space-y-4">
-      <h2 class="text-xl font-bold">
-        Technology Stack
-      </h2>
-
-      <div class="flex flex-wrap gap-2">
-        {
-          technologies.map((technology) => (
-            <span
-              class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary"
-            >
-              {technology}
-            </span>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- Screenshots -->
-    {
-      screenshots.length > 0 && (
-        <section class="space-y-5">
-          <h2 class="text-xl font-bold">
-            Interface Screenshots
-          </h2>
-
-          <div class="space-y-5">
-            {screenshots.map((screenshot) => (
-              <figure class="space-y-2">
-                <img
-                  src={screenshot.src}
-                  alt={screenshot.alt}
-                  loading="lazy"
-                  class="w-full rounded-xl border border-border"
-                />
-
-                <figcaption class="text-xs text-muted-foreground">
-                  {screenshot.caption}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      )
-    }
-
-    <!-- Private Deployment -->
-    <footer
-      class="rounded-xl border border-border/50 bg-muted/20 p-4"
-    >
-      <p class="text-sm font-semibold">
-        Private Deployment
-      </p>
-
-      <p class="mt-2 text-xs leading-relaxed text-muted-foreground">
-        This application is privately hosted and is not available
-        as a public demonstration.
-      </p>
-    </footer>
-
-  </article>
+			<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+				This application is privately hosted and is not available as a public
+				demonstration.
+			</p>
+		</footer>
+	</article>
 </Layout>
