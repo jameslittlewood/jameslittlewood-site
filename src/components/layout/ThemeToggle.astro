@@ -1,48 +1,86 @@
 ---
-
+import { Icon } from 'astro-icon/components'
 ---
 
 <button
-  id="theme-toggle"
-  class="relative flex h-6 w-10 items-center rounded-full bg-muted p-1"
-  title="theme toggle"
+	id="theme-toggle"
+	type="button"
+	aria-pressed="false"
+	aria-label="Switch to dark mode"
+	class="relative -my-[5px] inline-flex h-[34px] w-[67px] shrink-0 items-center rounded-full bg-muted p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 >
-  <div
-    class="h-4 w-4 translate-x-0 rounded-full bg-background shadow-sm dark:translate-x-4"
-  >
-  </div>
+	<span
+		data-theme-thumb
+		aria-hidden="true"
+		class="flex h-[26px] w-[26px] shrink-0 translate-x-0 items-center justify-center rounded-full bg-background text-primary shadow-sm transition-[translate] duration-200 ease-in-out motion-reduce:transition-none dark:translate-x-[33px] dark:text-foreground"
+	>
+		<span class="dark:hidden"
+			><Icon name="mdi:white-balance-sunny" size={18} /></span
+		>
+		<span class="hidden dark:block"
+			><Icon name="mdi:weather-night" size={18} /></span
+		>
+	</span>
 </button>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const theme = (() => {
-      const localStorageTheme = localStorage?.getItem("theme") ?? "";
-      if (["dark", "light"].includes(localStorageTheme)) {
-        return localStorageTheme;
-      }
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        return "dark";
-      }
-      return "light";
-    })();
+	let transitionFrame: number | undefined
 
-    if (theme === "light") {
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-    }
+	function syncToggleState() {
+		const dark = document.documentElement.classList.contains('dark')
+		const toggle = document.getElementById('theme-toggle')
+		toggle?.setAttribute('aria-pressed', String(dark))
+		toggle?.setAttribute(
+			'aria-label',
+			dark ? 'Switch to light mode' : 'Switch to dark mode'
+		)
+	}
 
-    window.localStorage.setItem("theme", theme || "dark");
+	// A delegated listener survives Astro swaps without binding handlers repeatedly.
+	document.addEventListener('click', (event) => {
+		if (
+			!(event.target instanceof Element) ||
+			!event.target.closest('#theme-toggle')
+		)
+			return
 
-    const handleToggleClick = () => {
-      const element = document.documentElement;
-      element.classList.toggle("dark");
+		if (transitionFrame !== undefined) cancelAnimationFrame(transitionFrame)
+		const root = document.documentElement
+		root.setAttribute('data-theme-changing', '')
+		const dark = root.classList.toggle('dark')
+		try {
+			localStorage.setItem('theme', dark ? 'dark' : 'light')
+		} catch {
+			// Switching still works if storage is unavailable.
+		}
+		syncToggleState()
 
-      const isDark = element.classList.contains("dark");
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    };
+		// Settle page colours with transitions suppressed; only the thumb may slide.
+		void document.body.offsetWidth
+		transitionFrame = requestAnimationFrame(() => {
+			transitionFrame = requestAnimationFrame(() => {
+				root.removeAttribute('data-theme-changing')
+				transitionFrame = undefined
+			})
+		})
+	})
 
-    const themeToggle = document.getElementById("theme-toggle");
-    themeToggle?.addEventListener("click", handleToggleClick);
-  });
+	// Initial preference and browser metadata are handled by Head.astro.
+	syncToggleState()
+	document.addEventListener('astro:after-swap', syncToggleState)
+	document.addEventListener('astro:page-load', syncToggleState)
 </script>
+
+<style>
+	/* Reuse the existing light-theme primary tone for a legible pale moon. */
+	:global(.dark) [data-theme-thumb] {
+		background-color: oklch(from var(--primary) 0.48 c h);
+	}
+
+	/* This guard lasts only through the theme update, leaving normal hovers intact. */
+	:global(html[data-theme-changing] *:not([data-theme-thumb])),
+	:global(html[data-theme-changing] *::before),
+	:global(html[data-theme-changing] *::after) {
+		transition: none !important;
+	}
+</style>
