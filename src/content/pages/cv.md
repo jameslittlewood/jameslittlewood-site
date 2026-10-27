@@ -36,7 +36,8 @@ Currently developing Python, data analysis and automation skills through regular
 
 </details>
 
-## Professional Experience
+<details>
+<summary><h2 id="professional-experience">Professional Experience</h2></summary>
 
 ### Technical Data Analyst | Profitero – Publicis Groupe
 
@@ -69,6 +70,8 @@ October 2021 – April 2022
 - Coordinated daily team activity, operational priorities and customer escalations in a busy customer-facing environment.
 
 - Monitored performance indicators and customer feedback to support operational decisions, staff coaching and service improvements.
+
+</details>
 
 <details>
 <summary><h2 id="projects--technical-development">Projects &amp; Technical Development</h2></summary>
