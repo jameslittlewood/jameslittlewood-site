@@ -19,6 +19,8 @@ import SearchBox from "./SearchBox.astro";
   <Nav />
 
   <div class="mt-8 flex items-center justify-between md:mt-14">
+    <!-- Cloudflare opt-out: preserve mailto links through Astro client-side navigation. -->
+    <!--email_off-->
     <div class="flex gap-4 text-muted-foreground/60">
       {
         site.social.map((item) => (
@@ -32,6 +34,7 @@ import SearchBox from "./SearchBox.astro";
         ))
       }
     </div>
+    <!--/email_off-->
 
     <ThemeToggle />
   </div>

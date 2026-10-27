@@ -17,7 +17,7 @@ const currentPath = Astro.url.pathname;
         <a
           href={item.href}
           class:list={[
-            "group flex min-h-20 items-center justify-start rounded-2xl border border-transparent px-5 py-4 transition-all md:min-h-0 md:justify-between",
+            "group flex min-h-20 items-center justify-start rounded-2xl border border-transparent px-5 py-4 transition-colors duration-300 md:min-h-0 md:justify-between",
             isActive
               ? "border-primary/20 bg-primary/10 md:hover:border-primary/20 md:hover:bg-primary/15"
               : "hover:bg-muted/50",
@@ -36,7 +36,7 @@ const currentPath = Astro.url.pathname;
             </span>
             <span
               class:list={[
-                "text-[10px] tracking-widest uppercase",
+                "text-[11px] tracking-widest uppercase",
                 isActive ? "text-primary/60" : "text-muted-foreground/50",
               ]}
             >
@@ -49,7 +49,7 @@ const currentPath = Astro.url.pathname;
               <Icon name="mdi:arrow-right" />
             </span>
           ) : (
-            <span class="hidden -translate-x-2 text-primary opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 md:block">
+            <span class="hidden -translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 md:block">
               <Icon name="mdi:arrow-right" />
             </span>
           )}

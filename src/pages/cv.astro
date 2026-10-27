@@ -9,14 +9,17 @@ const { Content } = await render(cv!);
 <Layout title={cv!.data.title} description={cv!.data.description}>
 	<div class="animate-in fade-in mx-auto max-w-2xl p-8 duration-700 md:p-16">
 		<div class="prose dark:prose-invert">
+			<!-- Preserve the CV contact link when Cloudflare-served HTML is swapped by Astro. -->
+			<!--email_off-->
 			<Content />
+			<!--/email_off-->
 		</div>
 
 		<div class="mt-8">
 			<a
 				href="/files/James_Littlewood_CV_2026.pdf"
 				download
-				class="inline-flex items-center rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-primary-foreground"
+				class="inline-flex items-center rounded-xl border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors duration-300 hover:bg-primary hover:text-primary-foreground"
 			>
 				Download CV
 			</a>

@@ -27,7 +27,7 @@ const projects = await getCollection("projects");
         </div>
       ) : (
         projects.map((project) => (
-          <div class="group flex h-full flex-col rounded-2xl border border-border/50 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-muted/40 hover:-translate-y-1 hover:shadow-lg">
+          <div class="group flex h-full flex-col rounded-2xl border border-border/50 bg-muted/20 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-muted/40 motion-safe:hover:-translate-y-0.5 hover:shadow-sm">
 
             <div class="mb-4 flex items-start justify-between">
               <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary transition-all duration-300 group-hover:bg-primary/25">
@@ -44,7 +44,7 @@ const projects = await getCollection("projects");
                 )}
               </div>
 
-              <span class="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[9px] font-bold tracking-widest text-primary uppercase">
+              <span class="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[11px] font-bold tracking-widest text-primary uppercase">
                 {project.data.status}
               </span>
             </div>
@@ -53,13 +53,13 @@ const projects = await getCollection("projects");
               {project.data.title}
             </h3>
 
-            <p class="mb-4 flex-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+            <p class="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-3">
               {project.data.description}
             </p>
 
             <div class="mb-3 flex flex-wrap gap-2">
               {project.data.tech.map((t) => (
-                <span class="font-mono text-[10px] text-primary/50">
+                <span class="font-mono text-xs text-primary/50">
                   #{t}
                 </span>
               ))}
@@ -72,7 +72,7 @@ const projects = await getCollection("projects");
               {project.id === "self-hosted-ai-chatbot" && (
                 <a
                   href="/projects/self-hosted-ai-chatbot/"
-                  class="inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-[11px] font-medium text-primary transition hover:bg-primary/20"
+                  class="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors duration-300 hover:bg-primary/20"
                 >
                   <Icon name="mdi:information-outline" class="h-3 w-3" />
                   Overview
@@ -86,7 +86,7 @@ const projects = await getCollection("projects");
                   href={project.data.links.homepage}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 px-3 py-2 text-[11px] font-medium text-foreground/70 hover:border-primary/40 hover:text-primary"
+                  class="flex items-center gap-1 rounded-xl border border-border/50 bg-muted/30 px-3 py-2 text-xs font-medium text-foreground/70 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
                 >
                   <Icon name="mdi:web" class="h-3 w-3" />
                   Website
@@ -99,7 +99,7 @@ const projects = await getCollection("projects");
                   href={project.data.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 px-3 py-2 text-[11px] font-medium text-foreground/70 hover:border-primary/40 hover:text-primary"
+                  class="flex items-center gap-1 rounded-xl border border-border/50 bg-muted/30 px-3 py-2 text-xs font-medium text-foreground/70 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
                 >
                   <Icon name="mdi:github" class="h-3 w-3" />
                   Source
@@ -112,7 +112,7 @@ const projects = await getCollection("projects");
                   href={project.data.links.demo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center gap-1 rounded-lg border border-border/50 bg-muted/30 px-3 py-2 text-[11px] font-medium text-foreground/70 hover:border-primary/40 hover:text-primary"
+                  class="flex items-center gap-1 rounded-xl border border-border/50 bg-muted/30 px-3 py-2 text-xs font-medium text-foreground/70 transition-colors duration-300 hover:border-primary/40 hover:text-primary"
                 >
                   <Icon name="mdi:open-in-new" class="h-3 w-3" />
                   Demo
