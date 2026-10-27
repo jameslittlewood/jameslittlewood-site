@@ -1,4 +1,3 @@
-
 ---
 title: CV
 description: James Littlewood CV
@@ -8,13 +7,18 @@ description: James Littlewood CV
 
 Reading, Berkshire | 07713 047 068 | contact@jameslittlewood.net
 
+<div class="not-prose my-6">
+  <a href="/files/James_Littlewood_CV_2026.pdf" download class="inline-flex items-center rounded-xl border border-primary px-4 py-2 text-sm font-medium text-primary transition-colors duration-300 hover:bg-primary hover:text-primary-foreground">Download CV</a>
+</div>
+
 ## Professional Profile
 
 Technology-focused data professional with experience in eCommerce product data, analytics and technical support. Previous experience at Profitero involved maintaining structured product data, applying taxonomies and investigating data-quality issues, supported by more than seven years at Apple in technical and customer-facing roles.
 
 Currently developing Python, data analysis and automation skills through regular, self-funded, one-to-one tuition with an experienced software developer and practical projects, including the deployment of a self-hosted AI chatbot integrating local and cloud-based large language models.
 
-## Core Skills & Technologies
+<details>
+<summary><h2 id="core-skills--technologies">Core Skills &amp; Technologies</h2></summary>
 
 **SQL & Databases:** PostgreSQL, SQLite, Neon, DBeaver and Letos (SQLiteStudio); SELECT/WHERE, joins, GROUP BY/HAVING, aggregation, views, data validation and reconciliation.
 
@@ -29,6 +33,8 @@ Currently developing Python, data analysis and automation skills through regular
 **eCommerce & Product Data:** Product validation, categorisation, taxonomies, structured attributes, quality assurance, exception handling and SLA-driven delivery.
 
 **Analytical & Communication Skills:** Structured problem-solving, root-cause investigation, requirements gathering, stakeholder communication and communicating technical findings.
+
+</details>
 
 ## Professional Experience
 
@@ -64,11 +70,12 @@ October 2021 – April 2022
 
 - Monitored performance indicators and customer feedback to support operational decisions, staff coaching and service improvements.
 
-## Projects & Technical Development
+<details>
+<summary><h2 id="projects--technical-development">Projects &amp; Technical Development</h2></summary>
 
 ### Self-Hosted AI Chatbot & LLM Infrastructure | Personal Project
 
-*Open WebUI, OpenRouter, Unsloth, Qwen, GGUF, Docker, Ubuntu Linux, Cloudflare*
+_Open WebUI, OpenRouter, Unsloth, Qwen, GGUF, Docker, Ubuntu Linux, Cloudflare_
 
 - Built and deployed a self-hosted AI chatbot platform using Open WebUI and Docker, integrating cloud-hosted models through OpenRouter alongside locally hosted open-weight LLMs.
 
@@ -86,19 +93,28 @@ May 2025 – July 2025
 
 - **NHL Performance Dashboard:** Developed a Tableau dashboard comparing Anaheim Ducks performance with other NHL teams through data cleaning, joins and trend analysis.
 
-## Ongoing Technical Development
+</details>
+
+<details>
+<summary><h2 id="ongoing-technical-development">Ongoing Technical Development</h2></summary>
 
 - Undertaking structured DataCamp learning across Python, SQL, statistics, data visualisation, databases and data modelling, alongside introductory AI and machine learning concepts.
 
 - Applying technical knowledge through independent study and hands-on projects involving data analysis, databases, automation and self-hosted applications.
 
-## Career Development & Travel
+</details>
+
+<details>
+<summary><h2 id="career-development--travel">Career Development &amp; Travel</h2></summary>
 
 June 2022 – May 2025
 
 Travelled while retraining for data and analytics work through structured study, independent technical learning and project work.
 
-## Education & Certifications
+</details>
+
+<details>
+<summary><h2 id="education--certifications">Education &amp; Certifications</h2></summary>
 
 **BSc (Hons) Audio Engineering and Music Production — 2:1**
 
@@ -107,3 +123,5 @@ SAE Institute / Middlesex University
 **Apple iOS / Mac Certified Technician**
 
 **The Curious Academy — Data Analysis Certification**
+
+</details>

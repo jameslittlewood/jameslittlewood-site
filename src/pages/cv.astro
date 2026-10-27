@@ -1,14 +1,14 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import { getEntry, render } from "astro:content";
+import Layout from '@/layouts/Layout.astro'
+import { getEntry, render } from 'astro:content'
 
-const cv = await getEntry("pages", "cv");
-const { Content } = await render(cv!);
+const cv = await getEntry('pages', 'cv')
+const { Content } = await render(cv!)
 ---
 
 <Layout title={cv!.data.title} description={cv!.data.description}>
 	<div class="animate-in fade-in mx-auto max-w-2xl p-8 duration-700 md:p-16">
-		<div class="prose dark:prose-invert">
+		<div class="cv-content prose dark:prose-invert">
 			<!-- Preserve the CV contact link when Cloudflare-served HTML is swapped by Astro. -->
 			<!--email_off-->
 			<Content />
@@ -26,3 +26,75 @@ const { Content } = await render(cv!);
 		</div>
 	</div>
 </Layout>
+
+<style>
+	.cv-content :global(h2) {
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		border-top: 1px solid var(--border);
+		padding-top: 1.25rem;
+		font-weight: 700;
+	}
+
+	.cv-content :global(details) {
+		margin-top: 2rem;
+	}
+
+	.cv-content :global(summary) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		border-top: 1px solid var(--border);
+		padding-top: 1.25rem;
+		color: var(--tw-prose-headings);
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.cv-content :global(summary::-webkit-details-marker) {
+		display: none;
+	}
+
+	.cv-content :global(summary h2) {
+		margin: 0;
+		border: 0;
+		padding: 0;
+		color: inherit;
+	}
+
+	.cv-content :global(summary::after) {
+		content: '';
+		width: 0.5rem;
+		height: 0.5rem;
+		flex-shrink: 0;
+		margin-right: 0.25rem;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: rotate(45deg);
+	}
+
+	.cv-content :global(details[open] > summary::after) {
+		transform: rotate(225deg);
+	}
+
+	.cv-content :global(summary:hover),
+	.cv-content :global(summary:focus-visible) {
+		color: var(--primary);
+	}
+
+	.cv-content :global(summary:focus-visible) {
+		outline: 2px solid var(--primary);
+		outline-offset: 4px;
+	}
+
+	.cv-content :global(details > :last-child) {
+		margin-bottom: 0;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.cv-content :global(summary::after) {
+			transition: transform 150ms ease;
+		}
+	}
+</style>

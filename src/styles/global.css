@@ -107,11 +107,6 @@ button:focus-visible {
   }
 }
 
-.prose table td,
-.prose table th {
-  padding-left: 6px;
-}
-
 /* task list */
 .prose ul.contains-task-list {
   list-style: none;
