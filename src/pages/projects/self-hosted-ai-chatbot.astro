@@ -301,12 +301,12 @@ const screenshots = [
 						</div>
 					</div>
 					<div
-						class="provider-connector relative hidden h-8 w-full text-primary sm:block"
+						class="provider-connector relative h-8 w-full text-primary"
 						aria-hidden="true"
 					>
 					</div>
 					<div
-						class="provider-grid relative mt-4 grid w-full grid-cols-2 gap-3 text-primary sm:mt-0"
+						class="provider-grid relative grid w-full grid-cols-2 gap-3 text-primary"
 					>
 						<div
 							class="provider-card relative min-w-0 rounded-xl border border-border bg-card p-3 sm:p-4"
@@ -843,50 +843,43 @@ const screenshots = [
 </script>
 
 <style>
-	/* Mobile providers are siblings, without connectors implying a serial flow. */
-	.provider-arrow {
-		display: none;
+	/* Both layouts use the same branch geometry: each centre is 25% minus a quarter of the 12px grid gap. */
+	.provider-connector::before,
+	.provider-connector::after,
+	.provider-card::before {
+		content: '';
+		position: absolute;
+		pointer-events: none;
+		border-color: var(--primary);
 	}
-
-	@media (min-width: 40rem) {
-		/* The desktop branch endpoints follow the provider centres and grid gap. */
-		.provider-connector::before,
-		.provider-connector::after,
-		.provider-card::before {
-			content: '';
-			position: absolute;
-			pointer-events: none;
-			border-color: var(--primary);
-		}
-		.provider-connector::before {
-			left: 50%;
-			top: 0;
-			height: 12px;
-			border-left-width: 1px;
-		}
-		.provider-connector::after {
-			left: calc(25% - 3px);
-			right: calc(25% - 3px);
-			top: 12px;
-			border-top-width: 1px;
-		}
-		.provider-card::before {
-			left: 50%;
-			top: -20px;
-			height: 16px;
-			border-right-width: 1px;
-		}
-		.provider-arrow {
-			display: block;
-			position: absolute;
-			left: calc(50% - 3px);
-			top: -9px;
-			width: 6px;
-			height: 6px;
-			border-right: 1px solid var(--primary);
-			border-bottom: 1px solid var(--primary);
-			transform: rotate(45deg);
-			pointer-events: none;
-		}
+	.provider-connector::before {
+		left: 50%;
+		top: 0;
+		height: 12px;
+		border-left-width: 1px;
+	}
+	.provider-connector::after {
+		left: calc(25% - 3px);
+		right: calc(25% - 3px);
+		top: 12px;
+		border-top-width: 1px;
+	}
+	.provider-card::before {
+		left: 50%;
+		top: -20px;
+		height: 16px;
+		border-right-width: 1px;
+	}
+	.provider-arrow {
+		display: block;
+		position: absolute;
+		left: calc(50% - 3px);
+		top: -9px;
+		width: 6px;
+		height: 6px;
+		border-right: 1px solid var(--primary);
+		border-bottom: 1px solid var(--primary);
+		transform: rotate(45deg);
+		pointer-events: none;
 	}
 </style>
