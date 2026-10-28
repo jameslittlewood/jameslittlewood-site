@@ -12,7 +12,7 @@ const site = {
   meta: {
     title: "James Littlewood",
     description:
-      "Data Analyst building practical projects with Python, SQL, PostgreSQL, Docker, Tableau and modern analytics tools.",
+      "Data analyst with a keen interest in Python development, automation, AI and self-hosted technology.",
     author: "James Littlewood",
     logo: "/logo.svg",
     ogImage: "/og-image.png",
