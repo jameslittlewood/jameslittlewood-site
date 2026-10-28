@@ -2,27 +2,30 @@
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
 
-const technologies = [
-	'Open WebUI',
-	'OpenRouter',
-	'Unsloth Studio',
-	'Qwen3.5 2B',
-	'Gemma 4 12B',
-	'Google DeepMind',
-	'Docker',
-	'Ubuntu Linux',
-	'Cloudflare',
-	'SearXNG',
-	'GGUF',
-	'DDGS',
-	'PostgreSQL 16',
-	'Homepage',
-	'Glances',
-	'Uptime Kuma',
-	'Tailscale',
-	'SSH',
-	'macOS',
-	'VS Code',
+const technologyGroups = [
+	{
+		title: 'AI & Models',
+		technologies: [
+			'Open WebUI',
+			'OpenRouter',
+			'Unsloth Studio',
+			'Qwen3.5 2B',
+			'Gemma 4 12B',
+			'GGUF',
+		],
+	},
+	{
+		title: 'Infrastructure & Data',
+		technologies: ['Ubuntu Linux', 'Docker', 'PostgreSQL 16'],
+	},
+	{
+		title: 'Search & Monitoring',
+		technologies: ['SearXNG', 'DDGS', 'Homepage', 'Glances', 'Uptime Kuma'],
+	},
+	{
+		title: 'Security & Development',
+		technologies: ['Cloudflare', 'Tailscale', 'SSH', 'VS Code', 'macOS'],
+	},
 ]
 
 const featureGroups = [
@@ -33,13 +36,13 @@ const featureGroups = [
 				title: 'Hybrid AI Models',
 				icon: 'mdi:cpu-64-bit',
 				description:
-					'Open WebUI connects to cloud-hosted models through OpenRouter and locally hosted models through Unsloth Studio, including Qwen3.5 2B on Ubuntu and Gemma 4 12B on Windows.',
+					'Open WebUI integrates OpenRouter cloud models with Ubuntu-hosted Qwen3.5 2B and Windows-hosted Gemma 4 12B through Unsloth Studio.',
 			},
 			{
 				title: 'Secure Remote Access',
 				icon: 'mdi:shield-check-outline',
 				description:
-					'Cloudflare Tunnel and Access provide authenticated browser access. Tailscale and SSH enable secure remote administration of the Ubuntu server from a MacBook Pro.',
+					'Cloudflare Access and Tunnel secure browser access, while Tailscale and SSH enable remote server administration.',
 			},
 		],
 	},
@@ -50,19 +53,19 @@ const featureGroups = [
 				title: 'Web Search',
 				icon: 'mdi:magnify',
 				description:
-					'Self-hosted SearXNG and DDGS provide web search capabilities, allowing supported AI models to retrieve information beyond their training data.',
+					'SearXNG and DDGS enable AI-assisted web search and access to current information.',
 			},
 			{
 				title: 'Document Retrieval',
 				icon: 'mdi:file-search-outline',
 				description:
-					'Retrieval-augmented generation (RAG) enables conversations grounded in uploaded documents, providing relevant context to supported language models.',
+					'Retrieval-augmented generation (RAG) grounds AI responses in uploaded documents.',
 			},
 			{
 				title: 'Assistant Presets',
 				icon: 'mdi:robot-outline',
 				description:
-					'Custom assistant presets provide specialised configurations for Python, SQL, data analytics, technical learning, research and document analysis.',
+					'Custom presets tailor assistants for Python, SQL, data analytics, research and document analysis.',
 			},
 		],
 	},
@@ -73,7 +76,7 @@ const featureGroups = [
 				title: 'Self-Hosted Infrastructure',
 				icon: 'mdi:server-outline',
 				description:
-					'An Ubuntu mini PC hosts Open WebUI and supporting Docker services, alongside PostgreSQL 16, Homepage, Glances and Uptime Kuma. Development and administration are carried out using VS Code, Tailscale and SSH from a MacBook Pro.',
+					'Ubuntu and Docker host the platform, supported by PostgreSQL 16 and monitoring tools including Homepage, Glances and Uptime Kuma.',
 			},
 		],
 	},
@@ -278,8 +281,13 @@ const screenshots = [
 									target="_blank"
 									rel="noopener noreferrer"
 									aria-label="Qwen3.5 2B model on Hugging Face (opens in a new tab)"
-									class="hover:underline underline-offset-4 focus-visible:rounded-sm"
-									>Qwen3.5 2B</a
+									class="text-primary hover:underline underline-offset-4 focus-visible:rounded-sm"
+									>Qwen3.5 2B<Icon
+										name="mdi:open-in-new"
+										size={12}
+										class="ml-1 inline-block align-[-2px]"
+										aria-hidden="true"
+									/></a
 								>
 							</p>
 						</div>
@@ -325,8 +333,13 @@ const screenshots = [
 									target="_blank"
 									rel="noopener noreferrer"
 									aria-label="Gemma 4 12B model on Hugging Face (opens in a new tab)"
-									class="hover:underline underline-offset-4 focus-visible:rounded-sm"
-									>Gemma 4 12B</a
+									class="text-primary hover:underline underline-offset-4 focus-visible:rounded-sm"
+									>Gemma 4 12B<Icon
+										name="mdi:open-in-new"
+										size={12}
+										class="ml-1 inline-block align-[-2px]"
+										aria-hidden="true"
+									/></a
 								>
 							</p>
 						</div>
@@ -387,7 +400,7 @@ const screenshots = [
 										aria-hidden="true"
 									/>
 									<div class="min-w-0">
-										<h4 class="mb-2 text-sm font-semibold">{feature.title}</h4>
+										<h4 class="mb-1 text-sm font-semibold">{feature.title}</h4>
 										<p class="text-sm leading-relaxed text-muted-foreground">
 											{feature.description}
 										</p>
@@ -398,21 +411,6 @@ const screenshots = [
 					</section>
 				))
 			}
-		</section>
-
-		<!-- Technology Stack -->
-		<section class="space-y-4">
-			<h2 class="text-xl font-bold">Technology Stack</h2>
-
-			<div class="flex flex-wrap gap-2">
-				{
-					technologies.map((technology) => (
-						<span class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
-							{technology}
-						</span>
-					))
-				}
-			</div>
 		</section>
 
 		<!-- Screenshots -->
@@ -582,6 +580,32 @@ const screenshots = [
 				</section>
 			)
 		}
+
+		<!-- Technology Stack -->
+		<section class="space-y-4" aria-labelledby="technology-stack-title">
+			<h2 id="technology-stack-title" class="text-xl font-bold">
+				Technology Stack
+			</h2>
+			{
+				technologyGroups.map((group, index) => (
+					<section
+						class="space-y-3"
+						aria-labelledby={`technology-group-${index}`}
+					>
+						<h3 id={`technology-group-${index}`} class="text-sm font-bold">
+							{group.title}
+						</h3>
+						<div class="flex flex-wrap gap-2">
+							{group.technologies.map((technology) => (
+								<span class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
+									{technology}
+								</span>
+							))}
+						</div>
+					</section>
+				))
+			}
+		</section>
 
 		<!-- Private Deployment -->
 		<footer class="rounded-xl border border-border/50 bg-muted/20 p-4">
