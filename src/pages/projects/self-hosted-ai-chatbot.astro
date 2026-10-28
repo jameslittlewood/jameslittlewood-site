@@ -25,36 +25,57 @@ const technologies = [
 	'VS Code',
 ]
 
-const features = [
+const featureGroups = [
 	{
-		title: 'Hybrid AI Models',
-		description:
-			'Open WebUI connects to OpenRouter cloud models, Ubuntu-hosted Qwen3.5 2B and Windows-hosted Gemma 4 12B through configured inference APIs.',
+		title: 'Models & Connectivity',
+		features: [
+			{
+				title: 'Hybrid AI Models',
+				icon: 'mdi:cpu-64-bit',
+				description:
+					'Open WebUI connects to cloud-hosted models through OpenRouter and locally hosted models through Unsloth Studio, including Qwen3.5 2B on Ubuntu and Gemma 4 12B on Windows.',
+			},
+			{
+				title: 'Secure Remote Access',
+				icon: 'mdi:shield-check-outline',
+				description:
+					'Cloudflare Tunnel and Access provide authenticated browser access. Tailscale and SSH enable secure remote administration of the Ubuntu server from a MacBook Pro.',
+			},
+		],
 	},
 	{
-		title: 'Secure Remote Access',
-		description:
-			'Cloudflare Tunnel and Access provide authenticated browser access. The MacBook Pro uses Tailscale and SSH for remote administration of Ubuntu.',
+		title: 'AI Capabilities',
+		features: [
+			{
+				title: 'Web Search',
+				icon: 'mdi:magnify',
+				description:
+					'Self-hosted SearXNG and DDGS provide web search capabilities, allowing supported AI models to retrieve information beyond their training data.',
+			},
+			{
+				title: 'Document Retrieval',
+				icon: 'mdi:file-search-outline',
+				description:
+					'Retrieval-augmented generation (RAG) enables conversations grounded in uploaded documents, providing relevant context to supported language models.',
+			},
+			{
+				title: 'Assistant Presets',
+				icon: 'mdi:robot-outline',
+				description:
+					'Custom assistant presets provide specialised configurations for Python, SQL, data analytics, technical learning, research and document analysis.',
+			},
+		],
 	},
 	{
-		title: 'Web Search',
-		description:
-			'DDGS and self-hosted SearXNG integration for AI-assisted web search.',
-	},
-	{
-		title: 'Document Retrieval',
-		description:
-			'Built-in retrieval-augmented generation (RAG) for conversations grounded in uploaded documents.',
-	},
-	{
-		title: 'Assistant Presets',
-		description:
-			'Specialised AI assistants for Python, SQL, data analytics, research and document analysis.',
-	},
-	{
-		title: 'Self-Hosted Infrastructure',
-		description:
-			'Ubuntu Linux and Docker host Open WebUI and supporting services, including PostgreSQL 16, Homepage, Glances and Uptime Kuma. Development uses VS Code on a MacBook Pro.',
+		title: 'Infrastructure & Development',
+		features: [
+			{
+				title: 'Self-Hosted Infrastructure',
+				icon: 'mdi:server-outline',
+				description:
+					'An Ubuntu mini PC hosts Open WebUI and supporting Docker services, alongside PostgreSQL 16, Homepage, Glances and Uptime Kuma. Development and administration are carried out using VS Code, Tailscale and SSH from a MacBook Pro.',
+			},
+		],
 	},
 ]
 
@@ -340,22 +361,43 @@ const screenshots = [
 		</section>
 
 		<!-- Technical Implementation -->
-		<section class="space-y-5">
-			<h2 class="text-xl font-bold">Technical Implementation</h2>
-
-			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-				{
-					features.map((feature) => (
-						<div class="rounded-xl border border-border/50 bg-muted/20 p-4">
-							<h3 class="mb-2 text-sm font-semibold">{feature.title}</h3>
-
-							<p class="text-sm leading-relaxed text-muted-foreground">
-								{feature.description}
-							</p>
-						</div>
-					))
-				}
-			</div>
+		<section class="space-y-5" aria-labelledby="implementation-title">
+			<h2 id="implementation-title" class="text-xl font-bold">
+				Technical Implementation
+			</h2>
+			{
+				featureGroups.map((group, index) => (
+					<section
+						class="space-y-3"
+						aria-labelledby={`implementation-group-${index}`}
+					>
+						<h3
+							id={`implementation-group-${index}`}
+							class="text-sm font-semibold"
+						>
+							{group.title}
+						</h3>
+						<ul class="divide-y divide-border/50 rounded-xl border border-border/50 bg-muted/20">
+							{group.features.map((feature) => (
+								<li class="flex items-start gap-3 p-4">
+									<Icon
+										name={feature.icon}
+										size={18}
+										class="mt-0.5 shrink-0 text-primary"
+										aria-hidden="true"
+									/>
+									<div class="min-w-0">
+										<h4 class="mb-2 text-sm font-semibold">{feature.title}</h4>
+										<p class="text-sm leading-relaxed text-muted-foreground">
+											{feature.description}
+										</p>
+									</div>
+								</li>
+							))}
+						</ul>
+					</section>
+				))
+			}
 		</section>
 
 		<!-- Technology Stack -->
