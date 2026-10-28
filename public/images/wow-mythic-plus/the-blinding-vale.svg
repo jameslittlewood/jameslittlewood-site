@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Original abstract illustration for the blinding vale">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121b26"/><stop offset="1" stop-color="#1e5f6b"/></linearGradient><radialGradient id="g" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#a5f3fc" stop-opacity=".35"/><stop offset="1" stop-color="#a5f3fc" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/><rect width="640" height="360" fill="url(#g)"/>
+  <circle cx="520" cy="70" r="2" fill="#a5f3fc" opacity=".7"/><circle cx="120" cy="55" r="1.5" fill="#a5f3fc" opacity=".6"/><circle cx="580" cy="150" r="1.2" fill="#a5f3fc" opacity=".5"/>
+  <rect x="180" y="40" width="180" height="270" fill="#a5f3fc" opacity=".12"/><path d="M120 310 L160 140 L200 310 Z" fill="#071218"/><path d="M400 310 L450 110 L500 310 Z" fill="#071218"/><path d="M260 310 L310 70 L360 310 Z" fill="#0a1820" stroke="#a5f3fc" stroke-opacity=".3"/><circle cx="310" cy="120" r="38" fill="#a5f3fc" opacity=".3"/>
+  <path d="M0 330 Q160 300 320 330 T640 330 L640 360 L0 360 Z" fill="#05040a" opacity=".7"/>
+</svg>

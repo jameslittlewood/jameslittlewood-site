@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Original abstract illustration for kings rest">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14111f"/><stop offset="1" stop-color="#4c3b19"/></linearGradient><radialGradient id="g" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#fde68a" stop-opacity=".35"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/><rect width="640" height="360" fill="url(#g)"/>
+  <circle cx="520" cy="70" r="2" fill="#fde68a" opacity=".7"/><circle cx="120" cy="55" r="1.5" fill="#fde68a" opacity=".6"/><circle cx="580" cy="150" r="1.2" fill="#fde68a" opacity=".5"/>
+  <path d="M100 310 L100 130 L170 90 L240 130 L240 310 Z" fill="#0b0910" stroke="#fde68a" stroke-opacity=".45"/><path d="M380 310 L380 150 L440 110 L500 150 L500 310 Z" fill="#0b0910" stroke="#fde68a" stroke-opacity=".45"/><path d="M250 310 L250 200 L310 160 L370 200 L370 310 Z" fill="#16101c"/><path d="M250 155 L270 135 L290 155 L310 135 L330 155 L350 135 L370 155" fill="none" stroke="#fde68a" stroke-width="3" opacity=".6"/>
+  <path d="M0 330 Q160 300 320 330 T640 330 L640 360 L0 360 Z" fill="#05040a" opacity=".7"/>
+</svg>

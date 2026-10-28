@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Original abstract illustration for voidscar arena">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#110d24"/><stop offset="1" stop-color="#3b1470"/></linearGradient><radialGradient id="g" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#c4b5fd" stop-opacity=".35"/><stop offset="1" stop-color="#c4b5fd" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/><rect width="640" height="360" fill="url(#g)"/>
+  <circle cx="520" cy="70" r="2" fill="#c4b5fd" opacity=".7"/><circle cx="120" cy="55" r="1.5" fill="#c4b5fd" opacity=".6"/><circle cx="580" cy="150" r="1.2" fill="#c4b5fd" opacity=".5"/>
+  <circle cx="320" cy="170" r="115" fill="none" stroke="#c4b5fd" stroke-width="3" opacity=".55"/><circle cx="320" cy="170" r="78" fill="none" stroke="#c4b5fd" stroke-width="2" opacity=".35"/><path d="M320 30 L350 140 L460 170 L350 200 L320 310 L290 200 L180 170 L290 140 Z" fill="#1b0c35" stroke="#c4b5fd" stroke-opacity=".45"/><circle cx="320" cy="170" r="22" fill="#c4b5fd" opacity=".5"/>
+  <path d="M0 330 Q160 300 320 330 T640 330 L640 360 L0 360 Z" fill="#05040a" opacity=".7"/>
+</svg>

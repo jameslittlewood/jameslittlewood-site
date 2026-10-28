@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Original abstract illustration for temple of sethraliss">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b150b"/><stop offset="1" stop-color="#6b4b16"/></linearGradient><radialGradient id="g" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#fcd34d" stop-opacity=".35"/><stop offset="1" stop-color="#fcd34d" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/><rect width="640" height="360" fill="url(#g)"/>
+  <circle cx="520" cy="70" r="2" fill="#fcd34d" opacity=".7"/><circle cx="120" cy="55" r="1.5" fill="#fcd34d" opacity=".6"/><circle cx="580" cy="150" r="1.2" fill="#fcd34d" opacity=".5"/>
+  <path d="M120 310 L120 180 L200 140 L280 180 L280 310 Z" fill="#100c06"/><path d="M320 310 L320 200 L400 160 L480 200 L480 310 Z" fill="#161006"/><path d="M200 140 L240 100 L280 140" fill="none" stroke="#fcd34d" stroke-width="4" opacity=".55"/><path d="M400 160 L440 120 L480 160" fill="none" stroke="#fcd34d" stroke-width="4" opacity=".55"/><circle cx="320" cy="95" r="30" fill="#fcd34d" opacity=".25"/>
+  <path d="M0 330 Q160 300 320 330 T640 330 L640 360 L0 360 Z" fill="#05040a" opacity=".7"/>
+</svg>

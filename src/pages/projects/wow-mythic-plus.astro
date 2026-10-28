@@ -1,677 +1,209 @@
 ---
 import Layout from '@/layouts/Layout.astro'
-import { Icon } from 'astro-icon/components'
 import ChartCard from '@/components/wow/ChartCard.astro'
 import ThemeToggle from '@/components/layout/ThemeToggle.astro'
 ---
 
 <Layout
 	standalone
-	title="Mythic+ Leaderboard Analytics"
-	description="An interactive view of collected top Mythic+ leaderboard runs, reported class and specialisation representation, team compositions, timings and key levels."
+	title="Mythic+ Analytics"
+	description="A tabbed, interactive view of collected EU Mythic+ leaderboard runs, classes, dungeons, team compositions and timings."
 >
-	<article class="mx-auto max-w-none space-y-8 p-4 sm:p-6 md:p-8 lg:p-10">
-		<div class="flex items-center justify-between gap-4">
-			<a
-				href="/projects/"
-				class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-			>
-				← Back to Projects
-			</a>
-			<ThemeToggle />
-		</div>
-
-		<header class="space-y-4">
-			<div class="inline-flex flex-wrap items-center gap-2">
-				<span
-					class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
-				>
-					Interactive dashboard
-				</span>
-				<span
-					class="rounded-full border border-border bg-muted/30 px-3 py-1 text-xs text-muted-foreground"
-				>
-					Static JSON · no direct database
-				</span>
+	<article class="min-h-screen bg-background">
+		<header class="relative isolate overflow-hidden border-b border-border/60 bg-[#0b0a17]">
+			<img
+				src="/images/wow-mythic-plus/hero.svg"
+				alt=""
+				width="1600"
+				height="620"
+				fetchpriority="high"
+				class="absolute inset-0 h-full w-full object-cover"
+				aria-hidden="true"
+			/>
+			<div class="absolute inset-0 bg-gradient-to-r from-[#080a16]/95 via-[#0d0a22]/80 to-[#1b1030]/55"></div>
+			<div class="relative mx-auto max-w-[1400px] px-4 py-6 sm:px-6 md:py-8">
+				<div class="flex items-center justify-between gap-4">
+					<a href="/projects/" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/20 px-3 py-1.5 text-xs font-semibold text-white/90 backdrop-blur hover:border-primary/50 hover:text-white focus-visible:rounded-full">
+						← Back to Projects
+					</a>
+					<ThemeToggle />
+				</div>
+				<div class="mt-10 max-w-3xl pb-8 sm:mt-14 md:mt-20 md:pb-14">
+					<div class="mb-4 flex flex-wrap items-center gap-2">
+						<span class="rounded-full border border-primary/40 bg-primary/20 px-3 py-1 text-[11px] font-bold tracking-widest text-primary uppercase">Mythic+ Analytics</span>
+						<span class="rounded-full border border-white/20 bg-black/20 px-3 py-1 text-[11px] font-semibold text-white/80">EU · MN Season 2</span>
+						<span class="rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200"><span data-hero-dungeons>8</span> dungeons · <span data-hero-runs>160,108</span> runs</span>
+					</div>
+					<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">Mythic+ Analytics</h1>
+					<p class="mt-4 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
+						Explore the collected EU top leaderboard runs for the current season. Compare key levels, classes, reported specialisations, dungeon timings and team compositions without pretending this is the whole Mythic+ population.
+					</p>
+					<p class="mt-3 text-xs text-white/55">Collected top leaderboard runs, not every Mythic+ run. Specialisations are reported, not verified run-time truth.</p>
+				</div>
 			</div>
-			<h1 class="text-3xl font-bold tracking-tight">
-				Mythic+ Leaderboard Analytics
-			</h1>
-			<p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-				An interactive view of <strong class="font-semibold text-foreground"
-					>collected top leaderboard runs</strong
-				> for all eight current EU dungeons. Filter runs, compare key levels, inspect
-				reported roster composition and read run-level timings. This is a collected
-				leaderboard sample, not the whole Mythic+ population.
-			</p>
-			<div
-				class="flex flex-wrap gap-2"
-				role="group"
-				aria-label="Published dataset scope"
-			>
-				<span
-					class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs text-primary"
-					data-scope-region>EU</span
-				>
-				<span
-					class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs text-primary"
-					data-scope-season>MN Season 2</span
-				>
-				<span
-					class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs text-primary"
-					data-scope-dungeon>All dungeons</span
-				>
-			</div>
-			<p class="text-xs text-muted-foreground">
-				Region and season are fixed for this publication. All eight verified
-				dungeons are available in the dungeon filter.
-			</p>
 		</header>
 
-		<noscript>
-			<div class="wow-warning rounded-2xl border p-4 text-sm">
-				This dashboard needs JavaScript to load the validated JSON dataset and
-				draw charts. The underlying JSON remains available at
-				<code class="font-mono text-xs"
-					>/data/wow-mythic-plus/manifest.json</code
-				>.
+		<nav aria-label="Dashboard sections" class="border-b border-border/60 bg-card/95 px-2 sm:px-6">
+			<div role="tablist" aria-label="Mythic+ dashboard tabs" class="mx-auto flex max-w-[1400px] gap-1 overflow-x-auto py-2">
+				<button type="button" role="tab" id="tab-overview" aria-selected="true" aria-controls="panel-overview" tabindex="0" data-tab="overview" class="tab-button min-h-11 shrink-0 rounded-xl px-4 py-2 text-sm font-semibold">Overview</button>
+				<button type="button" role="tab" id="tab-classes" aria-selected="false" aria-controls="panel-classes" tabindex="-1" data-tab="classes" class="tab-button min-h-11 shrink-0 rounded-xl px-4 py-2 text-sm font-semibold">Classes</button>
+				<button type="button" role="tab" id="tab-dungeons" aria-selected="false" aria-controls="panel-dungeons" tabindex="-1" data-tab="dungeons" class="tab-button min-h-11 shrink-0 rounded-xl px-4 py-2 text-sm font-semibold">Dungeons</button>
+				<button type="button" role="tab" id="tab-teams" aria-selected="false" aria-controls="panel-teams" tabindex="-1" data-tab="teams" class="tab-button min-h-11 shrink-0 rounded-xl px-4 py-2 text-sm font-semibold">Teams</button>
+				<button type="button" role="tab" id="tab-runs" aria-selected="false" aria-controls="panel-runs" tabindex="-1" data-tab="runs" class="tab-button min-h-11 shrink-0 rounded-xl px-4 py-2 text-sm font-semibold">Runs</button>
 			</div>
-		</noscript>
+		</nav>
 
-		<p class="sr-only" data-dashboard-status role="status" aria-live="polite">
-		</p>
-		<div
-			data-dashboard-loading
-			role="status"
-			aria-live="polite"
-			class="rounded-2xl border border-border/60 bg-muted/20 p-6 text-sm text-muted-foreground"
-		>
-			Loading the validated Mythic+ dataset…
-		</div>
-
-		<div
-			data-dashboard-error
-			hidden
-			role="alert"
-			class="wow-error rounded-2xl border p-5"
-		>
-			<h2 class="text-sm font-bold">The dashboard data could not be loaded</h2>
-			<p class="mt-2 text-sm text-muted-foreground" data-error-message></p>
-			<p class="mt-2 text-xs text-muted-foreground">
-				No fallback dataset is used. Check that the validated static JSON was
-				synced and that its schema version is compatible.
-			</p>
-			<button
-				type="button"
-				data-retry
-				class="mt-4 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/20 focus-visible:rounded-xl"
-			>
-				Retry
-			</button>
-		</div>
-
-		<div data-wow-dashboard hidden class="space-y-8">
-			<div
-				data-dataset-stale
-				hidden
-				role="status"
-				class="wow-warning rounded-2xl border p-4 text-sm"
-			>
-				This published dataset is more than 14 days old. Treat it as a
-				historical snapshot until a newer collection is published.
-			</div>
-			<div
-				data-dataset-incomplete
-				hidden
-				role="status"
-				class="wow-warning rounded-2xl border p-4 text-sm"
-			>
+		<div class="mx-auto max-w-[1400px] px-3 py-4 sm:px-6 sm:py-6">
+			<p class="sr-only" data-dashboard-status role="status" aria-live="polite"></p>
+			<div data-dashboard-loading role="status" class="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground">Loading the validated dataset index…</div>
+			<div data-dashboard-error hidden role="alert" class="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5">
+				<h2 class="text-sm font-bold">The dashboard data could not be loaded</h2>
+				<p class="mt-2 text-sm text-muted-foreground" data-error-message></p>
+				<button type="button" data-retry class="mt-4 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">Retry</button>
 			</div>
 
-			<section aria-labelledby="at-a-glance-title" class="space-y-3">
-				<div class="flex flex-wrap items-end justify-between gap-2">
-					<div>
-						<h2 id="at-a-glance-title" class="text-lg font-bold">
-							At a glance
-						</h2>
-						<p class="text-xs text-muted-foreground">
-							Metrics recalculate from the filtered run population.
-						</p>
-					</div>
-					<span
-						class="rounded-full border border-border bg-muted/30 px-3 py-1 text-[11px] text-muted-foreground"
-						data-dataset-version></span>
-				</div>
-				<div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
-					<div class="rounded-2xl border border-border/60 bg-card p-4">
-						<p
-							class="text-[11px] font-bold tracking-widest text-muted-foreground uppercase"
-						>
-							Collected runs
-						</p>
-						<p class="mt-2 text-2xl font-bold tabular-nums" data-kpi="runs">
-							—
-						</p>
-						<p
-							class="mt-1 text-xs text-muted-foreground"
-							data-kpi="runs-detail"
-						>
-							—
-						</p>
-					</div>
-					<div class="rounded-2xl border border-border/60 bg-card p-4">
-						<p
-							class="text-[11px] font-bold tracking-widest text-muted-foreground uppercase"
-						>
-							Highest key
-						</p>
-						<p class="mt-2 text-2xl font-bold tabular-nums" data-kpi="highest">
-							—
-						</p>
-						<p
-							class="mt-1 text-xs text-muted-foreground"
-							data-kpi="key-average"
-						>
-							—
-						</p>
-					</div>
-					<div class="rounded-2xl border border-border/60 bg-card p-4">
-						<p
-							class="text-[11px] font-bold tracking-widest text-muted-foreground uppercase"
-						>
-							Roster sample
-						</p>
-						<p
-							class="mt-2 text-2xl font-bold tabular-nums"
-							data-kpi="appearances"
-						>
-							—
-						</p>
-						<p
-							class="mt-1 text-xs text-muted-foreground"
-							data-kpi="teams-detail"
-						>
-							—
-						</p>
-					</div>
-					<div class="rounded-2xl border border-border/60 bg-card p-4">
-						<p
-							class="text-[11px] font-bold tracking-widest text-muted-foreground uppercase"
-						>
-							Coverage
-						</p>
-						<p class="mt-2 text-2xl font-bold tabular-nums" data-kpi="pages">
-							—
-						</p>
-						<p
-							class="mt-1 text-xs text-muted-foreground"
-							data-kpi="pages-detail"
-						>
-							—
-						</p>
-					</div>
-				</div>
-				<div
-					class="grid gap-2 rounded-2xl border border-border/50 bg-muted/20 p-4 text-xs text-muted-foreground sm:grid-cols-2"
-				>
-					<p>
-						<span class="font-semibold text-foreground"
-							>Observation window:</span
-						>
-						<span data-observation-window>—</span>
-					</p>
-					<p>
-						<span class="font-semibold text-foreground">Last updated:</span>
-						<span data-exported-at>—</span>
-					</p>
-					<p>
-						<span class="font-semibold text-foreground">Collection:</span>
-						<span data-collection-id>—</span>
-					</p>
-					<p>
-						<span class="font-semibold text-foreground">Selection:</span>
-						<span data-selection-method>—</span>
-					</p>
-				</div>
-				<details
-					class="rounded-2xl border border-border/50 bg-muted/20 p-4 text-xs text-muted-foreground"
-				>
-					<summary class="cursor-pointer font-semibold text-primary"
-						>Dataset and technical details</summary
-					>
-					<div class="mt-2 grid gap-2 sm:grid-cols-2">
-						<p>Dataset: <span data-dataset-version>—</span></p>
-						<p>Pages: <span data-pages-detail>—</span></p>
-						<p>Coverage: <span data-coverage-status>—</span></p>
-					</div>
-				</details>
-			</section>
-
-			<section aria-labelledby="filters-title" class="space-y-4">
-				<div>
-					<h2 id="filters-title" class="text-lg font-bold">Filters</h2>
-					<p class="text-xs text-muted-foreground">
-						Run filters and search change the KPIs, charts and table. The roster
-						role view changes appearance charts only; it does not remove runs.
-					</p>
-				</div>
-				<div class="rounded-2xl border border-border/60 bg-card p-4 sm:p-5">
-					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-						<label class="block text-xs font-semibold" for="filter-dungeon">
-							Dungeon
-							<select
-								id="filter-dungeon"
-								data-filter-dungeon
-								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"
-							>
-								<option value="all">All dungeons</option>
-							</select>
+			<div data-wow-dashboard hidden>
+				<section data-filter-bar hidden aria-label="Dashboard filters" class="mb-4 rounded-2xl border border-border/60 bg-card p-3 sm:p-4">
+					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+						<label class="block text-xs font-semibold" for="filter-dungeon">Dungeon
+							<select id="filter-dungeon" data-filter-dungeon class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"><option value="all">All dungeons</option></select>
 						</label>
-						<label class="block text-xs font-semibold" for="filter-key">
-							Key level
-							<select
-								id="filter-key"
-								data-filter-key
-								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"
-							>
-								<option value="all">All key levels</option>
-							</select>
+						<label class="block text-xs font-semibold" for="filter-key">Key level
+							<select id="filter-key" data-filter-key class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"><option value="all">All key levels</option></select>
 						</label>
-						<label class="block text-xs font-semibold" for="filter-class">
-							Class present
-							<select
-								id="filter-class"
-								data-filter-class
-								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"
-							>
-								<option value="all">All classes</option>
-							</select>
+						<label class="block text-xs font-semibold" for="filter-class" data-filter-group="class-spec">Class present
+							<select id="filter-class" data-filter-class class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"><option value="all">All classes</option></select>
 						</label>
-						<label class="block text-xs font-semibold" for="filter-spec">
-							Reported spec present
-							<select
-								id="filter-spec"
-								data-filter-spec
-								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"
-							>
-								<option value="all">All reported specs</option>
-							</select>
-						</label>
-						<label class="block text-xs font-semibold" for="filter-search">
-							Search runs
-							<input
-								id="filter-search"
-								data-filter-search
-								type="search"
-								placeholder="Rank, run id, dungeon or spec"
-								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground placeholder:text-muted-foreground focus-visible:border-primary"
-							/>
+						<label class="block text-xs font-semibold" for="filter-spec" data-filter-group="class-spec">Reported spec present
+							<select id="filter-spec" data-filter-spec class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"><option value="all">All reported specs</option></select>
 						</label>
 					</div>
-					<div
-						class="mt-4 flex flex-wrap items-end justify-between gap-3 border-t border-border/50 pt-4"
-					>
-						<fieldset>
-							<legend class="text-xs font-semibold"
-								>Roster role view <span
-									class="font-normal text-muted-foreground"
-									>(appearance charts only)</span
-								></legend
-							>
+					<div class="mt-3 flex flex-wrap items-end justify-between gap-3 border-t border-border/50 pt-3">
+						<fieldset data-filter-group="role">
+							<legend class="text-xs font-semibold">Roster role view <span class="font-normal text-muted-foreground">(appearance charts only)</span></legend>
 							<div class="mt-2 flex flex-wrap gap-2" data-role-filter>
-								<button
-									type="button"
-									data-role="all"
-									aria-pressed="true"
-									class="rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary"
-									>All roles</button
-								>
-								<button
-									type="button"
-									data-role="tank"
-									aria-pressed="false"
-									class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary"
-									>Tank</button
-								>
-								<button
-									type="button"
-									data-role="healer"
-									aria-pressed="false"
-									class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary"
-									>Healer</button
-								>
-								<button
-									type="button"
-									data-role="dps"
-									aria-pressed="false"
-									class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary"
-									>DPS</button
-								>
+								<button type="button" data-role="all" aria-pressed="true" class="rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">All roles</button>
+								<button type="button" data-role="tank" aria-pressed="false" class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground">Tank</button>
+								<button type="button" data-role="healer" aria-pressed="false" class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground">Healer</button>
+								<button type="button" data-role="dps" aria-pressed="false" class="rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground">DPS</button>
 							</div>
 						</fieldset>
-						<button
-							type="button"
-							data-reset
-							class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary focus-visible:rounded-xl"
-						>
-							Reset filters
-						</button>
+						<label class="block min-w-[14rem] flex-1 text-xs font-semibold" for="filter-search" data-filter-group="search">Search runs
+							<input id="filter-search" data-filter-search type="search" placeholder="Rank, run id, dungeon or spec" class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground placeholder:text-muted-foreground focus-visible:border-primary" />
+						</label>
+						<button type="button" data-reset class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary">Reset filters</button>
 					</div>
-					<p
-						class="mt-3 text-xs text-muted-foreground"
-						data-filter-summary
-						aria-live="polite"
-					>
-					</p>
-				</div>
-			</section>
+					<p class="mt-2 text-xs text-muted-foreground" data-filter-summary aria-live="polite"></p>
+				</section>
 
-			<section aria-labelledby="charts-title" class="space-y-4">
-				<div>
-					<h2 id="charts-title" class="text-lg font-bold">Charts</h2>
-					<p class="text-xs text-muted-foreground">
-						Descriptive distributions only. No class or specialisation strength
-						claim is made.
-					</p>
-				</div>
-				<div class="grid gap-4 lg:grid-cols-2">
-					<ChartCard
-						chart="key"
-						title="Key-level distribution"
-						description="Runs by reported Mythic+ key level in the filtered population."
-					/>
-					<ChartCard
-						chart="class"
-						title="Class appearances"
-						description="Roster appearances by reported class. The denominator is roster slots in view, not distinct players."
-					/>
-					<ChartCard
-						chart="spec"
-						wide
-						title="Reported specialisation"
-						description="Reported specialisations by role. This is not verified run-time specialisation."
-						height="h-80"
-					/>
-					<ChartCard
-						chart="compositions"
-						wide
-						title="Most common team compositions"
-						description="Sorted five-spec multisets from eligible complete rosters; repeated specs are preserved."
-						height="h-80"
-					/>
-					<ChartCard
-						chart="completion"
-						title="Completion-time distribution"
-						description="Clear time shown as MM:SS.mmm; chart bins use MM:SS. Missing timings are excluded."
-					/>
-					<ChartCard
-						chart="margin"
-						title="Timer-margin analysis"
-						description="Dungeon timer minus clear time. Positive margins are ahead; negative margins are overtime. Tooltips and tables use MM:SS.mmm."
-					/>
-				</div>
-			</section>
+				<section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" data-panel="overview" class="space-y-4">
+					<p class="text-xs text-muted-foreground">Scope: all eight verified dungeons · all key levels · EU MN Season 2</p>
+					<div class="grid grid-cols-2 gap-3 lg:grid-cols-6">
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Runs</p><p class="mt-1 text-2xl font-bold tabular-nums" data-overview-kpi="runs">—</p></div>
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Highest key</p><p class="mt-1 text-2xl font-bold tabular-nums" data-overview-kpi="highest">—</p></div>
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Average / median</p><p class="mt-1 text-lg font-bold tabular-nums" data-overview-kpi="average">—</p></div>
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Dungeons</p><p class="mt-1 text-2xl font-bold tabular-nums" data-overview-kpi="dungeons">—</p></div>
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Roster appearances</p><p class="mt-1 text-2xl font-bold tabular-nums" data-overview-kpi="appearances">—</p></div>
+						<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">Complete teams</p><p class="mt-1 text-2xl font-bold tabular-nums" data-overview-kpi="teams">—</p></div>
+					</div>
+					<div class="grid gap-4 lg:grid-cols-2">
+						<ChartCard chart="overview-key" title="Key-level distribution" description="Runs by reported Mythic+ key level across all eight dungeons." height="h-64" />
+						<ChartCard chart="overview-class" title="Class representation" description="Roster appearances by reported class; the denominator is all 800,538 appearances." height="h-64" />
+					</div>
+					<div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/60 bg-card p-4">
+						<div><h2 class="text-sm font-bold">Explore the season</h2><p class="text-xs text-muted-foreground">Dive into classes, dungeons, team compositions or the full leaderboard.</p></div>
+						<div class="flex flex-wrap gap-2">
+							<button type="button" data-goto-tab="classes" class="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">Classes</button>
+							<button type="button" data-goto-tab="dungeons" class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground">Dungeons</button>
+							<button type="button" data-goto-tab="teams" class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground">Teams</button>
+							<button type="button" data-goto-tab="runs" class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground">Runs</button>
+						</div>
+					</div>
+					<details class="rounded-2xl border border-border/60 bg-card p-4">
+						<summary class="cursor-pointer text-sm font-semibold text-primary">Data quality and methodology</summary>
+						<div class="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground" data-methodology></div>
+					</details>
+				</section>
 
-			<section aria-labelledby="compositions-title" class="space-y-4">
-				<div>
-					<h2 id="compositions-title" class="text-lg font-bold">
-						Ranked team compositions
-					</h2>
-					<p class="text-xs text-muted-foreground">
-						Class-coloured chips preserve repeated specialisations. Percentages
-						use eligible complete teams.
-					</p>
-				</div>
-				<div
-					class="overflow-x-auto rounded-2xl border border-border/60"
-					data-composition-list
-					tabindex="0"
-					role="region"
-					aria-label="Ranked team compositions, horizontally scrollable"
-				>
-				</div>
-			</section>
+				<section role="tabpanel" id="panel-classes" aria-labelledby="tab-classes" data-panel="classes" hidden class="space-y-4">
+					<div><h2 class="text-lg font-bold">Classes and reported specialisations</h2><p class="text-xs text-muted-foreground">Roster appearances, not distinct players or class strength. Specialisations are reported by the leaderboard, not verified run-time truth.</p></div>
+					<div class="grid gap-4 lg:grid-cols-2">
+						<ChartCard chart="class" title="Class appearances" description="Roster appearances by class. Denominator and counts update with the shared filters." height="h-72" />
+						<ChartCard chart="spec" title="Reported specialisations" description="Reported specialisation appearances by class colour and role view. Not verified run-time truth." height="h-80" />
+					</div>
+					<div class="rounded-2xl border border-border/60 bg-card p-4"><p class="text-xs text-muted-foreground" data-class-summary></p></div>
+				</section>
 
-			<section aria-labelledby="leaderboard-title" class="space-y-4">
-				<div class="flex flex-wrap items-end justify-between gap-3">
-					<div>
-						<h2 id="leaderboard-title" class="text-lg font-bold">
-							Leaderboard runs
-						</h2>
-						<p class="text-xs text-muted-foreground">
-							Search and sort the filtered runs. Source score is a leaderboard
-							score with unverified semantics; it is not a run-details score.
-						</p>
+				<section role="tabpanel" id="panel-dungeons" aria-labelledby="tab-dungeons" data-panel="dungeons" hidden class="space-y-4">
+					<div><h2 class="text-lg font-bold">Dungeon explorer</h2><p class="text-xs text-muted-foreground">Eight verified dungeons. Select a card to inspect its key, completion-time and timer-margin distributions.</p></div>
+					<div data-dungeon-cards class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"></div>
+					<div class="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border/60 bg-card p-4">
+						<p class="text-sm font-semibold" data-dungeon-title>All dungeons</p>
+						<button type="button" data-goto-tab="runs" class="rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">View filtered runs</button>
 					</div>
-					<p
-						class="text-xs font-semibold text-muted-foreground"
-						data-result-count
-						aria-live="polite"
-					>
-					</p>
-				</div>
-				<div
-					class="overflow-x-auto rounded-2xl border border-border/60"
-					tabindex="0"
-					role="region"
-					aria-label="Leaderboard runs table, horizontally scrollable"
-				>
-					<table class="w-full min-w-[54rem] border-collapse text-left text-sm">
-						<caption class="sr-only">
-							Collected Mythic+ leaderboard runs with rank, dungeon, key level,
-							timings, source score, reported composition and Raider.IO link.
-						</caption>
-						<thead
-							class="border-b border-border bg-muted/40 text-[11px] tracking-widest text-muted-foreground uppercase"
-						>
-							<tr>
-								<th scope="col" class="px-3 py-3" aria-sort="none">
-									<button
-										type="button"
-										data-sort="rank"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Rank</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">
-									<button
-										type="button"
-										data-sort="key"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Key</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">Dungeon</th>
-								<th scope="col" class="px-3 py-3">
-									<button
-										type="button"
-										data-sort="clear"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Clear</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">
-									<button
-										type="button"
-										data-sort="margin"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Margin</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">
-									<button
-										type="button"
-										data-sort="score"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Score</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">
-									<button
-										type="button"
-										data-sort="composition"
-										class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary focus-visible:rounded-sm"
-										>Reported composition</button
-									>
-								</th>
-								<th scope="col" class="px-3 py-3">Source</th>
-							</tr>
-						</thead>
-						<tbody data-runs-body></tbody>
-					</table>
-					<p class="sr-only" data-sort-status role="status" aria-live="polite">
-					</p>
-					<div
-						data-runs-empty
-						hidden
-						class="p-6 text-center text-sm text-muted-foreground"
-					>
-						No runs match the current filters. Reset the filters or search term
-						to see the cohort.
+					<div class="grid gap-4 lg:grid-cols-2">
+						<ChartCard chart="dungeon-key" title="Key-level distribution" description="Runs by key level for the selected dungeon or All Dungeons." height="h-64" />
+						<ChartCard chart="dungeon-completion" title="Completion times" description="Elapsed dungeon time. Chart bins use MM:SS; tooltips and tables use MM:SS.mmm." height="h-64" />
+						<ChartCard chart="dungeon-margin" title="Timer margins" description="Dungeon timer minus completion time. Positive is time remaining; negative is overtime." height="h-64" wide />
 					</div>
-				</div>
-				<div class="flex flex-wrap items-center justify-between gap-3">
-					<p class="text-xs text-muted-foreground" data-page-status></p>
-					<div class="flex flex-wrap items-center gap-2">
-						<label for="page-size" class="text-xs text-muted-foreground"
-							>Rows per page</label
-						>
-						<select
-							id="page-size"
-							data-page-size
-							class="rounded-xl border border-border bg-background px-2 py-1.5 text-xs text-foreground focus-visible:border-primary"
-						>
-							<option value="10">10</option>
-							<option value="25">25</option>
-							<option value="50">50</option>
-						</select>
-						<button
-							type="button"
-							data-page-prev
-							class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-							>Previous</button
-						>
-						<button
-							type="button"
-							data-page-next
-							class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-							>Next</button
-						>
-					</div>
-				</div>
-			</section>
+				</section>
 
-			<section
-				aria-labelledby="definitions-title"
-				class="rounded-2xl border border-border/60 bg-muted/20 p-5"
-			>
-				<h2 id="definitions-title" class="text-lg font-bold">
-					How to read this
-				</h2>
-				<div
-					class="mt-3 grid gap-4 text-xs leading-relaxed text-muted-foreground sm:grid-cols-2"
-				>
-					<div>
-						<h3 class="mb-1 text-sm font-semibold text-foreground">
-							Population
-						</h3>
-						<p>
-							The default is the latest successful complete collection for this
-							scope. Historical observations and unique runs ever discovered are
-							reported separately by the export and are not mixed into these
-							metric denominators.
-						</p>
-					</div>
-					<div>
-						<h3 class="mb-1 text-sm font-semibold text-foreground">
-							Counts and percentages
-						</h3>
-						<p>
-							A run is a distinct keystone run. A roster appearance is one
-							reported slot, so the same character can appear in several runs.
-							Complete teams contain five reported slots; class and spec
-							team-presence percentages use complete teams only.
-						</p>
-					</div>
-					<div>
-						<h3 class="mb-1 text-sm font-semibold text-foreground">
-							Reported specialisation
-						</h3>
-						<p>
-							<code class="font-mono text-[11px]">character.spec</code> is not verified
-							as the specialisation played at run completion. Charts and tables label
-							it “reported specialisation”; do not treat it as historical run-time
-							truth.
-						</p>
-					</div>
-					<div>
-						<h3 class="mb-1 text-sm font-semibold text-foreground">
-							Performance
-						</h3>
-						<p>
-							Timings and margins are descriptive. Key level, composition,
-							player skill and selection effects are confounded, and the cohort
-							covers only the accessible provider page ceiling of each dungeon
-							leaderboard, not all runs. No class-strength or overall-popularity
-							conclusion is valid.
-						</p>
-					</div>
-				</div>
-				<details class="mt-4 border-t border-border/50 pt-3">
-					<summary
-						class="cursor-pointer text-xs font-semibold text-primary focus-visible:rounded-sm"
-					>
-						Data definitions and source limitations
-					</summary>
-					<div
-						class="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground"
-						data-definitions
-					>
-					</div>
-				</details>
-			</section>
+				<section role="tabpanel" id="panel-teams" aria-labelledby="tab-teams" data-panel="teams" hidden class="space-y-4">
+					<div><h2 class="text-lg font-bold">Team compositions</h2><p class="text-xs text-muted-foreground">Ranked five-specialisation multisets from eligible complete teams. Repeated specs are preserved; frequency is not a strength claim.</p></div>
+					<div class="overflow-x-auto rounded-2xl border border-border/60 bg-card" data-composition-list tabindex="0" role="region" aria-label="Ranked team compositions, horizontally scrollable"></div>
+				</section>
 
-			<footer
-				class="rounded-xl border border-border/50 bg-muted/20 p-4 text-xs leading-relaxed text-muted-foreground"
-			>
-				<p>
-					Source: <a
-						href="https://raider.io"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="text-primary underline underline-offset-4 hover:text-primary/80"
-						>Raider.IO</a
-					>
-					public Mythic+ leaderboard API. This dashboard loads validated static JSON
-					and never connects to PostgreSQL. Collected top leaderboard runs are not
-					the complete Mythic+ population.
-				</p>
-				<p class="mt-2" data-footer-version></p>
-			</footer>
+				<section role="tabpanel" id="panel-runs" aria-labelledby="tab-runs" data-panel="runs" hidden class="space-y-4">
+					<div class="flex flex-wrap items-end justify-between gap-3"><div><h2 class="text-lg font-bold">Leaderboard runs</h2><p class="text-xs text-muted-foreground">Search and sort the full filtered population before pagination. Source score is a leaderboard score with unverified semantics.</p></div><p class="text-xs font-semibold text-muted-foreground" data-result-count aria-live="polite"></p></div>
+					<div class="overflow-x-auto rounded-2xl border border-border/60 bg-card" tabindex="0" role="region" aria-label="Leaderboard runs table, horizontally scrollable">
+						<table class="w-full min-w-[54rem] border-collapse text-left text-sm">
+							<caption class="sr-only">Collected Mythic+ leaderboard runs with rank, dungeon, key, timings, source score, reported composition and Raider.IO link.</caption>
+							<thead class="border-b border-border bg-muted/40 text-[11px] tracking-widest text-muted-foreground uppercase">
+								<tr>
+									<th scope="col" class="px-3 py-3" aria-sort="none"><button type="button" data-sort="rank" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Rank</button></th>
+									<th scope="col" class="px-3 py-3"><button type="button" data-sort="key" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Key</button></th>
+									<th scope="col" class="px-3 py-3">Dungeon</th>
+									<th scope="col" class="px-3 py-3"><button type="button" data-sort="clear" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Clear</button></th>
+									<th scope="col" class="px-3 py-3"><button type="button" data-sort="margin" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Margin</button></th>
+									<th scope="col" class="px-3 py-3"><button type="button" data-sort="score" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Score</button></th>
+									<th scope="col" class="px-3 py-3"><button type="button" data-sort="composition" class="inline-flex min-h-6 min-w-6 items-center py-1 font-bold hover:text-primary">Reported composition</button></th>
+									<th scope="col" class="px-3 py-3">Source</th>
+								</tr>
+							</thead>
+							<tbody data-runs-body></tbody>
+						</table>
+						<p class="sr-only" data-sort-status role="status" aria-live="polite"></p>
+						<div data-runs-empty hidden class="p-6 text-center text-sm text-muted-foreground">No runs match the current filters.</div>
+					</div>
+					<div class="flex flex-wrap items-center justify-between gap-3">
+						<p class="text-xs text-muted-foreground" data-page-status></p>
+						<div class="flex flex-wrap items-center gap-2">
+							<label for="page-size" class="text-xs text-muted-foreground">Rows per page</label>
+							<select id="page-size" data-page-size class="rounded-xl border border-border bg-background px-2 py-1.5 text-xs text-foreground"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select>
+							<button type="button" data-page-prev class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground disabled:opacity-40">Previous</button>
+							<button type="button" data-page-next class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground disabled:opacity-40">Next</button>
+						</div>
+					</div>
+				</section>
+
+				<footer class="mt-6 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+					<p>Source: <a href="https://raider.io" target="_blank" rel="noopener noreferrer" class="text-primary underline underline-offset-4">Raider.IO</a> public Mythic+ leaderboard API. Collected top leaderboard runs; not the complete Mythic+ population. No direct database access.</p>
+					<p class="mt-2" data-footer-version></p>
+				</footer>
+			</div>
 		</div>
 	</article>
 </Layout>
 
 <style>
-	.wow-warning {
-		border-color: color-mix(in oklch, var(--callout-warning) 45%, transparent);
-		background: color-mix(in oklch, var(--callout-warning) 10%, transparent);
-	}
-	.wow-error {
-		border-color: color-mix(in oklch, var(--callout-danger) 45%, transparent);
-		background: color-mix(in oklch, var(--callout-danger) 10%, transparent);
-	}
-	.wow-positive {
-		color: var(--callout-success);
-	}
-	.wow-negative {
-		color: var(--callout-danger);
-	}
+	.tab-button { color: var(--muted-foreground); }
+	.tab-button:hover { background: color-mix(in oklch, var(--primary) 8%, transparent); color: var(--primary); }
+	.tab-button[aria-selected='true'] { background: color-mix(in oklch, var(--primary) 16%, transparent); color: var(--primary); box-shadow: inset 0 -2px 0 var(--primary); }
+	[data-dungeon-card][data-selected='true'] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
 </style>
 
 <script>
 	import { mountWowDashboard } from '@/lib/wowMythicDashboard'
-
 	const start = () => {
 		const root = document.querySelector<HTMLElement>('[data-wow-dashboard]')
 		if (!root || root.dataset.mounted === 'true') return

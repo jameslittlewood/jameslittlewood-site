@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Local browser, mobile, performance and accessibility checks for dashboard v2. */
+/** Browser, lazy-loading, tab, mobile and accessibility checks for the tabbed dashboard. */
 import assert from 'node:assert/strict'
 import { readFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
@@ -16,7 +16,7 @@ const chrome =
 const port = Number(process.env.WOW_TEST_PORT || 4329)
 const base = `http://127.0.0.1:${port}`
 const url = `${base}/projects/wow-mythic-plus/`
-const screenshotDir = path.resolve(root, 'screenshots-source/wow-mythic-plus')
+const shots = path.resolve(root, 'screenshots-source/wow-mythic-plus')
 const require = createRequire(import.meta.url)
 const axePath = require.resolve('axe-core/axe.min.js')
 const index = JSON.parse(
@@ -29,13 +29,11 @@ const totalRuns = index.dungeons.reduce(
 	(sum, entry) => sum + entry.run_count,
 	0
 )
-const firstDungeon = index.dungeons[0]
 
 async function waitForServer() {
 	for (let attempt = 0; attempt < 90; attempt += 1) {
 		try {
-			const response = await fetch(url)
-			if (response.ok) return
+			if ((await fetch(url)).ok) return
 		} catch {}
 		await new Promise((resolve) => setTimeout(resolve, 500))
 	}
@@ -61,7 +59,7 @@ server.stderr.on('data', (chunk) => (serverOutput += chunk))
 let browser
 try {
 	await waitForServer()
-	await mkdir(screenshotDir, { recursive: true })
+	await mkdir(shots, { recursive: true })
 	browser = await puppeteer.launch({
 		executablePath: chrome,
 		headless: true,
@@ -82,40 +80,237 @@ try {
 		timeout: 90000,
 	})
 	await page.waitForFunction(
-		() => document.querySelectorAll('[data-runs-body] tr').length === 10
-	)
-	const loadMs = Date.now() - started
-
-	assert.equal(
-		await page.$eval('[data-kpi="runs"]', (el) => el.textContent),
+		(expected) =>
+			document.querySelector('[data-overview-kpi="runs"]')?.textContent ===
+			expected,
+		{},
 		new Intl.NumberFormat('en-GB').format(totalRuns)
+	)
+	const initialMs = Date.now() - started
+
+	assert.equal(await page.$$eval('[role="tab"]', (nodes) => nodes.length), 5)
+	assert.equal(
+		await page.$eval('#tab-overview', (node) =>
+			node.getAttribute('aria-selected')
+		),
+		'true'
 	)
 	assert.equal(
 		await page.$$eval('[data-chart] canvas', (nodes) => nodes.length),
-		6
+		2
 	)
 	assert.equal(
-		await page.$$eval('[data-chart-table] table', (nodes) => nodes.length),
-		6
+		await page.$$eval(
+			'[role="tabpanel"]',
+			(nodes) => nodes.filter((node) => !node.hidden).length
+		),
+		1
 	)
-	assert.equal(await page.$$eval('aside', (nodes) => nodes.length), 0)
+	assert.ok(
+		await page.$eval(
+			'#tab-overview',
+			(node) => node.getAttribute('aria-controls') === 'panel-overview'
+		)
+	)
+	assert.match(
+		await page.$eval(
+			'[data-chart="overview-key"]',
+			(node) => node.getAttribute('aria-label') ?? ''
+		),
+		/Horizontal axis: Mythic\+ key level\. Vertical axis: Number of runs/
+	)
+	assert.match(
+		await page.$eval(
+			'[data-chart="overview-class"]',
+			(node) => node.getAttribute('aria-label') ?? ''
+		),
+		/Horizontal axis: Roster appearances\. Vertical axis: Class/
+	)
 	assert.equal(
 		await page.$eval(
-			'[data-chart="compositions"]',
-			(el) => getComputedStyle(el).overflow
+			'[data-chart="overview-key"]',
+			(node) => getComputedStyle(node).overflow
 		),
 		'hidden'
 	)
-	assert.equal(await page.$eval('[data-page-size]', (el) => el.value), '10')
+	assert.equal(await page.$$eval('aside', (nodes) => nodes.length), 0)
 	assert.ok(
-		(await page.$eval('article', (el) => el.getBoundingClientRect().width)) <=
-			1400
+		(await page.$eval(
+			'article',
+			(node) => node.getBoundingClientRect().width
+		)) <= 1400
 	)
 	assert.ok(
-		await page.$eval('a[href="/projects/"]', (el) =>
-			el.textContent?.includes('Back to Projects')
+		await page.$eval('a[href="/projects/"]', (node) =>
+			node.textContent?.includes('Back to Projects')
 		)
 	)
+	assert.ok(
+		await page.$eval(
+			'img[src="/images/wow-mythic-plus/hero.svg"]',
+			(node) => node.complete && node.naturalWidth > 0
+		)
+	)
+	assert.equal(
+		await page.$eval('[data-filter-bar]', (node) => node.hidden),
+		true
+	)
+	assert.ok(
+		(
+			await page.$eval('[data-methodology]', (node) => node.textContent)
+		).includes('pages 0–1000')
+	)
+	assert.ok(
+		!(
+			await page.$eval(
+				'[data-footer-version]',
+				(node) => node.textContent ?? ''
+			)
+		).includes('undefined')
+	)
+	const resources = await page.evaluate(() =>
+		performance.getEntriesByType('resource').map((entry) => entry.name)
+	)
+	assert.equal(
+		resources.some((name) => name.includes('altar-of-fangs.json')),
+		false,
+		'overview must not load dungeon run files'
+	)
+	const dataBytes = await page.evaluate(() =>
+		performance
+			.getEntriesByType('resource')
+			.filter((entry) => entry.name.includes('/data/wow-mythic-plus/'))
+			.reduce((sum, entry) => sum + (entry.transferSize || 0), 0)
+	)
+	assert.ok(
+		dataBytes < 500_000,
+		`overview data should stay small, got ${dataBytes}`
+	)
+	assert.equal(
+		await page.$$eval('[data-chart-table] table', (nodes) => nodes.length),
+		2
+	)
+	await page.screenshot({
+		path: path.join(shots, 'tab-overview-light.png'),
+		fullPage: true,
+	})
+	await page.addStyleTag({
+		content: 'main { height: auto !important; overflow: visible !important; }',
+	})
+	await page.screenshot({
+		path: path.join(shots, 'tab-overview-light-full.png'),
+		fullPage: true,
+	})
+
+	await page.addScriptTag({ path: axePath })
+	const axe = async (label) => {
+		const result = await page.evaluate(async () => {
+			const article = document.querySelector('article')
+			return article
+				? await window.axe.run(article, {
+						runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
+					})
+				: { violations: [] }
+		})
+		if (result.violations.length)
+			console.error(
+				`${label}: ${result.violations.map((v) => `${v.id} ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`).join(' ; ')}`
+			)
+		assert.equal(
+			result.violations.length,
+			0,
+			`${label} accessibility violations`
+		)
+	}
+	await axe('overview light')
+
+	await page.focus('#tab-overview')
+	await page.keyboard.press('ArrowRight')
+	await page.waitForFunction(
+		() =>
+			document.querySelector('#tab-classes')?.getAttribute('aria-selected') ===
+			'true'
+	)
+	await page.waitForFunction(
+		() => document.querySelector('[data-chart="spec"] canvas'),
+		{ timeout: 120000 }
+	)
+	assert.match(
+		await page.$eval(
+			'[data-chart="class"]',
+			(node) => node.getAttribute('aria-label') ?? ''
+		),
+		/Horizontal axis: Roster appearances\. Vertical axis: Class/
+	)
+	assert.match(
+		await page.$eval(
+			'[data-chart="spec"]',
+			(node) => node.getAttribute('aria-label') ?? ''
+		),
+		/Horizontal axis: Roster appearances\. Vertical axis: Reported specialisation/
+	)
+	assert.equal(
+		await page.$eval('[data-filter-bar]', (node) => node.hidden),
+		false
+	)
+	assert.ok(
+		await page.$$eval('[data-filter-class] option', (nodes) => nodes.length > 1)
+	)
+	await page.screenshot({
+		path: path.join(shots, 'tab-classes-light.png'),
+		fullPage: true,
+	})
+	await axe('classes light')
+
+	const classValue = await page.$$eval(
+		'[data-filter-class] option',
+		(options) =>
+			options.find((option) => option.textContent === 'Paladin')?.value
+	)
+	await page.select('[data-filter-class]', classValue)
+	await page.waitForFunction(
+		() =>
+			Number(
+				document
+					.querySelector('[data-filter-summary]')
+					?.textContent?.match(/Showing ([\d,]+)/)?.[1]
+					?.replace(/,/g, '')
+			) < 160108
+	)
+	await page.click('[data-reset]')
+	await page.waitForFunction(
+		() =>
+			Number(
+				document
+					.querySelector('[data-filter-summary]')
+					?.textContent?.match(/Showing ([\d,]+)/)?.[1]
+					?.replace(/,/g, '')
+			) === 160108
+	)
+
+	await page.click('#tab-runs')
+	await page.waitForFunction(
+		() => document.querySelectorAll('[data-runs-body] tr').length === 10
+	)
+	assert.match(
+		await page.$eval('[data-page-status]', (node) => node.textContent),
+		/Showing runs 1–10 of 160,108/
+	)
+	assert.equal(
+		await page.$$eval(
+			'[data-runs-body] a[target="_blank"]',
+			(nodes) => nodes.length
+		),
+		10
+	)
+	assert.ok(
+		await page.$$eval('[data-runs-body] td:nth-child(4)', (cells) =>
+			cells.every((cell) =>
+				/^\d{2,}:\d{2}\.\d{3}$/.test(cell.textContent ?? '')
+			)
+		)
+	)
+	assert.equal(await page.$eval('[data-page-size]', (node) => node.value), '10')
 	await page.select('[data-page-size]', '25')
 	await page.waitForFunction(
 		() => document.querySelectorAll('[data-runs-body] tr').length === 25
@@ -124,194 +319,11 @@ try {
 	await page.waitForFunction(
 		() => document.querySelectorAll('[data-runs-body] tr').length === 10
 	)
-	assert.equal(
-		await page.$$eval(
-			"[data-runs-body] a[target='_blank']",
-			(nodes) => nodes.length
-		),
-		10
+	const firstRun = await page.$eval(
+		'[data-runs-body] th span:last-child',
+		(node) => node.textContent?.trim() ?? ''
 	)
-	assert.ok(
-		await page.$$eval('[data-runs-body] a', (nodes) =>
-			nodes.every((node) => (node.href || '').startsWith('https://raider.io/'))
-		)
-	)
-	assert.equal(
-		await page.$$eval('[data-filter-dungeon] option', (nodes) => nodes.length),
-		index.dungeons.length + 1
-	)
-	assert.ok(
-		await page.$$eval(
-			"[data-runs-body] th[scope='row']",
-			(nodes) => nodes.length === 10
-		)
-	)
-	assert.ok(
-		await page.$$eval(
-			'[data-composition-list] tbody tr',
-			(nodes) => nodes.length > 0
-		)
-	)
-	const times = await page.$$eval(
-		'[data-runs-body] tr td:nth-child(4)',
-		(cells) => cells.map((cell) => cell.textContent?.trim())
-	)
-	assert.ok(
-		times.every(
-			(value) => value === '—' || /^\d{2,}:\d{2}\.\d{3}$/.test(value ?? '')
-		)
-	)
-	const classChips = await page.$$eval(
-		"[data-runs-body] span[style*='background-color']",
-		(nodes) => nodes.length
-	)
-	assert.ok(classChips > 0, 'class-coloured roster chips should render')
-
-	const accessibility = await page.evaluate(() => {
-		const inputs = [
-			...document.querySelectorAll(
-				'[data-wow-dashboard] input, [data-wow-dashboard] select'
-			),
-		]
-		const labelled = inputs.every(
-			(input) =>
-				(input.labels?.length ?? 0) > 0 || input.getAttribute('aria-label')
-		)
-		const charts = [...document.querySelectorAll('[data-chart]')]
-		const chartLabels = charts.every(
-			(chart) => !!chart.getAttribute('aria-label')
-		)
-		const ids = [
-			...document.querySelectorAll(
-				'[data-wow-dashboard] [id], #filter-key, #filter-class, #filter-spec, #filter-search, #filter-dungeon'
-			),
-		].map((node) => node.id)
-		const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index)
-		return {
-			labelled,
-			chartLabels,
-			duplicates,
-			headings: [
-				...document.querySelectorAll('article h1, article h2, article h3'),
-			].map((node) => node.tagName),
-			rankSort: document
-				.querySelector('th[aria-sort]')
-				?.getAttribute('aria-sort'),
-			tableRegion: document
-				.querySelector(".overflow-x-auto[role='region']")
-				?.getAttribute('tabindex'),
-			smallTargets: [
-				...document.querySelectorAll('[data-wow-dashboard] button'),
-			]
-				.map((node) => node.getBoundingClientRect())
-				.filter(
-					(rect) => rect.width > 0 && (rect.width < 24 || rect.height < 24)
-				).length,
-		}
-	})
-	assert.equal(accessibility.labelled, true)
-	assert.equal(accessibility.chartLabels, true)
-	assert.deepEqual(accessibility.duplicates, [])
-	assert.equal(accessibility.rankSort, 'ascending')
-	assert.equal(accessibility.tableRegion, '0')
-	assert.equal(accessibility.smallTargets, 0)
-	assert.deepEqual(
-		accessibility.headings.filter((tag) => tag === 'H1'),
-		['H1']
-	)
-	assert.ok(
-		accessibility.headings.indexOf('H1') < accessibility.headings.indexOf('H2')
-	)
-
-	await page.addScriptTag({ path: axePath })
-	const lightAxe = await page.evaluate(async () => {
-		const article = document.querySelector('article')
-		return article
-			? await window.axe.run(article, {
-					runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
-				})
-			: { violations: [] }
-	})
-	if (lightAxe.violations.length)
-		console.error(
-			lightAxe.violations.map((v) => `${v.id}: ${v.description}`).join('\n')
-		)
-	assert.equal(lightAxe.violations.length, 0)
-
-	await page.screenshot({
-		path: path.join(screenshotDir, 'dashboard-desktop.png'),
-		fullPage: true,
-	})
-	await page.addStyleTag({
-		content: 'main { height: auto !important; overflow: visible !important; }',
-	})
-	await page.evaluate(
-		() =>
-			new Promise((resolve) =>
-				requestAnimationFrame(() => requestAnimationFrame(resolve))
-			)
-	)
-	await page.screenshot({
-		path: path.join(screenshotDir, 'dashboard-desktop-full.png'),
-		fullPage: true,
-	})
-
-	await page.select('[data-filter-dungeon]', firstDungeon.slug)
-	await page.waitForFunction(
-		(expected) =>
-			document.querySelector('[data-kpi="runs"]')?.textContent === expected,
-		{},
-		new Intl.NumberFormat('en-GB').format(firstDungeon.run_count)
-	)
-	assert.equal(
-		await page.$$eval('[data-runs-body] tr', (nodes) => nodes.length),
-		10
-	)
-	await page.select(
-		'[data-filter-key]',
-		await page.$$eval(
-			'[data-filter-key] option',
-			(options) => options.find((option) => option.value !== 'all')?.value
-		)
-	)
-	await page.waitForFunction(
-		(expected) =>
-			Number(
-				document
-					.querySelector('[data-kpi="runs"]')
-					?.textContent?.replace(/,/g, '')
-			) < expected,
-		{},
-		firstDungeon.run_count
-	)
-	await page.click('[data-reset]')
-	await page.waitForFunction(
-		(expected) =>
-			Number(
-				document
-					.querySelector('[data-kpi="runs"]')
-					?.textContent?.replace(/,/g, '')
-			) === expected,
-		{},
-		firstDungeon.run_count
-	)
-	await page.select('[data-filter-dungeon]', 'all')
-	await page.waitForFunction(
-		(expected) =>
-			Number(
-				document
-					.querySelector('[data-kpi="runs"]')
-					?.textContent?.replace(/,/g, '')
-			) === expected,
-		{},
-		totalRuns
-	)
-
-	const firstRunId = await page.$eval(
-		'[data-runs-body] tr th span:nth-child(2)',
-		(el) => el.textContent?.trim() ?? ''
-	)
-	await page.type('[data-filter-search]', firstRunId)
+	await page.type('[data-filter-search]', firstRun)
 	await page.waitForFunction(
 		() => document.querySelectorAll('[data-runs-body] tr').length === 1
 	)
@@ -319,76 +331,127 @@ try {
 	await page.waitForFunction(
 		() => document.querySelectorAll('[data-runs-body] tr').length === 10
 	)
-
-	await page.click("[data-sort='clear']")
-	await page.waitForFunction(
-		() =>
-			document
-				.querySelector("[data-sort='clear']")
-				?.closest('th')
-				?.getAttribute('aria-sort') !== 'none'
-	)
-	await page.focus("[data-sort='clear']")
-	await page.keyboard.press('Enter')
-	assert.equal(
-		await page.$eval("[data-sort='clear']", (button) =>
-			button.closest('th')?.getAttribute('aria-sort')
-		),
-		'ascending'
-	)
-	await page.click('[data-page-next]')
+	await page.select('[data-filter-dungeon]', 'den-of-nalorakk')
 	await page.waitForFunction(() =>
 		document
-			.querySelector('[data-page-status]')
-			?.textContent?.startsWith('Showing runs 11')
+			.querySelector('[data-filter-summary]')
+			?.textContent?.includes('Den of Nalorakk')
 	)
-	await page.click('[data-page-prev]')
+	const denCount = index.dungeons.find(
+		(entry) => entry.slug === 'den-of-nalorakk'
+	).run_count
+	await page.waitForFunction(
+		(expected) =>
+			document.querySelector('[data-result-count]')?.textContent === expected,
+		{},
+		`${new Intl.NumberFormat('en-GB').format(denCount)} matching runs`
+	)
+	await page.click('#tab-classes')
+	await page.waitForFunction(
+		() =>
+			document.querySelector('[data-filter-dungeon]')?.value ===
+			'den-of-nalorakk'
+	)
+	await page.click('#tab-runs')
+	await page.waitForFunction(
+		() => document.querySelectorAll('[data-runs-body] tr').length === 10
+	)
+	await page.screenshot({
+		path: path.join(shots, 'tab-runs-light.png'),
+		fullPage: true,
+	})
+	await axe('runs light')
 
-	await page.click("[data-role='healer']")
-	assert.equal(
-		await page.$eval("[data-role='healer']", (el) =>
-			el.getAttribute('aria-pressed')
+	await page.click('#tab-teams')
+	await page.waitForFunction(
+		() =>
+			document.querySelectorAll('[data-composition-list] tbody tr').length > 0
+	)
+	assert.ok(
+		await page
+			.$eval('[data-composition-list]', (node) => node.textContent ?? '')
+			.then((text) => text.includes('eligible complete teams'))
+	)
+	await page.screenshot({
+		path: path.join(shots, 'tab-teams-light.png'),
+		fullPage: true,
+	})
+	await axe('teams light')
+
+	await page.click('#tab-dungeons')
+	await page.waitForFunction(
+		() => document.querySelectorAll('[data-dungeon-card]').length === 9
+	)
+	const cardImages = await page.$$eval('[data-dungeon-card] img', (nodes) =>
+		nodes.map((node) => node.complete && node.naturalWidth > 0)
+	)
+	assert.ok(cardImages.every(Boolean), 'all dungeon card images should load')
+	await page.click('[data-dungeon-card="den-of-nalorakk"]')
+	await page.waitForFunction(() =>
+		document
+			.querySelector('[data-dungeon-title]')
+			?.textContent?.includes('Den of Nalorakk')
+	)
+	await page.waitForFunction(
+		() =>
+			document.querySelectorAll('[data-panel="dungeons"] canvas').length === 3
+	)
+	assert.match(
+		await page.$eval(
+			'[data-chart="dungeon-completion"]',
+			(node) => node.getAttribute('aria-label') ?? ''
 		),
-		'true'
+		/Horizontal axis: Completion time \(MM:SS\)\. Vertical axis: Number of runs/
 	)
-	await page.click('[data-reset]')
+	assert.match(
+		await page.$eval(
+			'[data-chart="dungeon-margin"]',
+			(node) => node.getAttribute('aria-label') ?? ''
+		),
+		/Horizontal axis: Timer margin \(MM:SS\)\. Vertical axis: Number of runs/
+	)
+	await page.screenshot({
+		path: path.join(shots, 'tab-dungeons-light.png'),
+		fullPage: true,
+	})
+	await axe('dungeons light')
+	await page.click('[data-panel="dungeons"] [data-goto-tab="runs"]')
+	await page.waitForFunction(
+		() =>
+			document.querySelector('#tab-runs')?.getAttribute('aria-selected') ===
+			'true'
+	)
+	await page.waitForFunction(
+		() =>
+			document.querySelector('[data-filter-dungeon]')?.value ===
+			'den-of-nalorakk'
+	)
+	assert.equal(await page.evaluate(() => location.hash), '#runs')
 
+	await page.click('#tab-overview')
 	await page.click('#theme-toggle')
 	await page.waitForFunction(() =>
 		document.documentElement.classList.contains('dark')
 	)
-	await new Promise((resolve) => setTimeout(resolve, 200))
-	const darkAxe = await page.evaluate(async () => {
-		const article = document.querySelector('article')
-		return article
-			? await window.axe.run(article, {
-					runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
-				})
-			: { violations: [] }
-	})
-	if (darkAxe.violations.length)
-		console.error(
-			darkAxe.violations
-				.map(
-					(v) =>
-						`${v.id}: ${v.description} :: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`
-				)
-				.join('\n')
-		)
-	assert.equal(darkAxe.violations.length, 0)
+	await page.waitForTimeout?.(250)
+	await new Promise((resolve) => setTimeout(resolve, 250))
 	await page.screenshot({
-		path: path.join(screenshotDir, 'dashboard-dark.png'),
+		path: path.join(shots, 'tab-overview-dark.png'),
 		fullPage: true,
 	})
-	await page.click('#theme-toggle')
+	await axe('overview dark')
 
 	await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 1 })
-	await page.reload({ waitUntil: 'networkidle0' })
+	await page.goto(`${url}#overview`, { waitUntil: 'networkidle0' })
 	await page.waitForSelector('[data-wow-dashboard]:not([hidden])', {
 		timeout: 90000,
 	})
 	await page.waitForFunction(
-		() => document.querySelectorAll('[data-runs-body] tr').length === 10
+		(expected) =>
+			document.querySelector('[data-overview-kpi="runs"]')?.textContent ===
+			expected,
+		{},
+		new Intl.NumberFormat('en-GB').format(totalRuns)
 	)
 	assert.equal(
 		await page.evaluate(
@@ -396,52 +459,43 @@ try {
 		),
 		false
 	)
-	const mobileCharts = await page.$$eval('[data-chart] canvas', (nodes) =>
-		nodes.map((node) => node.clientWidth)
-	)
-	assert.ok(mobileCharts.every((width) => width > 200))
-	await page.addScriptTag({ path: axePath })
-	const mobileAxe = await page.evaluate(async () => {
-		const article = document.querySelector('article')
-		return article
-			? await window.axe.run(article, {
-					runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] },
-				})
-			: { violations: [] }
-	})
-	if (mobileAxe.violations.length)
-		console.error(
-			mobileAxe.violations
-				.map(
-					(v) =>
-						`${v.id}: ${v.description} :: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`
-				)
-				.join('\n')
-		)
-	assert.equal(mobileAxe.violations.length, 0)
+	assert.equal(await page.$$eval('[role="tab"]', (nodes) => nodes.length), 5)
 	await page.screenshot({
-		path: path.join(screenshotDir, 'dashboard-mobile.png'),
+		path: path.join(shots, 'tab-overview-mobile.png'),
 		fullPage: true,
 	})
+	await page.addScriptTag({ path: axePath })
+	await axe('overview mobile')
+	await page.click('#tab-runs')
+	await page.waitForFunction(
+		() => document.querySelectorAll('[data-runs-body] tr').length === 10,
+		{ timeout: 120000 }
+	)
+	assert.equal(
+		await page.evaluate(
+			() => document.documentElement.scrollWidth > window.innerWidth + 1
+		),
+		false
+	)
+	await page.click('#tab-dungeons')
+	await page.waitForFunction(
+		() => document.querySelectorAll('[data-dungeon-card]').length === 9,
+		{ timeout: 120000 }
+	)
+	assert.equal(
+		await page.evaluate(
+			() => document.documentElement.scrollWidth > window.innerWidth + 1
+		),
+		false
+	)
 
-	const stalePage = await browser.newPage()
-	await stalePage.setRequestInterception(true)
-	stalePage.on('request', (request) => {
-		if (request.url().endsWith('/data/wow-mythic-plus/manifest.json')) {
-			request.respond({
-				status: 200,
-				contentType: 'application/json',
-				body: JSON.stringify({
-					...index,
-					generated_at: new Date(Date.now() - 30 * 86400000).toISOString(),
-				}),
-			})
-		} else request.continue()
-	})
-	await stalePage.goto(url, { waitUntil: 'networkidle0' })
-	await stalePage.waitForSelector('[data-dataset-stale]:not([hidden])', {
-		timeout: 90000,
-	})
+	const otherPage = await browser.newPage()
+	await otherPage.goto(`${base}/projects/`, { waitUntil: 'networkidle0' })
+	assert.ok(
+		await otherPage.$$eval('aside', (nodes) => nodes.length > 0),
+		'other pages must retain the sidebar'
+	)
+	await otherPage.close()
 
 	const errorPage = await browser.newPage()
 	let intercept = true
@@ -461,36 +515,22 @@ try {
 	})
 	await errorPage.goto(url, { waitUntil: 'networkidle0' })
 	await errorPage.waitForSelector('[data-dashboard-error]:not([hidden])', {
-		timeout: 90000,
+		timeout: 60000,
 	})
 	assert.match(
-		await errorPage.$eval('[data-error-message]', (el) => el.textContent),
-		/schema 2/
+		await errorPage.$eval('[data-error-message]', (node) => node.textContent),
+		/schema 2/i
 	)
 	intercept = false
-	errorPage.removeAllListeners('request')
+	await errorPage.removeAllListeners('request')
 	await errorPage.setRequestInterception(false)
 	await errorPage.setCacheEnabled(false)
 	await errorPage.click('[data-retry]')
 	await errorPage.waitForSelector('[data-wow-dashboard]:not([hidden])', {
 		timeout: 90000,
 	})
-	await errorPage.waitForFunction(
-		() => document.querySelectorAll('[data-runs-body] tr').length === 10
-	)
+	await errorPage.close()
 
-	const otherPage = await browser.newPage()
-	await otherPage.goto(`${base}/projects/`, { waitUntil: 'networkidle0' })
-	assert.ok(
-		await otherPage.$$eval('aside', (nodes) => nodes.length > 0),
-		'other pages must retain the sidebar'
-	)
-	await otherPage.close()
-
-	const dataBytes = index.dungeons.reduce(
-		(sum, entry) => sum + entry.size_bytes,
-		0
-	)
 	const nav = await page.evaluate(() => {
 		const entry = performance.getEntriesByType('navigation')[0]
 		return entry
@@ -502,12 +542,12 @@ try {
 	})
 	assert.deepEqual(consoleErrors, [])
 	console.log(
-		`Browser checks passed: ${index.dungeons.length} dungeons, ${totalRuns.toLocaleString('en-GB')} runs, six charts, filters, pagination, dark/light/mobile axe, stale/error/retry.`
+		`Browser checks passed: 5 tabs, ${totalRuns.toLocaleString('en-GB')} runs, lazy loading, filters across tabs, 10/25/50 pagination, dungeon cards, themes, mobile, axe, error/retry.`
 	)
 	console.log(
-		`Initial dashboard readiness: ${loadMs} ms; dataset JSON: ${(dataBytes / 1048576).toFixed(1)} MiB; navigation: ${JSON.stringify(nav)}`
+		`Overview readiness: ${initialMs} ms; overview data transfer: ${(dataBytes / 1024).toFixed(0)} KiB; navigation: ${JSON.stringify(nav)}`
 	)
-	console.log(`Screenshots: ${screenshotDir}`)
+	console.log(`Screenshots: ${shots}`)
 } catch (error) {
 	console.error(error)
 	if (serverOutput) console.error(`--- preview output ---\n${serverOutput}`)

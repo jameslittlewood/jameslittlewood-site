@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">Arcane citadel above a twilight mountain valley</title>
+  <desc id="desc">Original abstract fantasy illustration in deep purple and blue tones.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#090b1a"/><stop offset=".55" stop-color="#171238"/><stop offset="1" stop-color="#35205b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".7" cy=".36" r=".3">
+      <stop offset="0" stop-color="#c4b5fd" stop-opacity=".9"/><stop offset=".45" stop-color="#7c3aed" stop-opacity=".38"/><stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#221a3c"/><stop offset="1" stop-color="#0b0a17"/>
+    </linearGradient>
+    <linearGradient id="mtn2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#392457"/><stop offset="1" stop-color="#120e24"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <rect width="1600" height="620" fill="url(#sky)"/>
+  <circle cx="1120" cy="220" r="260" fill="url(#glow)" filter="url(#blur)"/>
+  <g fill="#e9e4ff" opacity=".65">
+    <circle cx="180" cy="90" r="2"/><circle cx="340" cy="150" r="1.6"/><circle cx="520" cy="70" r="2.2"/>
+    <circle cx="700" cy="130" r="1.3"/><circle cx="880" cy="60" r="1.8"/><circle cx="1250" cy="95" r="2"/>
+    <circle cx="1410" cy="180" r="1.4"/><circle cx="1010" cy="160" r="1.2"/><circle cx="460" cy="220" r="1.1"/>
+  </g>
+  <path d="M0 460 L180 330 L330 430 L500 300 L690 450 L860 350 L1030 460 L1200 320 L1390 440 L1600 350 L1600 620 L0 620 Z" fill="url(#mtn)"/>
+  <path d="M0 530 L210 410 L390 520 L590 390 L790 530 L990 430 L1190 540 L1400 420 L1600 500 L1600 620 L0 620 Z" fill="url(#mtn2)"/>
+  <g transform="translate(1000 190)">
+    <path d="M-95 190 L-80 60 L-45 20 L-30 85 L0 -30 L30 85 L45 20 L80 60 L95 190 Z" fill="#17112d" stroke="#a78bfa" stroke-opacity=".45"/>
+    <path d="M-35 190 L-25 90 L0 60 L25 90 L35 190 Z" fill="#0c0918"/>
+    <circle cx="0" cy="95" r="10" fill="#e9d5ff"/>
+    <path d="M-140 195 L140 195" stroke="#c4b5fd" stroke-opacity=".25"/>
+  </g>
+  <g opacity=".8">
+    <path d="M1250 285 Q1320 240 1390 285 Q1320 330 1250 285 Z" fill="none" stroke="#c4b5fd" stroke-width="2"/>
+    <path d="M1310 250 L1330 285 L1310 320 L1290 285 Z" fill="#7c3aed" opacity=".6"/>
+  </g>
+  <g fill="#a78bfa" opacity=".35" filter="url(#soft)">
+    <circle cx="1310" cy="285" r="36"/><circle cx="1120" cy="220" r="20"/>
+  </g>
+</svg>

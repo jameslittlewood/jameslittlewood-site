@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Original abstract illustration for altar of fangs">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0e24"/><stop offset="1" stop-color="#5b1b45"/></linearGradient><radialGradient id="g" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#f0abfc" stop-opacity=".35"/><stop offset="1" stop-color="#f0abfc" stop-opacity="0"/></radialGradient></defs>
+  <rect width="640" height="360" fill="url(#bg)"/><rect width="640" height="360" fill="url(#g)"/>
+  <circle cx="520" cy="70" r="2" fill="#f0abfc" opacity=".7"/><circle cx="120" cy="55" r="1.5" fill="#f0abfc" opacity=".6"/><circle cx="580" cy="150" r="1.2" fill="#f0abfc" opacity=".5"/>
+  <path d="M90 300 L150 80 L185 300 Z" fill="#0d0714" stroke="#f0abfc" stroke-opacity=".55"/><path d="M350 300 L400 60 L430 300 Z" fill="#0d0714" stroke="#f0abfc" stroke-opacity=".55"/><path d="M210 250 L270 130 L330 250 Z" fill="#2a102d"/>
+  <path d="M0 330 Q160 300 320 330 T640 330 L640 360 L0 360 Z" fill="#05040a" opacity=".7"/>
+</svg>

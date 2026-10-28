@@ -313,6 +313,56 @@ export async function loadIndex(fetcher: typeof fetch = fetch, base = '/data/wow
 	return validateIndex(await response.json())
 }
 
+export interface CombinedDataset {
+	schema_version: string
+	dataset_version: string
+	exported_at: string
+	season_name: string
+	population: {
+		cohort: { runs: number; roster_appearances: number; complete_rosters: number; incomplete_rosters: number; eligible_complete_teams: number }
+		observation_window: { started_at: string | null; completed_at: string | null }
+		dungeons: Array<{ slug: string; collection_key: string; run_count: number }>
+		historical_context: Record<string, number>
+	}
+	completeness: Record<string, unknown>
+	run_statistics: {
+		total_distinct_runs: number
+		key_level: { highest: number | null; lowest: number | null; average: number | null; median: number | null }
+		by_key_level: Array<{ mythic_level: number; runs: number; percentage_of_runs: number }>
+	}
+	class_representation: { classes: ClassDatum[]; denominators: Record<string, number> }
+	spec_representation: { specs: SpecDatum[]; denominators: Record<string, unknown> }
+	team_compositions: Record<string, unknown>
+	performance: Record<string, unknown>
+	definitions: Record<string, unknown>
+	notes: string[]
+}
+
+export function validateCombined(input: unknown): CombinedDataset {
+	assert(isRecord(input), 'Combined dataset is not an object')
+	assert(typeof input.schema_version === 'string' && isSupportedSchema(input.schema_version), 'Combined schema unsupported')
+	assert(isRecord(input.population) && isRecord(input.population.cohort), 'Combined cohort missing')
+	assert(Array.isArray(input.population.dungeons), 'Combined dungeon list missing')
+	assert(isRecord(input.run_statistics) && Array.isArray(input.run_statistics.by_key_level), 'Combined statistics missing')
+	assert(isRecord(input.class_representation) && Array.isArray(input.class_representation.classes), 'Combined class data missing')
+	assertNoCharacterKeys(input)
+	return input as unknown as CombinedDataset
+}
+
+export async function loadCombined(
+	index: Manifest,
+	fetcher: typeof fetch = fetch,
+	base = '/data/wow-mythic-plus',
+): Promise<CombinedDataset> {
+	const response = await fetcher(`${base.replace(/\/$/, '')}/${index.combined.file}`, { cache: 'no-cache' })
+	if (!response.ok) throw new Error(`Could not load combined analytics (HTTP ${response.status})`)
+	const dataset = validateCombined(
+		JSON.parse(new TextDecoder().decode(await verifyFile(response, index.combined.sha256, index.combined.size_bytes))),
+	)
+	if (dataset.dataset_version !== index.dataset_version) throw new Error('Combined dataset version does not match the index')
+	return dataset
+}
+
 export async function loadDungeon(
 	index: Manifest,
 	entry: DungeonEntry,
