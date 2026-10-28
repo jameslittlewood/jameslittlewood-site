@@ -301,15 +301,15 @@ const screenshots = [
 						</div>
 					</div>
 					<div
-						class="provider-connector relative h-8 w-full text-primary"
+						class="provider-connector relative hidden h-8 w-full text-primary sm:block"
 						aria-hidden="true"
 					>
 					</div>
 					<div
-						class="provider-grid relative grid w-full grid-cols-1 gap-x-3 gap-y-6 text-primary sm:grid-cols-2 sm:gap-y-3"
+						class="provider-grid relative mt-4 grid w-full grid-cols-2 gap-3 text-primary sm:mt-0"
 					>
 						<div
-							class="provider-card relative rounded-xl border border-border bg-card p-4"
+							class="provider-card relative min-w-0 rounded-xl border border-border bg-card p-3 sm:p-4"
 						>
 							<span class="provider-arrow" aria-hidden="true"></span>
 							<Icon
@@ -323,7 +323,7 @@ const screenshots = [
 						</div>
 						<div
 							id="windows-inference"
-							class="provider-card relative rounded-xl border border-border bg-card p-4"
+							class="provider-card relative min-w-0 rounded-xl border border-border bg-card p-3 sm:p-4"
 						>
 							<span class="provider-arrow" aria-hidden="true"></span>
 							<Icon
@@ -843,67 +843,50 @@ const screenshots = [
 </script>
 
 <style>
-	/* The branch endpoints follow the provider centres, including the grid gap. */
-	.provider-connector::before,
-	.provider-connector::after,
-	.provider-card::before,
-	.provider-card:first-child::after {
-		content: '';
-		position: absolute;
-		pointer-events: none;
-		border-color: var(--primary);
-	}
-	.provider-connector::before {
-		left: 50%;
-		top: 0;
-		height: 12px;
-		border-left-width: 1px;
-	}
-	.provider-connector::after {
-		left: -8px;
-		right: 50%;
-		top: 12px;
-		border-top-width: 1px;
-	}
-	.provider-card::before {
-		left: -9px;
-		right: 50%;
-		top: -13px;
-		height: 8px;
-		border-top-width: 1px;
-		border-right-width: 1px;
-	}
-	.provider-card:first-child::after {
-		left: -9px;
-		top: -20px;
-		bottom: -12px;
-		border-left-width: 1px;
-	}
+	/* Mobile providers are siblings, without connectors implying a serial flow. */
 	.provider-arrow {
-		position: absolute;
-		left: calc(50% - 3px);
-		top: -9px;
-		width: 6px;
-		height: 6px;
-		border-right: 1px solid var(--primary);
-		border-bottom: 1px solid var(--primary);
-		transform: rotate(45deg);
-		pointer-events: none;
+		display: none;
 	}
+
 	@media (min-width: 40rem) {
+		/* The desktop branch endpoints follow the provider centres and grid gap. */
+		.provider-connector::before,
+		.provider-connector::after,
+		.provider-card::before {
+			content: '';
+			position: absolute;
+			pointer-events: none;
+			border-color: var(--primary);
+		}
+		.provider-connector::before {
+			left: 50%;
+			top: 0;
+			height: 12px;
+			border-left-width: 1px;
+		}
 		.provider-connector::after {
 			left: calc(25% - 3px);
 			right: calc(25% - 3px);
+			top: 12px;
+			border-top-width: 1px;
 		}
 		.provider-card::before {
 			left: 50%;
-			right: auto;
 			top: -20px;
 			height: 16px;
-			border-top: 0;
+			border-right-width: 1px;
 		}
-		.provider-card:first-child::after {
-			display: none;
+		.provider-arrow {
+			display: block;
+			position: absolute;
+			left: calc(50% - 3px);
+			top: -9px;
+			width: 6px;
+			height: 6px;
+			border-right: 1px solid var(--primary);
+			border-bottom: 1px solid var(--primary);
+			transform: rotate(45deg);
+			pointer-events: none;
 		}
 	}
 </style>
