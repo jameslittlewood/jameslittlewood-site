@@ -2,6 +2,14 @@
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
 
+const technologyLinks: Record<string, string> = {
+	SearXNG: 'https://docs.searxng.org/',
+	DDGS: 'https://github.com/deedy5/ddgs',
+	Homepage: 'https://gethomepage.dev/',
+	Glances: 'https://glances.readthedocs.io/en/latest/',
+	'Uptime Kuma': 'https://github.com/louislam/uptime-kuma',
+}
+
 const technologyGroups = [
 	{
 		title: 'AI & Models',
@@ -16,7 +24,7 @@ const technologyGroups = [
 	},
 	{
 		title: 'Infrastructure & Data',
-		technologies: ['Ubuntu Linux', 'Docker', 'PostgreSQL 16'],
+		technologies: ['Ubuntu Linux', 'Docker', 'PostgreSQL'],
 	},
 	{
 		title: 'Search & Monitoring',
@@ -76,7 +84,7 @@ const featureGroups = [
 				title: 'Self-Hosted Infrastructure',
 				icon: 'mdi:server-outline',
 				description:
-					'Ubuntu and Docker host the platform, supported by PostgreSQL 16 and monitoring tools including Homepage, Glances and Uptime Kuma.',
+					'Ubuntu and Docker host the platform, supported by PostgreSQL and monitoring tools including Homepage, Glances and Uptime Kuma.',
 			},
 		],
 	},
@@ -402,7 +410,29 @@ const screenshots = [
 									<div class="min-w-0">
 										<h4 class="mb-1 text-sm font-semibold">{feature.title}</h4>
 										<p class="text-sm leading-relaxed text-muted-foreground">
-											{feature.description}
+											{feature.description
+												.split(/(SearXNG|DDGS|Homepage|Glances|Uptime Kuma)/g)
+												.map((part) =>
+													technologyLinks[part] ? (
+														<a
+															href={technologyLinks[part]}
+															target="_blank"
+															rel="noopener noreferrer"
+															aria-label={`${part} ${technologyLinks[part].includes('github.com') ? 'repository on GitHub' : 'documentation'} (opens in a new tab)`}
+															class="inline-flex items-center whitespace-nowrap text-primary hover:underline underline-offset-4 focus-visible:rounded-sm"
+														>
+															{part}
+															<Icon
+																name="mdi:open-in-new"
+																size={12}
+																class="ml-1 inline-block align-[-2px]"
+																aria-hidden="true"
+															/>
+														</a>
+													) : (
+														part
+													)
+												)}
 										</p>
 									</div>
 								</li>
@@ -596,11 +626,29 @@ const screenshots = [
 							{group.title}
 						</h3>
 						<div class="flex flex-wrap gap-2">
-							{group.technologies.map((technology) => (
-								<span class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
-									{technology}
-								</span>
-							))}
+							{group.technologies.map((technology) =>
+								technologyLinks[technology] ? (
+									<a
+										href={technologyLinks[technology]}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label={`${technology} ${technologyLinks[technology].includes('github.com') ? 'repository on GitHub' : 'documentation'} (opens in a new tab)`}
+										class="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary hover:border-primary/50"
+									>
+										{technology}
+										<Icon
+											name="mdi:open-in-new"
+											size={12}
+											class="shrink-0"
+											aria-hidden="true"
+										/>
+									</a>
+								) : (
+									<span class="rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 font-mono text-xs text-primary">
+										{technology}
+									</span>
+								)
+							)}
 						</div>
 					</section>
 				))
