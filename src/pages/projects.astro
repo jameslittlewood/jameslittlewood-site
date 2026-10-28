@@ -80,6 +80,17 @@ const projects = await getCollection("projects");
                 </a>
               )}
 
+              {project.id === "wow-mythic-plus" && (
+                <a
+                  href="/projects/wow-mythic-plus/"
+                  class="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors duration-300 hover:bg-primary/20"
+                >
+                  <Icon name="mdi:chart-box-outline" class="h-3 w-3" />
+                  Dashboard
+                  <Icon name="mdi:arrow-right" class="h-3 w-3" />
+                </a>
+              )}
+
               {/* External website */}
               {project.data.links?.homepage && (
                 <a

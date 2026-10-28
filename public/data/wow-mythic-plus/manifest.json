@@ -1,0 +1,24 @@
+{
+  "analytics_version": "1.1.0",
+  "cohort": {
+    "complete_rosters": 40,
+    "eligible_complete_teams": 40,
+    "incomplete_rosters": 0,
+    "roster_appearances": 200,
+    "runs": 40
+  },
+  "collection_id": 3,
+  "collection_key": "badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
+  "dataset_version": "v1-badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
+  "file": "analytics-v1.1.0-badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190-20261028T165517580110Z.json",
+  "generated_at": "2026-10-28T16:55:17.580110+00:00",
+  "manifest_version": 1,
+  "schema_version": "1.1.0",
+  "scope": {
+    "dungeon": "den-of-nalorakk",
+    "region": "eu",
+    "season": "season-mn-2"
+  },
+  "sha256": "802cbd704d1f6da3102b00f35179868b4639ce8d33106759756c7179d5779d75",
+  "size_bytes": 111087
+}

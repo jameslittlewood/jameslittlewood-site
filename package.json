@@ -7,7 +7,10 @@
     "build": "astro build && npx pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:wow": "node --test tests/wowMythic.test.ts",
+    "test:wow:browser": "node scripts/test-wow-dashboard.mjs",
+    "sync:wow": "node scripts/sync-wow-mythic-data.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -18,18 +21,21 @@
     "astro-expressive-code": "^0.41.5",
     "astro-icon": "^1.1.5",
     "dayjs": "^1.11.19",
+    "echarts": "^6.1.0",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3",
     "@tailwindcss/postcss": "^4.3.1",
     "@tailwindcss/typography": "^0.5.19",
+    "axe-core": "^4.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "pagefind": "^1.4.0",
     "prettier": "3.7.4",
     "prettier-plugin-astro": "0.14.1",
-    "prettier-plugin-tailwindcss": "0.7.2"
+    "prettier-plugin-tailwindcss": "0.7.2",
+    "puppeteer-core": "^24.43.1"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

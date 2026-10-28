@@ -1,0 +1,4039 @@
+{
+  "class_representation": {
+    "classes": [
+      {
+        "appearances": 40,
+        "class_id": 7,
+        "class_name": "Shaman",
+        "distinct_characters": 18,
+        "percentage_of_classified_roster_appearances": 20.0,
+        "percentage_of_roster_appearances": 20.0,
+        "team_presence_percentage": 100.0,
+        "teams_with_class": 40
+      },
+      {
+        "appearances": 37,
+        "class_id": 1,
+        "class_name": "Warrior",
+        "distinct_characters": 19,
+        "percentage_of_classified_roster_appearances": 18.5,
+        "percentage_of_roster_appearances": 18.5,
+        "team_presence_percentage": 92.5,
+        "teams_with_class": 37
+      },
+      {
+        "appearances": 37,
+        "class_id": 4,
+        "class_name": "Rogue",
+        "distinct_characters": 16,
+        "percentage_of_classified_roster_appearances": 18.5,
+        "percentage_of_roster_appearances": 18.5,
+        "team_presence_percentage": 92.5,
+        "teams_with_class": 37
+      },
+      {
+        "appearances": 34,
+        "class_id": 2,
+        "class_name": "Paladin",
+        "distinct_characters": 13,
+        "percentage_of_classified_roster_appearances": 17.0,
+        "percentage_of_roster_appearances": 17.0,
+        "team_presence_percentage": 85.0,
+        "teams_with_class": 34
+      },
+      {
+        "appearances": 30,
+        "class_id": 11,
+        "class_name": "Druid",
+        "distinct_characters": 13,
+        "percentage_of_classified_roster_appearances": 15.0,
+        "percentage_of_roster_appearances": 15.0,
+        "team_presence_percentage": 75.0,
+        "teams_with_class": 30
+      },
+      {
+        "appearances": 10,
+        "class_id": 6,
+        "class_name": "Death Knight",
+        "distinct_characters": 5,
+        "percentage_of_classified_roster_appearances": 5.0,
+        "percentage_of_roster_appearances": 5.0,
+        "team_presence_percentage": 25.0,
+        "teams_with_class": 10
+      },
+      {
+        "appearances": 5,
+        "class_id": 10,
+        "class_name": "Monk",
+        "distinct_characters": 4,
+        "percentage_of_classified_roster_appearances": 2.5,
+        "percentage_of_roster_appearances": 2.5,
+        "team_presence_percentage": 12.5,
+        "teams_with_class": 5
+      },
+      {
+        "appearances": 3,
+        "class_id": 8,
+        "class_name": "Mage",
+        "distinct_characters": 1,
+        "percentage_of_classified_roster_appearances": 1.5,
+        "percentage_of_roster_appearances": 1.5,
+        "team_presence_percentage": 7.5,
+        "teams_with_class": 3
+      },
+      {
+        "appearances": 3,
+        "class_id": 12,
+        "class_name": "Demon Hunter",
+        "distinct_characters": 1,
+        "percentage_of_classified_roster_appearances": 1.5,
+        "percentage_of_roster_appearances": 1.5,
+        "team_presence_percentage": 7.5,
+        "teams_with_class": 3
+      },
+      {
+        "appearances": 1,
+        "class_id": 5,
+        "class_name": "Priest",
+        "distinct_characters": 1,
+        "percentage_of_classified_roster_appearances": 0.5,
+        "percentage_of_roster_appearances": 0.5,
+        "team_presence_percentage": 2.5,
+        "teams_with_class": 1
+      }
+    ],
+    "denominators": {
+      "classified_roster_appearances": 200,
+      "complete_teams": 40,
+      "missing_class_appearances": 0,
+      "missing_class_id_appearances": 0,
+      "missing_class_name_appearances": 0,
+      "roster_appearances": 200
+    }
+  },
+  "completeness": {
+    "combat_log_coverage": "not_collected",
+    "integrity_warnings": [],
+    "known_character_id_appearances": 200,
+    "missing_character_id_appearances": 0,
+    "missing_class_appearances": 0,
+    "missing_role_appearances": 0,
+    "missing_spec_appearances": 0,
+    "reported_spec_runtime_verified": false,
+    "roster_appearances": 200,
+    "run_details_enrichment": "not_collected",
+    "runs": 40,
+    "runs_with_complete_roster": 40,
+    "runs_with_incomplete_roster": 0
+  },
+  "dataset_version": "v1-badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
+  "definitions": {
+    "average_key_level": {
+      "denominator": "runs with a keystone level",
+      "description": "Arithmetic mean of reported keystone levels.",
+      "unit": "key level"
+    },
+    "class_percentage": {
+      "denominator": "all roster appearances, or classified roster appearances",
+      "description": "Class appearances divided by all roster appearances in the cohort. The separate classified denominator excludes slots with missing class information.",
+      "unit": "percent"
+    },
+    "complete_team": {
+      "denominator": "distinct runs in the selected collection",
+      "description": "A run with exactly five reported roster slots. This is structural completeness; it does not prove that every player or spec is known.",
+      "unit": "count"
+    },
+    "completion_time": {
+      "denominator": "runs with a non-null clear time",
+      "description": "Reported clear_time_ms converted from milliseconds to seconds. Missing timings are excluded and counted, never treated as zero.",
+      "unit": "seconds"
+    },
+    "key_bracket": {
+      "denominator": "runs in the selected collection",
+      "description": "Counts by configurable contiguous key-level brackets. Runs outside the configured brackets are reported as unbracketed_runs.",
+      "unit": "count"
+    },
+    "key_level": {
+      "denominator": "runs in the selected collection",
+      "description": "Reported Mythic+ keystone level.",
+      "unit": "key level"
+    },
+    "median_key_level": {
+      "denominator": "runs with a keystone level",
+      "description": "Median of reported keystone levels.",
+      "unit": "key level"
+    },
+    "percentage_within_role": {
+      "denominator": "roster appearances with the same reported role",
+      "description": "Appearances of a reported specialisation divided by all roster appearances with the same reported role. Missing roles are counted separately and produce a null role percentage.",
+      "unit": "percent"
+    },
+    "performance": {
+      "denominator": "runs or eligible complete teams in the group",
+      "description": "Descriptive clear-time and timer-margin summaries grouped by key level and by repeated composition. These are not causal or strength claims; key level, composition and player skill are confounded.",
+      "unit": "seconds and key levels"
+    },
+    "population": {
+      "denominator": "selected collection",
+      "description": "Metrics use only the selected successful, complete collection. Earlier collections and the unique-run archive are reported separately as historical context and are not mixed into metric denominators.",
+      "unit": "runs and roster appearances"
+    },
+    "reported_specialisation": {
+      "denominator": "all roster appearances; role percentages use role appearances",
+      "description": "The specialisation reported by the leaderboard roster. It is not verified as the specialisation played at run completion and must be labelled 'reported specialisation' in downstream interfaces.",
+      "unit": "count and percent"
+    },
+    "roster_appearance": {
+      "denominator": "all roster observations in the selected collection",
+      "description": "One reported roster slot in the selected collection, including incomplete rosters. The same character can appear in several runs.",
+      "unit": "count"
+    },
+    "run": {
+      "denominator": "distinct run observations in the selected collection",
+      "description": "One distinct keystone_run_id observed in the selected collection.",
+      "unit": "count"
+    },
+    "run_row": {
+      "denominator": "one row per distinct run in the selected collection",
+      "description": "One public-safe run-level record in the selected collection. It contains the source run id, scope, rank, key, timings, score and reported class/spec/role roster without character names or character identifiers.",
+      "unit": "record"
+    },
+    "run_source_url": {
+      "denominator": "one URL per run row",
+      "description": "Public Raider.IO run-detail URL generated from region, season, dungeon and run id. The pattern was verified for the current scope.",
+      "unit": "https URL"
+    },
+    "source_ranking_score": {
+      "denominator": "runs with a source ranking score",
+      "description": "Leaderboard ranking score observed for each run at collection time. Its semantic equivalence to run-details score is not verified; it is never combined with run-details scores or used for strength claims.",
+      "unit": "leaderboard score points"
+    },
+    "team_composition": {
+      "denominator": "eligible complete teams",
+      "description": "A sorted multiset of five reported specialisation IDs. Repeated specialisations are preserved. API roster order is not treated as team order. Only complete teams with five classified specs and roles are eligible.",
+      "unit": "count and percent"
+    },
+    "team_presence": {
+      "denominator": "complete five-slot teams in the selected collection",
+      "description": "Complete teams containing the class or specialisation at least once, divided by all structurally complete teams. Incomplete rosters are not used for team-presence percentages.",
+      "unit": "percent"
+    },
+    "timer_margin": {
+      "denominator": "runs with both clear time and keystone timer",
+      "description": "Dungeon keystone timer minus reported clear time, in seconds. Positive means ahead of the timer; negative means overtime. The percentage variant divides by the dungeon timer.",
+      "unit": "seconds or percent"
+    },
+    "timer_margin_percent": {
+      "denominator": "runs with clear time and keystone timer",
+      "description": "Timer margin divided by the dungeon keystone timer, expressed as a percentage. Positive is ahead of the timer; negative is overtime.",
+      "unit": "percent"
+    }
+  },
+  "exported_at": "2026-10-28T16:55:17.580110+00:00",
+  "notes": [
+    "Cohort is collected top leaderboard runs, not all Mythic+ runs or players.",
+    "Specialisation is reported as returned by the leaderboard and is not verified run-time specialisation.",
+    "Roster array order is not treated as in-game group order.",
+    "Class and specialisation percentages are descriptive, not measures of overall popularity or class strength.",
+    "Source ranking score semantics remain unverified; no run-details score is combined with it.",
+    "Single-dungeon and single-season scope limits cross-dungeon comparisons.",
+    "No combat-log or run-details enrichment is present; those coverages are reported as not_collected.",
+    "Percentages are rounded independently for presentation and may not sum to exactly 100.00.",
+    "Run rows contain public source run ids and reported game class/spec ids, but no character names or character identifiers."
+  ],
+  "performance": {
+    "by_composition": [
+      {
+        "clear_time": {
+          "available_runs": 20,
+          "max": 1901.271,
+          "mean": 1694.388,
+          "median": 1676.509,
+          "min": 1577.035,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "composition_id": "65,71,104,261,262",
+        "median_mythic_level": 23.0,
+        "occurrences": 20,
+        "percentage_of_eligible_complete_teams": 50.0,
+        "spec_ids": [
+          65,
+          71,
+          104,
+          261,
+          262
+        ],
+        "spec_names": [
+          "Holy",
+          "Arms",
+          "Guardian",
+          "Subtlety",
+          "Elemental"
+        ],
+        "timer_margin": {
+          "available_runs": 20,
+          "max": 343.964,
+          "mean": 226.612,
+          "median": 244.49,
+          "min": 19.728,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      },
+      {
+        "clear_time": {
+          "available_runs": 6,
+          "max": 1888.437,
+          "mean": 1771.381,
+          "median": 1784.701,
+          "min": 1651.027,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "composition_id": "65,71,250,261,262",
+        "median_mythic_level": 23.5,
+        "occurrences": 6,
+        "percentage_of_eligible_complete_teams": 15.0,
+        "spec_ids": [
+          65,
+          71,
+          250,
+          261,
+          262
+        ],
+        "spec_names": [
+          "Holy",
+          "Arms",
+          "Blood",
+          "Subtlety",
+          "Elemental"
+        ],
+        "timer_margin": {
+          "available_runs": 6,
+          "max": 269.972,
+          "mean": 149.618,
+          "median": 136.298,
+          "min": 32.562,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      },
+      {
+        "clear_time": {
+          "available_runs": 4,
+          "max": 1813.518,
+          "mean": 1736.809,
+          "median": 1732.058,
+          "min": 1669.6,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "composition_id": "70,71,104,261,264",
+        "median_mythic_level": 23.0,
+        "occurrences": 4,
+        "percentage_of_eligible_complete_teams": 10.0,
+        "spec_ids": [
+          70,
+          71,
+          104,
+          261,
+          264
+        ],
+        "spec_names": [
+          "Retribution",
+          "Arms",
+          "Guardian",
+          "Subtlety",
+          "Restoration"
+        ],
+        "timer_margin": {
+          "available_runs": 4,
+          "max": 251.399,
+          "mean": 184.191,
+          "median": 188.941,
+          "min": 107.481,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      },
+      {
+        "clear_time": {
+          "available_runs": 4,
+          "max": 1762.612,
+          "mean": 1750.311,
+          "median": 1750.022,
+          "min": 1738.589,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "composition_id": "71,103,261,264,268",
+        "median_mythic_level": 23.0,
+        "occurrences": 4,
+        "percentage_of_eligible_complete_teams": 10.0,
+        "spec_ids": [
+          71,
+          103,
+          261,
+          264,
+          268
+        ],
+        "spec_names": [
+          "Arms",
+          "Feral",
+          "Subtlety",
+          "Restoration",
+          "Brewmaster"
+        ],
+        "timer_margin": {
+          "available_runs": 4,
+          "max": 182.41,
+          "mean": 170.688,
+          "median": 170.978,
+          "min": 158.387,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      },
+      {
+        "clear_time": {
+          "available_runs": 3,
+          "max": 1916.259,
+          "mean": 1748.678,
+          "median": 1672.384,
+          "min": 1657.392,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "composition_id": "62,65,250,262,577",
+        "median_mythic_level": 23,
+        "occurrences": 3,
+        "percentage_of_eligible_complete_teams": 7.5,
+        "spec_ids": [
+          62,
+          65,
+          250,
+          262,
+          577
+        ],
+        "spec_names": [
+          "Arcane",
+          "Holy",
+          "Blood",
+          "Elemental",
+          "Havoc"
+        ],
+        "timer_margin": {
+          "available_runs": 3,
+          "max": 263.607,
+          "mean": 172.321,
+          "median": 248.615,
+          "min": 4.74,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      }
+    ],
+    "by_key_level": [
+      {
+        "clear_time": {
+          "available_runs": 30,
+          "max": 1762.612,
+          "mean": 1686.606,
+          "median": 1687.493,
+          "min": 1577.035,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "mythic_level": 23,
+        "percentage_of_runs": 75.0,
+        "runs": 30,
+        "timer_margin": {
+          "available_runs": 30,
+          "max": 343.964,
+          "mean": 234.393,
+          "median": 233.506,
+          "min": 158.387,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      },
+      {
+        "clear_time": {
+          "available_runs": 10,
+          "max": 1916.259,
+          "mean": 1833.642,
+          "median": 1853.707,
+          "min": 1674.349,
+          "missing_runs": 0,
+          "unit": "seconds"
+        },
+        "mythic_level": 24,
+        "percentage_of_runs": 25.0,
+        "runs": 10,
+        "timer_margin": {
+          "available_runs": 10,
+          "max": 246.65,
+          "mean": 87.357,
+          "median": 67.292,
+          "min": 4.74,
+          "missing_runs": 0,
+          "unit": "seconds"
+        }
+      }
+    ],
+    "comparison_notes": [
+      "Descriptive comparisons only. Compositions and key levels are not randomised treatment groups; player skill, group experience and selection effects are unobserved.",
+      "All runs in this cohort are from one dungeon and season, so dungeon timer differences are not being compared.",
+      "Source ranking score semantics are unverified and are excluded from these performance comparisons.",
+      "Small samples, especially for rare compositions, make differences unstable. No claim about class or specialisation strength is made."
+    ],
+    "low_sample_compositions_excluded": 3,
+    "min_composition_sample": 3
+  },
+  "population": {
+    "cohort": {
+      "complete_rosters": 40,
+      "eligible_complete_teams": 40,
+      "incomplete_rosters": 0,
+      "roster_appearances": 200,
+      "runs": 40
+    },
+    "collection": {
+      "completed_at": "2026-10-28T15:39:32.361239+00:00",
+      "fetch_completed_at": "2026-10-28T15:39:32.359128+00:00",
+      "fetch_started_at": "2026-10-28T15:39:32.158422+00:00",
+      "id": 3,
+      "key": "badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
+      "pages_requested": 2,
+      "pages_succeeded": 2,
+      "requested_pages": [
+        0,
+        1
+      ],
+      "started_at": "2026-10-28T15:39:31.876195+00:00",
+      "status": "completed"
+    },
+    "description": "Latest successful complete collection for the requested scope; historical observations and the unique-run archive are not mixed into the metric population.",
+    "historical_context": {
+      "collections_for_scope": 3,
+      "leaderboard_observations_stored_for_scope": 120,
+      "other_leaderboard_observations_for_scope": 80,
+      "other_roster_observations_for_scope": 400,
+      "roster_observations_stored_for_scope": 600,
+      "unique_runs_ever_discovered_for_scope": 40
+    },
+    "observation_window": {
+      "completed_at": "2026-10-28T15:39:32.359107+00:00",
+      "started_at": "2026-10-28T15:39:32.291081+00:00"
+    },
+    "scope": {
+      "dungeon": "den-of-nalorakk",
+      "region": "eu",
+      "season": "season-mn-2"
+    },
+    "selection_method": "latest_complete_collection"
+  },
+  "run_statistics": {
+    "by_dungeon": [
+      {
+        "dungeon_id": 16368,
+        "dungeon_name": "Den of Nalorakk",
+        "dungeon_slug": "den-of-nalorakk",
+        "percentage_of_runs": 100.0,
+        "runs": 40
+      }
+    ],
+    "by_key_bracket": [
+      {
+        "label": "1-9",
+        "max_level": 9,
+        "min_level": 1,
+        "percentage_of_runs": 0.0,
+        "runs": 0
+      },
+      {
+        "label": "10-14",
+        "max_level": 14,
+        "min_level": 10,
+        "percentage_of_runs": 0.0,
+        "runs": 0
+      },
+      {
+        "label": "15-19",
+        "max_level": 19,
+        "min_level": 15,
+        "percentage_of_runs": 0.0,
+        "runs": 0
+      },
+      {
+        "label": "20-24",
+        "max_level": 24,
+        "min_level": 20,
+        "percentage_of_runs": 100.0,
+        "runs": 40
+      },
+      {
+        "label": "25+",
+        "max_level": null,
+        "min_level": 25,
+        "percentage_of_runs": 0.0,
+        "runs": 0
+      }
+    ],
+    "by_key_level": [
+      {
+        "mythic_level": 23,
+        "percentage_of_runs": 75.0,
+        "runs": 30
+      },
+      {
+        "mythic_level": 24,
+        "percentage_of_runs": 25.0,
+        "runs": 10
+      }
+    ],
+    "completion_time": {
+      "available_runs": 40,
+      "max": 1916.259,
+      "mean": 1723.365,
+      "median": 1729.087,
+      "min": 1577.035,
+      "missing_runs": 0,
+      "unit": "seconds"
+    },
+    "key_level": {
+      "average": 23.25,
+      "highest": 24,
+      "lowest": 23,
+      "median": 23.0
+    },
+    "source_ranking_score": {
+      "available_runs": 40,
+      "max": 549.8,
+      "mean": 537.6,
+      "median": 535.0,
+      "min": 533.1,
+      "missing_runs": 0,
+      "note": "Values are the leaderboard ranking score observed at collection time. They have not been verified as equivalent to run-details score and are not used for class, specialisation or composition comparisons.",
+      "semantics_verified": false,
+      "unit": "leaderboard_score_points"
+    },
+    "timer_margin": {
+      "available_runs": 40,
+      "max": 343.964,
+      "mean": 197.634,
+      "mean_percentage_of_dungeon_timer": 10.29,
+      "median": 191.913,
+      "median_percentage_of_dungeon_timer": 9.99,
+      "min": 4.74,
+      "missing_runs": 0,
+      "unit": "seconds"
+    },
+    "total_distinct_runs": 40,
+    "unbracketed_percentage": 0.0,
+    "unbracketed_runs": 0
+  },
+  "runs": [
+    {
+      "clear_time_seconds": 1674.349,
+      "completed_at": "2026-10-27T15:23:02+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23351424,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 1,
+      "source_score": 549.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23351424",
+      "status": "finished",
+      "timer_margin_percent": 12.84,
+      "timer_margin_seconds": 246.65
+    },
+    {
+      "clear_time_seconds": 1722.198,
+      "completed_at": "2026-10-24T20:26:11+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22760891,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 2,
+      "source_score": 548.9,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22760891",
+      "status": "finished",
+      "timer_margin_percent": 10.35,
+      "timer_margin_seconds": 198.801
+    },
+    {
+      "clear_time_seconds": 1813.518,
+      "completed_at": "2026-10-27T18:49:50+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 70,
+          "spec_name": "Retribution"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 5,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23394822,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 3,
+      "source_score": 547.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23394822",
+      "status": "finished",
+      "timer_margin_percent": 5.6,
+      "timer_margin_seconds": 107.481
+    },
+    {
+      "clear_time_seconds": 1831.947,
+      "completed_at": "2026-10-24T13:31:37+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22651293,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 4,
+      "source_score": 546.7,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22651293",
+      "status": "finished",
+      "timer_margin_percent": 4.64,
+      "timer_margin_seconds": 89.052
+    },
+    {
+      "clear_time_seconds": 1843.142,
+      "completed_at": "2026-10-24T20:18:22+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22759760,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 5,
+      "source_score": 546.5,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22759760",
+      "status": "finished",
+      "timer_margin_percent": 4.05,
+      "timer_margin_seconds": 77.857
+    },
+    {
+      "clear_time_seconds": 1864.272,
+      "completed_at": "2026-10-22T12:05:30+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22184121,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 6,
+      "source_score": 546.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22184121",
+      "status": "finished",
+      "timer_margin_percent": 2.95,
+      "timer_margin_seconds": 56.727
+    },
+    {
+      "clear_time_seconds": 1881.027,
+      "completed_at": "2026-10-20T19:01:41+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21851577,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 7,
+      "source_score": 545.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21851577",
+      "status": "finished",
+      "timer_margin_percent": 2.08,
+      "timer_margin_seconds": 39.972
+    },
+    {
+      "clear_time_seconds": 1888.437,
+      "completed_at": "2026-10-23T23:25:55+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22523914,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 8,
+      "source_score": 545.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22523914",
+      "status": "finished",
+      "timer_margin_percent": 1.7,
+      "timer_margin_seconds": 32.562
+    },
+    {
+      "clear_time_seconds": 1901.271,
+      "completed_at": "2026-10-17T22:15:50+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21264244,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 9,
+      "source_score": 545.4,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21264244",
+      "status": "finished",
+      "timer_margin_percent": 1.03,
+      "timer_margin_seconds": 19.728
+    },
+    {
+      "clear_time_seconds": 1916.259,
+      "completed_at": "2026-10-26T15:40:59+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 24,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 8,
+          "class_name": "Mage",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 62,
+          "spec_name": "Arcane"
+        },
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 2,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        },
+        {
+          "class_id": 12,
+          "class_name": "Demon Hunter",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 577,
+          "spec_name": "Havoc"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23167873,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 10,
+      "source_score": 545.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23167873",
+      "status": "finished",
+      "timer_margin_percent": 0.25,
+      "timer_margin_seconds": 4.74
+    },
+    {
+      "clear_time_seconds": 1577.035,
+      "completed_at": "2026-10-26T15:53:56+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23207700,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 11,
+      "source_score": 536.7,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23207700",
+      "status": "finished",
+      "timer_margin_percent": 17.91,
+      "timer_margin_seconds": 343.964
+    },
+    {
+      "clear_time_seconds": 1589.711,
+      "completed_at": "2026-10-25T16:17:13+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22989516,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 12,
+      "source_score": 536.5,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22989516",
+      "status": "finished",
+      "timer_margin_percent": 17.25,
+      "timer_margin_seconds": 331.288
+    },
+    {
+      "clear_time_seconds": 1595.637,
+      "completed_at": "2026-10-22T15:28:33+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22217808,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 13,
+      "source_score": 536.3,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22217808",
+      "status": "finished",
+      "timer_margin_percent": 16.94,
+      "timer_margin_seconds": 325.362
+    },
+    {
+      "clear_time_seconds": 1599.737,
+      "completed_at": "2026-10-24T15:22:39+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22676316,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 14,
+      "source_score": 536.3,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22676316",
+      "status": "finished",
+      "timer_margin_percent": 16.72,
+      "timer_margin_seconds": 321.262
+    },
+    {
+      "clear_time_seconds": 1611.574,
+      "completed_at": "2026-10-25T18:11:25+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23012039,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 15,
+      "source_score": 536.0,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23012039",
+      "status": "finished",
+      "timer_margin_percent": 16.11,
+      "timer_margin_seconds": 309.425
+    },
+    {
+      "clear_time_seconds": 1619.569,
+      "completed_at": "2026-10-28T00:24:02+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23436505,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 16,
+      "source_score": 535.9,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23436505",
+      "status": "finished",
+      "timer_margin_percent": 15.69,
+      "timer_margin_seconds": 301.43
+    },
+    {
+      "clear_time_seconds": 1620.642,
+      "completed_at": "2026-10-26T00:44:53+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23119248,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 17,
+      "source_score": 535.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23119248",
+      "status": "finished",
+      "timer_margin_percent": 15.64,
+      "timer_margin_seconds": 300.357
+    },
+    {
+      "clear_time_seconds": 1631.043,
+      "completed_at": "2026-10-23T23:29:57+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22568617,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 18,
+      "source_score": 535.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22568617",
+      "status": "finished",
+      "timer_margin_percent": 15.09,
+      "timer_margin_seconds": 289.956
+    },
+    {
+      "clear_time_seconds": 1651.027,
+      "completed_at": "2026-10-24T19:39:53+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22752698,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 19,
+      "source_score": 535.3,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22752698",
+      "status": "finished",
+      "timer_margin_percent": 14.05,
+      "timer_margin_seconds": 269.972
+    },
+    {
+      "clear_time_seconds": 1657.392,
+      "completed_at": "2026-10-24T21:45:07+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 8,
+          "class_name": "Mage",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 62,
+          "spec_name": "Arcane"
+        },
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 2,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        },
+        {
+          "class_id": 12,
+          "class_name": "Demon Hunter",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 577,
+          "spec_name": "Havoc"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22777280,
+      "season": "season-mn-2",
+      "source_page": 0,
+      "source_rank": 20,
+      "source_score": 535.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22777280",
+      "status": "finished",
+      "timer_margin_percent": 13.72,
+      "timer_margin_seconds": 263.607
+    },
+    {
+      "clear_time_seconds": 1668.475,
+      "completed_at": "2026-10-24T17:09:58+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22719689,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 21,
+      "source_score": 534.9,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22719689",
+      "status": "finished",
+      "timer_margin_percent": 13.15,
+      "timer_margin_seconds": 252.524
+    },
+    {
+      "clear_time_seconds": 1669.6,
+      "completed_at": "2026-10-20T20:11:03+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 70,
+          "spec_name": "Retribution"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 5,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21861714,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 22,
+      "source_score": 534.9,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21861714",
+      "status": "finished",
+      "timer_margin_percent": 13.09,
+      "timer_margin_seconds": 251.399
+    },
+    {
+      "clear_time_seconds": 1672.384,
+      "completed_at": "2026-10-22T14:33:51+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 8,
+          "class_name": "Mage",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 62,
+          "spec_name": "Arcane"
+        },
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 2,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        },
+        {
+          "class_id": 12,
+          "class_name": "Demon Hunter",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 577,
+          "spec_name": "Havoc"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22195616,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 23,
+      "source_score": 534.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22195616",
+      "status": "finished",
+      "timer_margin_percent": 12.94,
+      "timer_margin_seconds": 248.615
+    },
+    {
+      "clear_time_seconds": 1676.277,
+      "completed_at": "2026-10-23T17:32:48+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22460003,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 24,
+      "source_score": 534.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22460003",
+      "status": "finished",
+      "timer_margin_percent": 12.74,
+      "timer_margin_seconds": 244.722
+    },
+    {
+      "clear_time_seconds": 1678.669,
+      "completed_at": "2026-10-19T15:11:54+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21607301,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 25,
+      "source_score": 534.7,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21607301",
+      "status": "finished",
+      "timer_margin_percent": 12.61,
+      "timer_margin_seconds": 242.33
+    },
+    {
+      "clear_time_seconds": 1696.317,
+      "completed_at": "2026-10-28T14:14:50+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23511959,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 26,
+      "source_score": 534.4,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23511959",
+      "status": "finished",
+      "timer_margin_percent": 11.7,
+      "timer_margin_seconds": 224.682
+    },
+    {
+      "clear_time_seconds": 1708.295,
+      "completed_at": "2026-10-17T14:23:51+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21143302,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 27,
+      "source_score": 534.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21143302",
+      "status": "finished",
+      "timer_margin_percent": 11.07,
+      "timer_margin_seconds": 212.704
+    },
+    {
+      "clear_time_seconds": 1727.903,
+      "completed_at": "2026-10-24T12:50:00+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 2,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 3,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 4,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        },
+        {
+          "class_id": 10,
+          "class_name": "Monk",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 269,
+          "spec_name": "Windwalker"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22637462,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 28,
+      "source_score": 533.8,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22637462",
+      "status": "finished",
+      "timer_margin_percent": 10.05,
+      "timer_margin_seconds": 193.096
+    },
+    {
+      "clear_time_seconds": 1730.27,
+      "completed_at": "2026-10-25T14:38:40+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 70,
+          "spec_name": "Retribution"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 5,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22931960,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 29,
+      "source_score": 533.7,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22931960",
+      "status": "finished",
+      "timer_margin_percent": 9.93,
+      "timer_margin_seconds": 190.729
+    },
+    {
+      "clear_time_seconds": 1733.846,
+      "completed_at": "2026-10-21T13:55:24+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 70,
+          "spec_name": "Retribution"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 5,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 21978730,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 30,
+      "source_score": 533.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/21978730",
+      "status": "finished",
+      "timer_margin_percent": 9.74,
+      "timer_margin_seconds": 187.153
+    },
+    {
+      "clear_time_seconds": 1735.403,
+      "completed_at": "2026-10-15T14:12:21+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 70,
+          "spec_name": "Retribution"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 259,
+          "spec_name": "Assassination"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 5,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 20753514,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 31,
+      "source_score": 533.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/20753514",
+      "status": "finished",
+      "timer_margin_percent": 9.66,
+      "timer_margin_seconds": 185.596
+    },
+    {
+      "clear_time_seconds": 1737.455,
+      "completed_at": "2026-10-22T14:44:44+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22202562,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 32,
+      "source_score": 533.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22202562",
+      "status": "finished",
+      "timer_margin_percent": 9.55,
+      "timer_margin_seconds": 183.544
+    },
+    {
+      "clear_time_seconds": 1737.978,
+      "completed_at": "2026-10-24T11:36:36+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22625980,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 33,
+      "source_score": 533.6,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22625980",
+      "status": "finished",
+      "timer_margin_percent": 9.53,
+      "timer_margin_seconds": 183.021
+    },
+    {
+      "clear_time_seconds": 1738.589,
+      "completed_at": "2026-10-28T00:33:40+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 103,
+          "spec_name": "Feral"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 3,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 4,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        },
+        {
+          "class_id": 10,
+          "class_name": "Monk",
+          "role": "tank",
+          "roster_position": 5,
+          "spec_id": 268,
+          "spec_name": "Brewmaster"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23437608,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 34,
+      "source_score": 533.5,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23437608",
+      "status": "finished",
+      "timer_margin_percent": 9.5,
+      "timer_margin_seconds": 182.41
+    },
+    {
+      "clear_time_seconds": 1743.941,
+      "completed_at": "2026-10-24T19:00:46+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 103,
+          "spec_name": "Feral"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 3,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 4,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        },
+        {
+          "class_id": 10,
+          "class_name": "Monk",
+          "role": "tank",
+          "roster_position": 5,
+          "spec_id": 268,
+          "spec_name": "Brewmaster"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22745016,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 35,
+      "source_score": 533.4,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22745016",
+      "status": "finished",
+      "timer_margin_percent": 9.22,
+      "timer_margin_seconds": 177.058
+    },
+    {
+      "clear_time_seconds": 1751.973,
+      "completed_at": "2026-10-27T16:20:46+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23398257,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 36,
+      "source_score": 533.3,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23398257",
+      "status": "finished",
+      "timer_margin_percent": 8.8,
+      "timer_margin_seconds": 169.026
+    },
+    {
+      "clear_time_seconds": 1756.102,
+      "completed_at": "2026-10-27T21:53:09+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 103,
+          "spec_name": "Feral"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 3,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 4,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        },
+        {
+          "class_id": 10,
+          "class_name": "Monk",
+          "role": "tank",
+          "roster_position": 5,
+          "spec_id": 268,
+          "spec_name": "Brewmaster"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23423309,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 37,
+      "source_score": 533.2,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23423309",
+      "status": "finished",
+      "timer_margin_percent": 8.58,
+      "timer_margin_seconds": 164.897
+    },
+    {
+      "clear_time_seconds": 1757.978,
+      "completed_at": "2026-10-25T16:33:54+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 2,
+          "class_name": "Paladin",
+          "role": "healer",
+          "roster_position": 1,
+          "spec_id": 65,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "tank",
+          "roster_position": 3,
+          "spec_id": 104,
+          "spec_name": "Guardian"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22969539,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 38,
+      "source_score": 533.2,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22969539",
+      "status": "finished",
+      "timer_margin_percent": 8.49,
+      "timer_margin_seconds": 163.021
+    },
+    {
+      "clear_time_seconds": 1760.744,
+      "completed_at": "2026-10-28T01:34:44+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 6,
+          "class_name": "Death Knight",
+          "role": "tank",
+          "roster_position": 2,
+          "spec_id": 250,
+          "spec_name": "Blood"
+        },
+        {
+          "class_id": 5,
+          "class_name": "Priest",
+          "role": "healer",
+          "roster_position": 3,
+          "spec_id": 257,
+          "spec_name": "Holy"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 4,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "dps",
+          "roster_position": 5,
+          "spec_id": 262,
+          "spec_name": "Elemental"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 23441408,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 39,
+      "source_score": 533.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/23441408",
+      "status": "finished",
+      "timer_margin_percent": 8.34,
+      "timer_margin_seconds": 160.255
+    },
+    {
+      "clear_time_seconds": 1762.612,
+      "completed_at": "2026-10-25T14:23:24+00:00",
+      "dungeon": {
+        "id": 16368,
+        "name": "Den of Nalorakk",
+        "slug": "den-of-nalorakk"
+      },
+      "keystone_time_seconds": 1920.999,
+      "mythic_level": 23,
+      "num_chests": 1,
+      "roster": [
+        {
+          "class_id": 1,
+          "class_name": "Warrior",
+          "role": "dps",
+          "roster_position": 1,
+          "spec_id": 71,
+          "spec_name": "Arms"
+        },
+        {
+          "class_id": 11,
+          "class_name": "Druid",
+          "role": "dps",
+          "roster_position": 2,
+          "spec_id": 103,
+          "spec_name": "Feral"
+        },
+        {
+          "class_id": 4,
+          "class_name": "Rogue",
+          "role": "dps",
+          "roster_position": 3,
+          "spec_id": 261,
+          "spec_name": "Subtlety"
+        },
+        {
+          "class_id": 7,
+          "class_name": "Shaman",
+          "role": "healer",
+          "roster_position": 4,
+          "spec_id": 264,
+          "spec_name": "Restoration"
+        },
+        {
+          "class_id": 10,
+          "class_name": "Monk",
+          "role": "tank",
+          "roster_position": 5,
+          "spec_id": 268,
+          "spec_name": "Brewmaster"
+        }
+      ],
+      "roster_complete": true,
+      "run_id": 22930655,
+      "season": "season-mn-2",
+      "source_page": 1,
+      "source_rank": 40,
+      "source_score": 533.1,
+      "source_score_semantics_verified": false,
+      "source_url": "https://raider.io/mythic-plus-rankings/runs/eu/season-mn-2/den-of-nalorakk/22930655",
+      "status": "finished",
+      "timer_margin_percent": 8.25,
+      "timer_margin_seconds": 158.387
+    }
+  ],
+  "schema_version": "1.1.0",
+  "source": {
+    "attribution": "Collected from the public Raider.IO Mythic+ leaderboard API. This is a leaderboard snapshot, not the complete Mythic+ population.",
+    "endpoint": "mythic-plus/runs",
+    "name": "Raider.IO",
+    "spec_provenance": "run.roster[].character.spec; run-time specialisation is not verified"
+  },
+  "spec_representation": {
+    "denominators": {
+      "classified_spec_appearances": 200,
+      "complete_teams": 40,
+      "missing_role_appearances": 0,
+      "missing_spec_appearances": 0,
+      "missing_spec_id_appearances": 0,
+      "missing_spec_name_appearances": 0,
+      "partial_spec_appearances": 0,
+      "role_appearances": {
+        "dps": 120,
+        "healer": 40,
+        "tank": 40
+      },
+      "roster_appearances": 200
+    },
+    "label": "reported specialisation",
+    "runtime_verified": false,
+    "runtime_verified_appearances": 0,
+    "runtime_verified_claim_present": false,
+    "sources": [
+      "mythic-plus/runs:run.roster[].character.spec"
+    ],
+    "specs": [
+      {
+        "appearances": 37,
+        "class_id": 1,
+        "class_name": "Warrior",
+        "distinct_characters": 19,
+        "percentage_of_classified_spec_appearances": 18.5,
+        "percentage_of_roster_appearances": 18.5,
+        "percentage_within_role": 30.83,
+        "role": "dps",
+        "spec_id": 71,
+        "spec_name": "Arms",
+        "team_presence_percentage": 92.5,
+        "teams_with_spec": 37
+      },
+      {
+        "appearances": 36,
+        "class_id": 4,
+        "class_name": "Rogue",
+        "distinct_characters": 16,
+        "percentage_of_classified_spec_appearances": 18.0,
+        "percentage_of_roster_appearances": 18.0,
+        "percentage_within_role": 30.0,
+        "role": "dps",
+        "spec_id": 261,
+        "spec_name": "Subtlety",
+        "team_presence_percentage": 90.0,
+        "teams_with_spec": 36
+      },
+      {
+        "appearances": 30,
+        "class_id": 7,
+        "class_name": "Shaman",
+        "distinct_characters": 13,
+        "percentage_of_classified_spec_appearances": 15.0,
+        "percentage_of_roster_appearances": 15.0,
+        "percentage_within_role": 25.0,
+        "role": "dps",
+        "spec_id": 262,
+        "spec_name": "Elemental",
+        "team_presence_percentage": 75.0,
+        "teams_with_spec": 30
+      },
+      {
+        "appearances": 29,
+        "class_id": 2,
+        "class_name": "Paladin",
+        "distinct_characters": 12,
+        "percentage_of_classified_spec_appearances": 14.5,
+        "percentage_of_roster_appearances": 14.5,
+        "percentage_within_role": 72.5,
+        "role": "healer",
+        "spec_id": 65,
+        "spec_name": "Holy",
+        "team_presence_percentage": 72.5,
+        "teams_with_spec": 29
+      },
+      {
+        "appearances": 26,
+        "class_id": 11,
+        "class_name": "Druid",
+        "distinct_characters": 10,
+        "percentage_of_classified_spec_appearances": 13.0,
+        "percentage_of_roster_appearances": 13.0,
+        "percentage_within_role": 65.0,
+        "role": "tank",
+        "spec_id": 104,
+        "spec_name": "Guardian",
+        "team_presence_percentage": 65.0,
+        "teams_with_spec": 26
+      },
+      {
+        "appearances": 10,
+        "class_id": 6,
+        "class_name": "Death Knight",
+        "distinct_characters": 5,
+        "percentage_of_classified_spec_appearances": 5.0,
+        "percentage_of_roster_appearances": 5.0,
+        "percentage_within_role": 25.0,
+        "role": "tank",
+        "spec_id": 250,
+        "spec_name": "Blood",
+        "team_presence_percentage": 25.0,
+        "teams_with_spec": 10
+      },
+      {
+        "appearances": 10,
+        "class_id": 7,
+        "class_name": "Shaman",
+        "distinct_characters": 5,
+        "percentage_of_classified_spec_appearances": 5.0,
+        "percentage_of_roster_appearances": 5.0,
+        "percentage_within_role": 25.0,
+        "role": "healer",
+        "spec_id": 264,
+        "spec_name": "Restoration",
+        "team_presence_percentage": 25.0,
+        "teams_with_spec": 10
+      },
+      {
+        "appearances": 5,
+        "class_id": 2,
+        "class_name": "Paladin",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 2.5,
+        "percentage_of_roster_appearances": 2.5,
+        "percentage_within_role": 4.17,
+        "role": "dps",
+        "spec_id": 70,
+        "spec_name": "Retribution",
+        "team_presence_percentage": 12.5,
+        "teams_with_spec": 5
+      },
+      {
+        "appearances": 4,
+        "class_id": 11,
+        "class_name": "Druid",
+        "distinct_characters": 3,
+        "percentage_of_classified_spec_appearances": 2.0,
+        "percentage_of_roster_appearances": 2.0,
+        "percentage_within_role": 3.33,
+        "role": "dps",
+        "spec_id": 103,
+        "spec_name": "Feral",
+        "team_presence_percentage": 10.0,
+        "teams_with_spec": 4
+      },
+      {
+        "appearances": 4,
+        "class_id": 10,
+        "class_name": "Monk",
+        "distinct_characters": 3,
+        "percentage_of_classified_spec_appearances": 2.0,
+        "percentage_of_roster_appearances": 2.0,
+        "percentage_within_role": 10.0,
+        "role": "tank",
+        "spec_id": 268,
+        "spec_name": "Brewmaster",
+        "team_presence_percentage": 10.0,
+        "teams_with_spec": 4
+      },
+      {
+        "appearances": 3,
+        "class_id": 8,
+        "class_name": "Mage",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 1.5,
+        "percentage_of_roster_appearances": 1.5,
+        "percentage_within_role": 2.5,
+        "role": "dps",
+        "spec_id": 62,
+        "spec_name": "Arcane",
+        "team_presence_percentage": 7.5,
+        "teams_with_spec": 3
+      },
+      {
+        "appearances": 3,
+        "class_id": 12,
+        "class_name": "Demon Hunter",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 1.5,
+        "percentage_of_roster_appearances": 1.5,
+        "percentage_within_role": 2.5,
+        "role": "dps",
+        "spec_id": 577,
+        "spec_name": "Havoc",
+        "team_presence_percentage": 7.5,
+        "teams_with_spec": 3
+      },
+      {
+        "appearances": 1,
+        "class_id": 5,
+        "class_name": "Priest",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 0.5,
+        "percentage_of_roster_appearances": 0.5,
+        "percentage_within_role": 2.5,
+        "role": "healer",
+        "spec_id": 257,
+        "spec_name": "Holy",
+        "team_presence_percentage": 2.5,
+        "teams_with_spec": 1
+      },
+      {
+        "appearances": 1,
+        "class_id": 4,
+        "class_name": "Rogue",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 0.5,
+        "percentage_of_roster_appearances": 0.5,
+        "percentage_within_role": 0.83,
+        "role": "dps",
+        "spec_id": 259,
+        "spec_name": "Assassination",
+        "team_presence_percentage": 2.5,
+        "teams_with_spec": 1
+      },
+      {
+        "appearances": 1,
+        "class_id": 10,
+        "class_name": "Monk",
+        "distinct_characters": 1,
+        "percentage_of_classified_spec_appearances": 0.5,
+        "percentage_of_roster_appearances": 0.5,
+        "percentage_within_role": 0.83,
+        "role": "dps",
+        "spec_id": 269,
+        "spec_name": "Windwalker",
+        "team_presence_percentage": 2.5,
+        "teams_with_spec": 1
+      }
+    ],
+    "unknown_spec_appearances": null,
+    "unknown_spec_note": "No authoritative specialisation dictionary is stored. A present but unfamiliar spec cannot be distinguished from a data error, so no unknown count is fabricated; missing and partial values are counted separately."
+  },
+  "team_compositions": {
+    "compositions": [
+      {
+        "composition_id": "65,71,104,261,262",
+        "occurrences": 20,
+        "percentage_of_eligible_complete_teams": 50.0,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "healer",
+          "dps",
+          "tank",
+          "dps",
+          "dps"
+        ],
+        "spec_ids": [
+          65,
+          71,
+          104,
+          261,
+          262
+        ],
+        "spec_names": [
+          "Holy",
+          "Arms",
+          "Guardian",
+          "Subtlety",
+          "Elemental"
+        ],
+        "specs": [
+          {
+            "class_id": 2,
+            "class_name": "Paladin",
+            "role": "healer",
+            "spec_id": 65,
+            "spec_name": "Holy"
+          },
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 11,
+            "class_name": "Druid",
+            "role": "tank",
+            "spec_id": 104,
+            "spec_name": "Guardian"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "dps",
+            "spec_id": 262,
+            "spec_name": "Elemental"
+          }
+        ]
+      },
+      {
+        "composition_id": "65,71,250,261,262",
+        "occurrences": 6,
+        "percentage_of_eligible_complete_teams": 15.0,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "healer",
+          "dps",
+          "tank",
+          "dps",
+          "dps"
+        ],
+        "spec_ids": [
+          65,
+          71,
+          250,
+          261,
+          262
+        ],
+        "spec_names": [
+          "Holy",
+          "Arms",
+          "Blood",
+          "Subtlety",
+          "Elemental"
+        ],
+        "specs": [
+          {
+            "class_id": 2,
+            "class_name": "Paladin",
+            "role": "healer",
+            "spec_id": 65,
+            "spec_name": "Holy"
+          },
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 6,
+            "class_name": "Death Knight",
+            "role": "tank",
+            "spec_id": 250,
+            "spec_name": "Blood"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "dps",
+            "spec_id": 262,
+            "spec_name": "Elemental"
+          }
+        ]
+      },
+      {
+        "composition_id": "70,71,104,261,264",
+        "occurrences": 4,
+        "percentage_of_eligible_complete_teams": 10.0,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "dps",
+          "tank",
+          "dps",
+          "healer"
+        ],
+        "spec_ids": [
+          70,
+          71,
+          104,
+          261,
+          264
+        ],
+        "spec_names": [
+          "Retribution",
+          "Arms",
+          "Guardian",
+          "Subtlety",
+          "Restoration"
+        ],
+        "specs": [
+          {
+            "class_id": 2,
+            "class_name": "Paladin",
+            "role": "dps",
+            "spec_id": 70,
+            "spec_name": "Retribution"
+          },
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 11,
+            "class_name": "Druid",
+            "role": "tank",
+            "spec_id": 104,
+            "spec_name": "Guardian"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "healer",
+            "spec_id": 264,
+            "spec_name": "Restoration"
+          }
+        ]
+      },
+      {
+        "composition_id": "71,103,261,264,268",
+        "occurrences": 4,
+        "percentage_of_eligible_complete_teams": 10.0,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "dps",
+          "dps",
+          "healer",
+          "tank"
+        ],
+        "spec_ids": [
+          71,
+          103,
+          261,
+          264,
+          268
+        ],
+        "spec_names": [
+          "Arms",
+          "Feral",
+          "Subtlety",
+          "Restoration",
+          "Brewmaster"
+        ],
+        "specs": [
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 11,
+            "class_name": "Druid",
+            "role": "dps",
+            "spec_id": 103,
+            "spec_name": "Feral"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "healer",
+            "spec_id": 264,
+            "spec_name": "Restoration"
+          },
+          {
+            "class_id": 10,
+            "class_name": "Monk",
+            "role": "tank",
+            "spec_id": 268,
+            "spec_name": "Brewmaster"
+          }
+        ]
+      },
+      {
+        "composition_id": "62,65,250,262,577",
+        "occurrences": 3,
+        "percentage_of_eligible_complete_teams": 7.5,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "healer",
+          "tank",
+          "dps",
+          "dps"
+        ],
+        "spec_ids": [
+          62,
+          65,
+          250,
+          262,
+          577
+        ],
+        "spec_names": [
+          "Arcane",
+          "Holy",
+          "Blood",
+          "Elemental",
+          "Havoc"
+        ],
+        "specs": [
+          {
+            "class_id": 8,
+            "class_name": "Mage",
+            "role": "dps",
+            "spec_id": 62,
+            "spec_name": "Arcane"
+          },
+          {
+            "class_id": 2,
+            "class_name": "Paladin",
+            "role": "healer",
+            "spec_id": 65,
+            "spec_name": "Holy"
+          },
+          {
+            "class_id": 6,
+            "class_name": "Death Knight",
+            "role": "tank",
+            "spec_id": 250,
+            "spec_name": "Blood"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "dps",
+            "spec_id": 262,
+            "spec_name": "Elemental"
+          },
+          {
+            "class_id": 12,
+            "class_name": "Demon Hunter",
+            "role": "dps",
+            "spec_id": 577,
+            "spec_name": "Havoc"
+          }
+        ]
+      },
+      {
+        "composition_id": "70,71,104,259,264",
+        "occurrences": 1,
+        "percentage_of_eligible_complete_teams": 2.5,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "dps",
+          "tank",
+          "dps",
+          "healer"
+        ],
+        "spec_ids": [
+          70,
+          71,
+          104,
+          259,
+          264
+        ],
+        "spec_names": [
+          "Retribution",
+          "Arms",
+          "Guardian",
+          "Assassination",
+          "Restoration"
+        ],
+        "specs": [
+          {
+            "class_id": 2,
+            "class_name": "Paladin",
+            "role": "dps",
+            "spec_id": 70,
+            "spec_name": "Retribution"
+          },
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 11,
+            "class_name": "Druid",
+            "role": "tank",
+            "spec_id": 104,
+            "spec_name": "Guardian"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 259,
+            "spec_name": "Assassination"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "healer",
+            "spec_id": 264,
+            "spec_name": "Restoration"
+          }
+        ]
+      },
+      {
+        "composition_id": "71,104,261,264,269",
+        "occurrences": 1,
+        "percentage_of_eligible_complete_teams": 2.5,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "tank",
+          "dps",
+          "healer",
+          "dps"
+        ],
+        "spec_ids": [
+          71,
+          104,
+          261,
+          264,
+          269
+        ],
+        "spec_names": [
+          "Arms",
+          "Guardian",
+          "Subtlety",
+          "Restoration",
+          "Windwalker"
+        ],
+        "specs": [
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 11,
+            "class_name": "Druid",
+            "role": "tank",
+            "spec_id": 104,
+            "spec_name": "Guardian"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "healer",
+            "spec_id": 264,
+            "spec_name": "Restoration"
+          },
+          {
+            "class_id": 10,
+            "class_name": "Monk",
+            "role": "dps",
+            "spec_id": 269,
+            "spec_name": "Windwalker"
+          }
+        ]
+      },
+      {
+        "composition_id": "71,250,257,261,262",
+        "occurrences": 1,
+        "percentage_of_eligible_complete_teams": 2.5,
+        "role_counts": {
+          "dps": 3,
+          "healer": 1,
+          "tank": 1
+        },
+        "roles": [
+          "dps",
+          "tank",
+          "healer",
+          "dps",
+          "dps"
+        ],
+        "spec_ids": [
+          71,
+          250,
+          257,
+          261,
+          262
+        ],
+        "spec_names": [
+          "Arms",
+          "Blood",
+          "Holy",
+          "Subtlety",
+          "Elemental"
+        ],
+        "specs": [
+          {
+            "class_id": 1,
+            "class_name": "Warrior",
+            "role": "dps",
+            "spec_id": 71,
+            "spec_name": "Arms"
+          },
+          {
+            "class_id": 6,
+            "class_name": "Death Knight",
+            "role": "tank",
+            "spec_id": 250,
+            "spec_name": "Blood"
+          },
+          {
+            "class_id": 5,
+            "class_name": "Priest",
+            "role": "healer",
+            "spec_id": 257,
+            "spec_name": "Holy"
+          },
+          {
+            "class_id": 4,
+            "class_name": "Rogue",
+            "role": "dps",
+            "spec_id": 261,
+            "spec_name": "Subtlety"
+          },
+          {
+            "class_id": 7,
+            "class_name": "Shaman",
+            "role": "dps",
+            "spec_id": 262,
+            "spec_name": "Elemental"
+          }
+        ]
+      }
+    ],
+    "denominators": {
+      "complete_teams": 40,
+      "complete_teams_missing_spec_or_role": 0,
+      "eligible_complete_teams": 40,
+      "incomplete_teams": 0,
+      "total_runs": 40
+    }
+  }
+}
