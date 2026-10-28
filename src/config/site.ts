@@ -57,7 +57,7 @@ const site = {
       {
         icon: "mdi:database-search",
         label: "Focus",
-        value: "Data analytics & Python development",
+        value: "Data analytics, Python development, AI & automation",
       },
       {
         icon: "mdi:location",
