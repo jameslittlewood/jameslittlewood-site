@@ -1,55 +1,30 @@
 import * as echarts from 'echarts/core'
 import type { EChartsType } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
-import {
-	AriaComponent,
-	GridComponent,
-	LegendComponent,
-	TitleComponent,
-	TooltipComponent,
-} from 'echarts/components'
+import { AriaComponent, GridComponent, LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
-
 import {
-	classRepresentation,
-	completionHistogram,
-	compositionAnalysis,
-	compositionFullText,
-	compositionText,
-	coverage,
-	filterRuns,
-	formatDate,
-	formatDuration,
-	formatMargin,
-	formatPercent,
-	kpis,
-	loadWowDataset,
-	marginHistogram,
-	searchRuns,
-	sortRuns,
-	specRepresentation,
-	type Manifest,
-	type RunRow,
-	type SortKey,
-	type WowDataset,
+	classOptions, classRepresentation, completionHistogram, compositionAnalysis, filterRuns,
+	formatCount, formatDate, formatDuration, formatMargin, formatPercent, histogram, kpis,
+	loadAllDungeons, loadDungeon, loadIndex, marginHistogram, searchRuns, sortRuns,
+	specOptions, specRepresentation,
+	type DungeonData, type DungeonEntry, type Manifest, type RunRow, type SortKey,
 } from './wowMythic'
+import { classColour, WOW_CLASSES } from './wowClasses'
 
-echarts.use([
-	BarChart,
-	GridComponent,
-	TooltipComponent,
-	TitleComponent,
-	LegendComponent,
-	AriaComponent,
-	CanvasRenderer,
-])
+echarts.use([BarChart, GridComponent, TooltipComponent, TitleComponent, LegendComponent, AriaComponent, CanvasRenderer])
 
 type RoleView = 'all' | 'tank' | 'healer' | 'dps'
 type SortDirection = 'asc' | 'desc'
+type ChartName = 'key' | 'class' | 'spec' | 'compositions' | 'completion' | 'margin'
+const DEFAULT_PAGE_SIZE = 10
 
-interface DashboardState {
-	manifest: Manifest
-	dataset: WowDataset
+interface State {
+	index: Manifest
+	datasets: Map<string, DungeonData>
+	selected: string
+	runs: RunRow[]
+	totalRuns: number
 	keyLevel: string
 	classId: string
 	specId: string
@@ -57,117 +32,101 @@ interface DashboardState {
 	search: string
 	sortKey: SortKey
 	sortDirection: SortDirection
+	page: number
+	pageSize: number
 }
 
-interface Palette {
-	primary: string
-	green: string
-	amber: string
-	red: string
-	text: string
-	muted: string
-	grid: string
-	card: string
-}
+interface Palette { primary: string; text: string; muted: string; grid: string; card: string }
 
-const CHARTS = [
-	'key',
-	'class',
-	'spec',
-	'compositions',
-	'completion',
-	'margin',
-] as const
-type ChartName = (typeof CHARTS)[number]
+let activeCleanup: (() => void) | undefined
 
-let cleanupActive: (() => void) | undefined
-let chartObserver: MutationObserver | undefined
+const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-if (typeof document !== 'undefined') {
-	document.addEventListener('astro:before-swap', () => {
-		cleanupActive?.()
-		cleanupActive = undefined
-	})
-}
-
-const reducedMotion = () =>
-	typeof window !== 'undefined' &&
-	window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-const isDark = () => document.documentElement.classList.contains('dark')
-
-function palette(): Palette {
+function tokens(): Palette {
 	const styles = getComputedStyle(document.documentElement)
 	const token = (name: string, fallback: string) => {
 		const value = styles.getPropertyValue(name).trim()
-		if (!value) return fallback
-		if (typeof CSS !== 'undefined' && CSS.supports?.('color', value))
-			return value
-		return fallback
+		return value && CSS.supports?.('color', value) ? value : fallback
 	}
 	return {
-		primary: token('--primary', isDark() ? '#c4b5fd' : '#6d28d9'),
-		green: token('--callout-success', isDark() ? '#6ee7b7' : '#047857'),
-		amber: token('--callout-warning', isDark() ? '#fbbf24' : '#a16207'),
-		red: token('--callout-danger', isDark() ? '#fca5a5' : '#b91c1c'),
-		text: token('--foreground', isDark() ? '#ede9f7' : '#2c2438'),
-		muted: token('--muted-foreground', isDark() ? '#b9b1ca' : '#655b74'),
-		grid: token(
-			'--border',
-			isDark() ? 'rgba(237,233,247,.12)' : 'rgba(44,36,56,.10)'
-		),
-		card: token('--card', isDark() ? '#221a31' : '#ffffff'),
+		primary: token('--primary', '#6d28d9'), text: token('--foreground', '#2c2438'),
+		muted: token('--muted-foreground', '#655b74'), grid: token('--border', 'rgba(44,36,56,.10)'),
+		card: token('--card', '#ffffff'),
 	}
 }
 
-function roleColour(role: string | null, colours: Palette): string {
-	if (role === 'tank') return colours.primary
-	if (role === 'healer') return colours.green
-	if (role === 'dps') return colours.amber
-	return colours.muted
+function element(tag: string, className: string, text?: string): HTMLElement {
+	const node = document.createElement(tag)
+	node.className = className
+	if (text !== undefined) node.textContent = text
+	return node
 }
 
-function textElement(
-	tag: string,
-	className: string,
-	value: string
-): HTMLElement {
-	const element = document.createElement(tag)
-	element.className = className
-	element.textContent = value
-	return element
+function axis(colours: Palette) {
+	return {
+		axisLine: { lineStyle: { color: colours.grid } }, axisTick: { show: false },
+		axisLabel: { color: colours.muted, fontSize: 10 },
+		splitLine: { lineStyle: { color: colours.grid } },
+	}
 }
 
-function renderSemanticTable(
-	container: HTMLElement,
-	caption: string,
-	headers: string[],
-	rows: Array<Array<string | HTMLElement>>
-): void {
+function base(colours: Palette, ariaLabel: string) {
+	return {
+		backgroundColor: 'transparent', animation: !reducedMotion(),
+		textStyle: { color: colours.text, fontFamily: 'inherit' },
+		aria: { enabled: true, label: { description: ariaLabel } },
+		tooltip: {
+			trigger: 'item', confine: true, appendToBody: false,
+			backgroundColor: colours.card, borderColor: colours.grid,
+			textStyle: { color: colours.text, fontSize: 11 },
+			extraCssText: 'border-radius: 10px; box-shadow: none; max-width: min(360px, 85vw); white-space: normal;',
+		},
+	}
+}
+
+function verticalOption(labels: string[], values: number[], colours: Palette, ariaLabel: string, colourFor?: (index: number) => string, tooltip?: (index: number) => string) {
+	return {
+		...base(colours, ariaLabel),
+		grid: { left: 8, right: 12, top: 24, bottom: 8, containLabel: true },
+		xAxis: { type: 'category', data: labels, ...axis(colours), splitLine: { show: false } },
+		yAxis: { type: 'value', ...axis(colours), minInterval: 1 },
+		series: [{ type: 'bar', data: values.map((value, index) => ({ value, itemStyle: { color: colourFor?.(index) ?? colours.primary, borderColor: colours.grid, borderWidth: 1, borderRadius: [4, 4, 0, 0] } })), barMaxWidth: 30, label: { show: true, position: 'top', color: colours.muted, fontSize: 10 }, tooltip: tooltip ? { formatter: (params: { dataIndex: number }) => tooltip(params.dataIndex) } : undefined }],
+	}
+}
+
+function horizontalOption(labels: string[], values: number[], colours: Palette, ariaLabel: string, colourFor?: (index: number) => string, tooltip?: (index: number) => string, labelWidth = 130) {
+	return {
+		...base(colours, ariaLabel),
+		grid: { left: 8, right: 34, top: 12, bottom: 8, containLabel: true },
+		xAxis: { type: 'value', ...axis(colours) },
+		yAxis: { type: 'category', data: labels, inverse: true, ...axis(colours), axisLabel: { color: colours.muted, fontSize: 9, width: labelWidth, overflow: 'truncate' }, splitLine: { show: false } },
+		series: [{ type: 'bar', data: values.map((value, index) => ({ value, itemStyle: { color: colourFor?.(index) ?? colours.primary, borderColor: colours.grid, borderWidth: 1, borderRadius: [0, 4, 4, 0] } })), barMaxWidth: 20, label: { show: true, position: 'right', color: colours.muted, fontSize: 10 }, tooltip: tooltip ? { formatter: (params: { dataIndex: number }) => tooltip(params.dataIndex) } : undefined }],
+	}
+}
+
+function emptyOption(colours: Palette, message: string) {
+	return { ...base(colours, message), title: { text: message, left: 'center', top: 'middle', textStyle: { color: colours.muted, fontSize: 12, fontWeight: 'normal' } }, xAxis: { show: false }, yAxis: { show: false }, series: [] }
+}
+
+function semanticTable(container: HTMLElement, caption: string, headers: string[], rows: Array<Array<string | HTMLElement>>) {
 	container.replaceChildren()
 	const table = document.createElement('table')
 	table.className = 'w-full border-collapse text-left text-xs'
-	const cap = textElement('caption', 'sr-only', caption)
-	table.append(cap)
+	table.append(element('caption', 'sr-only', caption))
 	const thead = document.createElement('thead')
-	const headRow = document.createElement('tr')
-	for (const header of headers) {
-		const th = textElement(
-			'th',
-			'border-b border-border px-2 py-2 font-semibold text-muted-foreground',
-			header
-		)
+	const head = document.createElement('tr')
+	for (const value of headers) {
+		const th = element('th', 'border-b border-border px-2 py-2 font-semibold text-muted-foreground', value)
 		th.scope = 'col'
-		headRow.append(th)
+		head.append(th)
 	}
-	thead.append(headRow)
+	thead.append(head)
 	const tbody = document.createElement('tbody')
 	for (const row of rows) {
 		const tr = document.createElement('tr')
 		for (const value of row) {
 			const td = document.createElement('td')
-			td.className =
-				'border-b border-border/40 px-2 py-1.5 text-muted-foreground'
+			td.className = 'border-b border-border/40 px-2 py-1.5 text-muted-foreground'
 			if (value instanceof HTMLElement) td.append(value)
 			else td.textContent = value
 			tr.append(td)
@@ -178,1030 +137,472 @@ function renderSemanticTable(
 	container.append(table)
 }
 
-function chartTable(
-	container: HTMLElement,
-	caption: string,
-	headers: string[],
-	rows: string[][]
-): void {
-	renderSemanticTable(container, caption, headers, rows)
+function chip(specName: string, classId: number | null): HTMLElement {
+	const span = element('span', 'inline-flex items-center rounded-md border border-l-4 px-1.5 py-0.5 text-[10px] font-semibold')
+	// Keep the text high-contrast; class colour is encoded by the left border.
+	span.style.backgroundColor = 'var(--muted)'
+	span.style.color = 'var(--foreground)'
+	span.style.borderColor = 'var(--border)'
+	span.style.borderLeftColor = classColour(classId)
+	span.textContent = specName
+	return span
 }
 
-function axisCommon(colours: Palette): Record<string, unknown> {
-	return {
-		axisLine: { lineStyle: { color: colours.grid } },
-		axisTick: { show: false },
-		axisLabel: { color: colours.muted, fontSize: 10 },
-		splitLine: { lineStyle: { color: colours.grid } },
-	}
+function formatAxisTime(seconds: number): string {
+	const total = Math.round(seconds)
+	return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
 }
 
-function baseOption(
-	colours: Palette,
-	ariaLabel: string
-): Record<string, unknown> {
-	return {
-		backgroundColor: 'transparent',
-		animation: !reducedMotion(),
-		textStyle: { color: colours.text, fontFamily: 'inherit' },
-		aria: { enabled: true, label: { description: ariaLabel } },
-		tooltip: {
-			trigger: 'item',
-			backgroundColor: colours.card,
-			borderColor: colours.grid,
-			textStyle: { color: colours.text, fontSize: 11 },
-			extraCssText: 'border-radius: 10px; box-shadow: none;',
-		},
-	}
-}
-
-function horizontalOption(
-	categories: string[],
-	values: number[],
-	colours: Palette,
-	ariaLabel: string,
-	colourFor?: (index: number) => string,
-	tooltip?: (index: number) => string
-): Record<string, unknown> {
-	return {
-		...baseOption(colours, ariaLabel),
-		grid: { left: 8, right: 28, top: 12, bottom: 8, containLabel: true },
-		xAxis: {
-			type: 'value',
-			...axisCommon(colours),
-			axisLabel: { color: colours.muted, fontSize: 10 },
-		},
-		yAxis: {
-			type: 'category',
-			data: categories,
-			inverse: true,
-			...axisCommon(colours),
-			axisLabel: {
-				color: colours.muted,
-				fontSize: 9,
-				width: 104,
-				overflow: 'truncate',
-			},
-			splitLine: { show: false },
-		},
-		series: [
-			{
-				type: 'bar',
-				data: values.map((value, index) => ({
-					value,
-					itemStyle: {
-						color: colourFor?.(index) ?? colours.primary,
-						borderRadius: [0, 4, 4, 0],
-					},
-				})),
-				barMaxWidth: 18,
-				label: {
-					show: true,
-					position: 'right',
-					color: colours.muted,
-					fontSize: 10,
-				},
-				tooltip: tooltip
-					? {
-							formatter: (params: { dataIndex: number }) =>
-								tooltip(params.dataIndex),
-						}
-					: undefined,
-			},
-		],
-	}
-}
-
-function verticalOption(
-	categories: string[],
-	values: number[],
-	colours: Palette,
-	ariaLabel: string,
-	colourFor?: (index: number) => string,
-	tooltip?: (index: number) => string
-): Record<string, unknown> {
-	return {
-		...baseOption(colours, ariaLabel),
-		grid: { left: 8, right: 12, top: 20, bottom: 8, containLabel: true },
-		xAxis: {
-			type: 'category',
-			data: categories,
-			...axisCommon(colours),
-			splitLine: { show: false },
-		},
-		yAxis: { type: 'value', ...axisCommon(colours), minInterval: 1 },
-		series: [
-			{
-				type: 'bar',
-				data: values.map((value, index) => ({
-					value,
-					itemStyle: {
-						color: colourFor?.(index) ?? colours.primary,
-						borderRadius: [4, 4, 0, 0],
-					},
-				})),
-				barMaxWidth: 28,
-				label: {
-					show: true,
-					position: 'top',
-					color: colours.muted,
-					fontSize: 10,
-				},
-				tooltip: tooltip
-					? {
-							formatter: (params: { dataIndex: number }) =>
-								tooltip(params.dataIndex),
-						}
-					: undefined,
-			},
-		],
-	}
-}
-
-function emptyOption(
-	colours: Palette,
-	message: string
-): Record<string, unknown> {
-	return {
-		...baseOption(colours, message),
-		title: {
-			text: message,
-			left: 'center',
-			top: 'middle',
-			textStyle: { color: colours.muted, fontSize: 12, fontWeight: 'normal' },
-		},
-		xAxis: { show: false },
-		yAxis: { show: false },
-		series: [],
-	}
+function formatMarginAxis(seconds: number): string {
+	const total = Math.round(Math.abs(seconds))
+	return `${seconds < 0 ? '-' : '+'}${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
 }
 
 export function mountWowDashboard(): () => void {
-	cleanupActive?.()
+	activeCleanup?.()
 	const controller = new AbortController()
 	const root = document.querySelector<HTMLElement>('[data-wow-dashboard]')
-	const loading = document.querySelector<HTMLElement>(
-		'[data-dashboard-loading]'
-	)
-	const errorPanel = document.querySelector<HTMLElement>(
-		'[data-dashboard-error]'
-	)
-	const errorMessage = document.querySelector<HTMLElement>(
-		'[data-error-message]'
-	)
-	const retryButton =
-		errorPanel?.querySelector<HTMLButtonElement>('[data-retry]')
+	const loading = document.querySelector<HTMLElement>('[data-dashboard-loading]')
+	const errorPanel = document.querySelector<HTMLElement>('[data-dashboard-error]')
+	const errorMessage = document.querySelector<HTMLElement>('[data-error-message]')
+	const retry = errorPanel?.querySelector<HTMLButtonElement>('[data-retry]')
 	if (!root || !loading || !errorPanel || !errorMessage) return () => undefined
 
 	const charts = new Map<ChartName, EChartsType>()
-	const resizeObserver = new ResizeObserver((entries) => {
-		for (const entry of entries) {
-			const chart = charts.get(
-				entry.target.getAttribute('data-chart') as ChartName
-			)
-			chart?.resize()
-		}
+	const observer = new ResizeObserver((entries) => {
+		for (const entry of entries) charts.get(entry.target.getAttribute('data-chart') as ChartName)?.resize()
 	})
-	let state: DashboardState | undefined
+	let state: State | undefined
+	let requestId = 0
+	let searchTimer: ReturnType<typeof setTimeout> | undefined
+	let themeObserver: MutationObserver | undefined
 
-	const disposeCharts = () => {
-		for (const chart of charts.values()) chart.dispose()
-		charts.clear()
-		resizeObserver.disconnect()
+	const setText = (selector: string, value: string) => {
+		root.querySelector<HTMLElement>(selector)?.replaceChildren(document.createTextNode(value))
 	}
 
 	const ensureChart = (name: ChartName): EChartsType | undefined => {
-		const element = root.querySelector<HTMLElement>(`[data-chart="${name}"]`)
-		if (!element) return undefined
+		const node = root.querySelector<HTMLElement>(`[data-chart="${name}"]`)
+		if (!node) return undefined
 		let chart = charts.get(name)
 		if (!chart) {
-			chart = echarts.init(element, undefined, { renderer: 'canvas' })
+			chart = echarts.init(node, undefined, { renderer: 'canvas' })
 			charts.set(name, chart)
-			resizeObserver.observe(element)
+			observer.observe(node)
 		}
 		return chart
 	}
 
-	const currentRuns = (): { runs: RunRow[]; appearances: number } => {
-		if (!state) return { runs: [], appearances: 0 }
-		const filtered = filterRuns(state.dataset.runs, state)
-		const searched = searchRuns(filtered, state.search)
-		return {
-			runs: searched,
-			appearances: searched.reduce((sum, run) => sum + run.roster.length, 0),
-		}
-	}
-
-	const setText = (selector: string, value: string) => {
-		const element = root.querySelector<HTMLElement>(selector)
-		if (element) element.textContent = value
+	const selectedEntries = (): DungeonEntry[] => {
+		if (!state) return []
+		return state.selected === 'all' ? state.index.dungeons : state.index.dungeons.filter((entry) => entry.slug === state?.selected)
 	}
 
 	const populateFilters = () => {
 		if (!state) return
-		const keySelect = root.querySelector<HTMLSelectElement>('[data-filter-key]')
-		const classSelect = root.querySelector<HTMLSelectElement>(
-			'[data-filter-class]'
-		)
-		const specSelect =
-			root.querySelector<HTMLSelectElement>('[data-filter-spec]')
-		if (!keySelect || !classSelect || !specSelect) return
-		const levels = [
-			...new Set(state.dataset.runs.map((run) => run.mythic_level)),
-		].sort((a, b) => a - b)
-		keySelect.replaceChildren(new Option('All key levels', 'all'))
-		for (const level of levels)
-			keySelect.append(new Option(`+${level}`, String(level)))
-		const classes = [
-			...new Map(
-				state.dataset.runs
-					.flatMap((run) => run.roster)
-					.filter((member) => member.class_id !== null && member.class_name)
-					.map((member) => [
-						member.class_id as number,
-						member.class_name as string,
-					])
-			).entries(),
-		].sort((a, b) => a[1].localeCompare(b[1]))
-		classSelect.replaceChildren(new Option('All classes', 'all'))
-		for (const [id, name] of classes)
-			classSelect.append(new Option(name, String(id)))
-		specSelect.replaceChildren(new Option('All reported specs', 'all'))
-		keySelect.value = state.keyLevel
-		classSelect.value = state.classId
-		specSelect.value = state.specId
+		const dungeon = root.querySelector<HTMLSelectElement>('[data-filter-dungeon]')
+		const key = root.querySelector<HTMLSelectElement>('[data-filter-key]')
+		const classes = root.querySelector<HTMLSelectElement>('[data-filter-class]')
+		if (!dungeon || !key || !classes) return
+		dungeon.replaceChildren(new Option('All dungeons', 'all'))
+		for (const entry of state.index.dungeons) dungeon.append(new Option(entry.name, entry.slug))
+		dungeon.value = state.selected
+		const levels = [...new Set(state.runs.map((run) => run.mythic_level))].sort((a, b) => a - b)
+		key.replaceChildren(new Option('All key levels', 'all'))
+		for (const level of levels) key.append(new Option(`+${level}`, String(level)))
+		key.value = state.keyLevel
+		classes.replaceChildren(new Option('All classes', 'all'))
+		for (const option of classOptions(state.runs)) {
+			const count = state.runs.filter((run) => run.roster.some((member) => member.class_id === option.id)).length
+			classes.append(new Option(`${option.name} (${formatCount(count)})`, String(option.id)))
+		}
+		classes.value = state.classId
+		populateSpecs()
 	}
 
 	const populateSpecs = () => {
 		if (!state) return
-		const specSelect =
-			root.querySelector<HTMLSelectElement>('[data-filter-spec]')
-		if (!specSelect) return
-		const specs = new Map<number, { name: string; role: string | null }>()
-		for (const run of state.dataset.runs) {
-			for (const member of run.roster) {
-				if (member.spec_id === null || !member.spec_name) continue
-				if (
-					state.classId !== 'all' &&
-					member.class_id !== Number(state.classId)
-				)
-					continue
-				specs.set(member.spec_id, { name: member.spec_name, role: member.role })
+		const select = root.querySelector<HTMLSelectElement>('[data-filter-spec]')
+		if (!select) return
+		select.replaceChildren(new Option('All reported specs', 'all'))
+		for (const option of specOptions(state.runs, state.classId)) select.append(new Option(option.name, String(option.id)))
+		if (![...select.options].some((option) => option.value === state?.specId)) state.specId = 'all'
+		select.value = state.specId
+	}
+
+	const filteredRuns = (): RunRow[] => (state ? searchRuns(filterRuns(state.runs, state), state.search) : [])
+
+	const loadSelection = async (slug: string) => {
+		if (!state) return
+		const current = ++requestId
+		state.selected = slug
+		const entries = slug === 'all' ? state.index.dungeons : state.index.dungeons.filter((entry) => entry.slug === slug)
+		const loaded: DungeonData[] = []
+		for (const [index, entry] of entries.entries()) {
+			loading.hidden = false
+			loading.textContent = slug === 'all' ? `Loading dungeon ${index + 1} of ${entries.length}: ${entry.name}…` : `Loading ${entry.name}…`
+			let data = state.datasets.get(entry.slug)
+			if (!data) {
+				data = await loadDungeon(state.index, entry)
+				state.datasets.set(entry.slug, data)
 			}
+			if (controller.signal.aborted || current !== requestId) return
+			loaded.push(data)
 		}
-		specSelect.replaceChildren(new Option('All reported specs', 'all'))
-		for (const [id, value] of [...specs.entries()].sort((a, b) =>
-			a[1].name.localeCompare(b[1].name)
-		)) {
-			specSelect.append(new Option(value.name, String(id)))
-		}
-		if (![...specs.keys()].includes(Number(state.specId))) state.specId = 'all'
-		specSelect.value = state.specId
+		const merged = new Map<number, RunRow>()
+		for (const item of loaded) for (const run of item.runs) merged.set(run.run_id, run)
+		state.runs = [...merged.values()]
+		state.totalRuns = entries.reduce((sum, entry) => sum + entry.run_count, 0)
+		state.keyLevel = 'all'
+		state.classId = 'all'
+		state.specId = 'all'
+		state.page = 0
+		populateFilters()
+		loading.hidden = true
+		root.hidden = false
+		render()
+	}
+
+	const updateHeader = () => {
+		if (!state) return
+		const entry = state.selected === 'all' ? null : state.index.dungeons.find((item) => item.slug === state?.selected)
+		const entries = selectedEntries()
+		setText('[data-scope-region]', state.index.region.toUpperCase())
+		setText('[data-scope-season]', state.index.season_name)
+		setText('[data-scope-dungeon]', entry?.name ?? 'All dungeons')
+		setText('[data-dataset-version]', state.index.dataset_version)
+		setText('[data-collection-id]', entry ? `${formatCount(entry.run_count)} runs` : `${entries.length} dungeon collections`)
+		setText('[data-selection-method]', state.selected === 'all' ? 'combined latest complete dungeon collections' : 'latest complete dungeon collection')
+		setText('[data-pages-detail]', entries.map((item) => `${item.slug}: ${item.coverage_status}`).join('; '))
+		setText('[data-coverage-status]', entries.every((item) => item.coverage_status === 'api_page_limit') ? 'API page ceiling' : 'Mixed coverage')
+		setText('[data-footer-version]', `Validated schema ${state.index.schema_version} · ${state.dataset_version} · ${state.index.partial ? 'partial dataset' : '8 verified dungeons'}`)
+		const dates = entries.map((item) => item.observation_window.completed_at).filter(Boolean) as string[]
+		setText('[data-observation-window]', dates.length ? `${formatDate(dates.sort()[0])} – ${formatDate(dates.sort().at(-1) ?? null)}` : '—')
+		setText('[data-exported-at]', formatDate(state.index.generated_at))
 	}
 
 	const updateKpis = (runs: RunRow[]) => {
-		if (!state) return
 		const summary = kpis(runs)
-		setText('[data-kpi="runs"]', String(summary.runs))
-		setText(
-			'[data-kpi="runs-detail"]',
-			`${summary.completeTeams} complete · ${summary.incompleteTeams} incomplete`
-		)
-		setText(
-			'[data-kpi="highest"]',
-			summary.highest === null ? '—' : `+${summary.highest}`
-		)
-		setText(
-			'[data-kpi="key-average"]',
-			summary.average === null
-				? '—'
-				: `avg +${summary.average.toFixed(2)} · median +${summary.median?.toFixed(1)}`
-		)
-		setText('[data-kpi="appearances"]', String(summary.appearances))
-		setText(
-			'[data-kpi="teams-detail"]',
-			`${summary.completeTeams} complete teams`
-		)
-		const pages = coverage(state.dataset)
-		setText('[data-kpi="pages"]', `${pages.succeeded}/${pages.requested}`)
-		setText('[data-kpi="pages-detail"]', `pages ${pages.pagesLabel}`)
-		setText(
-			'[data-observation-window]',
-			`${formatDate(state.dataset.population.observation_window.started_at)} – ${formatDate(state.dataset.population.observation_window.completed_at)}`
-		)
-		setText('[data-exported-at]', formatDate(state.dataset.exported_at))
-		setText(
-			'[data-collection-id]',
-			`#${state.dataset.population.collection.id} · ${state.dataset.population.collection.key.slice(0, 8)}…`
-		)
-		setText(
-			'[data-selection-method]',
-			state.dataset.population.selection_method === 'latest_complete_collection'
-				? 'latest successful complete collection'
-				: state.dataset.population.selection_method.replaceAll('_', ' ')
-		)
-		setText('[data-dataset-version]', state.dataset.dataset_version)
-		setText(
-			'[data-footer-version]',
-			`Validated schema ${state.dataset.schema_version} · dataset ${state.dataset.dataset_version} · exported ${formatDate(state.dataset.exported_at)}`
-		)
-		setText(
-			'[data-scope-region]',
-			state.dataset.population.scope.region.toUpperCase()
-		)
-		setText('[data-scope-season]', state.dataset.population.scope.season)
-		setText(
-			'[data-scope-dungeon]',
-			state.dataset.runs[0]?.dungeon.name ??
-				state.dataset.population.scope.dungeon
-		)
+		const entries = selectedEntries()
+		setText('[data-kpi="runs"]', formatCount(summary.runs))
+		setText('[data-kpi="runs-detail"]', `${formatCount(summary.completeTeams)} complete · ${formatCount(summary.incompleteTeams)} incomplete`)
+		setText('[data-kpi="highest"]', summary.highest === null ? '—' : `+${summary.highest}`)
+		setText('[data-kpi="key-average"]', summary.average === null ? '—' : `avg +${summary.average.toFixed(2)} · median +${summary.median?.toFixed(1)}`)
+		setText('[data-kpi="appearances"]', formatCount(summary.appearances))
+		setText('[data-kpi="teams-detail"]', `${formatCount(summary.completeTeams)} complete teams`)
+		const pages = entries.reduce((sum, entry) => sum + (entry.pages_succeeded ?? 1001), 0)
+		const positions = entries.reduce((sum, entry) => sum + (entry.positions ?? entry.run_count), 0)
+		const duplicates = entries.reduce((sum, entry) => sum + (entry.duplicate_positions ?? 0), 0)
+		setText('[data-kpi="pages"]', formatCount(pages))
+		setText('[data-kpi="pages-detail"]', `${formatCount(positions)} positions · ${formatCount(duplicates)} duplicates`)
+		setText('[data-pages-detail]', `${formatCount(pages)} pages · ${formatCount(positions)} positions · ${formatCount(duplicates)} repeated positions`)
+		setText('[data-filter-summary]', `Showing ${formatCount(runs.length)} of ${formatCount(state?.totalRuns ?? 0)} collected runs · ${formatCount(summary.appearances)} roster appearances · ${state?.role === 'all' ? 'all roles' : `${state?.role} only`} view`)
 	}
 
 	const updateWarnings = (runs: RunRow[]) => {
-		if (!state) return
+		const warning = document.querySelector<HTMLElement>('[data-dataset-incomplete]')
 		const stale = document.querySelector<HTMLElement>('[data-dataset-stale]')
-		const incomplete = document.querySelector<HTMLElement>(
-			'[data-dataset-incomplete]'
-		)
-		const exported = new Date(state.dataset.exported_at).valueOf()
-		if (stale)
-			stale.hidden = !(
-				Number.isFinite(exported) &&
-				Date.now() - exported > 14 * 24 * 60 * 60 * 1000
-			)
-		if (incomplete) {
-			const missingClass = runs.reduce(
-				(sum, run) =>
-					sum +
-					run.roster.filter(
-						(member) => member.class_id === null || !member.class_name
-					).length,
-				0
-			)
-			const missingSpec = runs.reduce(
-				(sum, run) =>
-					sum +
-					run.roster.filter(
-						(member) => member.spec_id === null || !member.spec_name
-					).length,
-				0
-			)
-			const missingRole = runs.reduce(
-				(sum, run) =>
-					sum + run.roster.filter((member) => member.role === null).length,
-				0
-			)
-			const incompleteTeams = runs.filter(
-				(run) => run.roster.length !== 5
-			).length
-			const messages: string[] = []
-			if (incompleteTeams)
-				messages.push(
-					`${incompleteTeams} run${incompleteTeams === 1 ? '' : 's'} in view have incomplete rosters.`
-				)
-			if (missingClass)
-				messages.push(
-					`${missingClass} roster appearance${missingClass === 1 ? '' : 's'} have no reported class.`
-				)
-			if (missingSpec)
-				messages.push(
-					`${missingSpec} roster appearance${missingSpec === 1 ? '' : 's'} have no reported spec.`
-				)
-			if (missingRole)
-				messages.push(
-					`${missingRole} roster appearance${missingRole === 1 ? '' : 's'} have no reported role and are omitted from role views.`
-				)
-			incomplete.hidden = messages.length === 0
-			incomplete.textContent = messages.length
-				? `Data completeness: ${messages.join(' ')}`
-				: ''
+		if (!state) return
+		const summary = kpis(runs)
+		const missing: string[] = []
+		if (summary.incompleteTeams) missing.push(`${formatCount(summary.incompleteTeams)} incomplete rosters`)
+		if (summary.missingClass) missing.push(`${formatCount(summary.missingClass)} missing class values`)
+		if (summary.missingSpec) missing.push(`${formatCount(summary.missingSpec)} missing spec values`)
+		if (summary.missingRole) missing.push(`${formatCount(summary.missingRole)} missing role values`)
+		if (warning) {
+			warning.hidden = missing.length === 0
+			warning.textContent = missing.length ? `Completeness: ${missing.join('; ')}.` : ''
+		}
+		if (stale) {
+			const generated = new Date(state.index.generated_at).valueOf()
+			stale.hidden = !(Number.isFinite(generated) && Date.now() - generated > 14 * 86400000)
 		}
 	}
 
-	const updateFilterSummary = (runs: RunRow[], appearances: number) => {
-		if (!state) return
-		const roleLabel = state.role === 'all' ? 'all roles' : `${state.role} only`
-		const composition = compositionAnalysis(runs)
-		setText(
-			'[data-filter-summary]',
-			`Showing ${runs.length} of ${state.dataset.runs.length} runs · ${appearances} roster appearances · ${roleLabel} appearance view · ${composition.eligibleTeams} eligible complete teams (${composition.incompleteTeams} incomplete and ${composition.excludedMissing} missing-spec/role teams excluded).`
-		)
+	const renderCompositionList = (comps: ReturnType<typeof compositionAnalysis>) => {
+		const container = root.querySelector<HTMLElement>('[data-composition-list]')
+		if (!container) return
+		container.replaceChildren()
+		const table = document.createElement('table')
+		table.className = 'w-full min-w-[48rem] border-collapse text-left text-xs'
+		table.append(element('caption', 'sr-only', 'Ranked eligible complete-team compositions'))
+		const thead = document.createElement('thead')
+		const head = document.createElement('tr')
+		for (const title of ['#', 'Composition', 'Occurrences', 'Share', 'Roles']) {
+			const th = element('th', 'border-b border-border px-3 py-2 font-semibold text-muted-foreground', title)
+			th.scope = 'col'
+			head.append(th)
+		}
+		thead.append(head)
+		const tbody = document.createElement('tbody')
+		comps.compositions.slice(0, 15).forEach((row, index) => {
+			const tr = document.createElement('tr')
+			tr.className = 'border-b border-border/40 last:border-0'
+			const rank = element('td', 'px-3 py-2 font-mono text-muted-foreground', String(index + 1))
+			const composition = document.createElement('td')
+			composition.className = 'px-3 py-2'
+			const wrap = element('div', 'flex flex-wrap gap-1')
+			row.labels.forEach((label, labelIndex) => {
+				const specName = row.specNames[labelIndex]
+				const className = label.replace(specName, '').trim()
+				const classId = WOW_CLASSES.find((entry) => entry.name === className)?.id ?? null
+				wrap.append(chip(specName, classId))
+			})
+			composition.append(wrap)
+			tr.append(rank, composition, element('td', 'px-3 py-2 font-mono', formatCount(row.occurrences)), element('td', 'px-3 py-2 font-mono', formatPercent(row.percentage)), element('td', 'px-3 py-2 text-muted-foreground', row.roles.join(', ')))
+			tbody.append(tr)
+		})
+		table.append(thead, tbody)
+		container.append(table)
 	}
 
 	const renderCharts = (runs: RunRow[]) => {
-		if (!state) return
-		const colours = palette()
-		const comps = compositionAnalysis(runs)
-		const classData = classRepresentation(runs, state.role)
-		const specData = specRepresentation(runs, state.role)
-		const completion = completionHistogram(runs, 30)
-		const margins = marginHistogram(runs, 30)
-		const keyLevels = [...new Set(runs.map((run) => run.mythic_level))].sort(
-			(a, b) => a - b
-		)
-		const levels = keyLevels.map(
-			(level) => runs.filter((run) => run.mythic_level === level).length
-		)
-
+		const colours = tokens()
+		const levels = [...new Set(runs.map((run) => run.mythic_level))].sort((a, b) => a - b)
+		const levelCounts = levels.map((level) => runs.filter((run) => run.mythic_level === level).length)
 		const keyChart = ensureChart('key')
-		keyChart?.setOption(
-			keyLevels.length
-				? verticalOption(
-						keyLevels.map((level) => `+${level}`),
-						levels,
-						colours,
-						`Bar chart of runs by key level: ${keyLevels.map((level, index) => `+${level}: ${levels[index]} runs`).join(', ')}.`,
-						undefined,
-						(index) => `+${keyLevels[index]}: ${levels[index]} runs`
-					)
-				: emptyOption(colours, 'No runs match the current filters'),
-			true
-		)
-		if (keyChart)
-			keyChart
-				.getDom()
-				.setAttribute(
-					'aria-label',
-					keyLevels.length
-						? `Runs by key level: ${keyLevels.map((level, index) => `+${level}, ${levels[index]} runs`).join('; ')}`
-						: 'No runs match the current filters'
-				)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="key"]')!,
-			'Key-level distribution data',
-			['Key level', 'Runs'],
-			keyLevels.map((level, index) => [`+${level}`, String(levels[index])])
-		)
+		keyChart?.setOption(levels.length ? verticalOption(levels.map((level) => `+${level}`), levelCounts, colours, `Runs by key level.`, undefined, (index) => `+${levels[index]}: ${formatCount(levelCounts[index])} runs`) : emptyOption(colours, 'No runs match the filters'), true)
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="key"]')!, 'Key-level distribution data', ['Key level', 'Runs'], levels.map((level, index) => [`+${level}`, formatCount(levelCounts[index])]))
 
+		const classData = classRepresentation(runs, state?.role ?? 'all')
 		const classChart = ensureChart('class')
-		classChart?.setOption(
-			classData.data.length
-				? horizontalOption(
-						classData.data.map((row) => row.className),
-						classData.data.map((row) => row.appearances),
-						colours,
-						`Bar chart of class appearances: ${classData.data
-							.slice(0, 5)
-							.map((row) => `${row.className} ${row.appearances}`)
-							.join(', ')}.`,
-						undefined,
-						(index) => {
-							const row = classData.data[index]
-							return `${row.className}: ${row.appearances} appearances (${formatPercent(row.percentage)} of ${classData.denominator}); ${row.teams} complete teams`
-						}
-					)
-				: emptyOption(colours, 'No class appearances in view'),
-			true
-		)
-		if (classChart)
-			classChart.getDom().setAttribute(
-				'aria-label',
-				classData.data.length
-					? `Class appearances: ${classData.data
-							.slice(0, 5)
-							.map((row) => `${row.className} ${row.appearances}`)
-							.join(
-								'; '
-							)}${classData.data.length > 5 ? `; and ${classData.data.length - 5} more classes` : ''}. See the data table for all values.`
-					: 'No class appearances in view'
-			)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="class"]')!,
-			'Class appearance data',
-			['Class', 'Appearances', 'Share', 'Complete teams'],
-			classData.data.map((row) => [
-				row.className,
-				String(row.appearances),
-				formatPercent(row.percentage),
-				String(row.teams),
-			])
-		)
+		classChart?.setOption(classData.data.length ? horizontalOption(classData.data.map((row) => row.className), classData.data.map((row) => row.appearances), colours, `Class appearances.`, (index) => classData.data[index].colour, (index) => `${classData.data[index].className}: ${formatCount(classData.data[index].appearances)} appearances; ${formatCount(classData.data[index].teams)} complete teams`, 130) : emptyOption(colours, 'No class appearances in view'), true)
+		classChart?.getDom().setAttribute('aria-label', classData.data.length ? `Class appearances: ${classData.data.slice(0, 8).map((row) => `${row.className} ${row.appearances}`).join('; ')}. See the data table.` : 'No class appearances in view')
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="class"]')!, 'Class appearance data', ['Class', 'Appearances', 'Share', 'Teams'], classData.data.map((row) => [row.className, formatCount(row.appearances), formatPercent(row.percentage), formatCount(row.teams)]))
 
-		const topSpecs = specData.data.slice(0, 12)
+		const specs = specRepresentation(runs, state?.role ?? 'all')
+		const topSpecs = specs.data.slice(0, 24)
 		const specChart = ensureChart('spec')
-		specChart?.setOption(
-			topSpecs.length
-				? horizontalOption(
-						topSpecs.map(
-							(row) =>
-								`${row.specName}${row.className ? ` · ${row.className}` : ''}`
-						),
-						topSpecs.map((row) => row.appearances),
-						colours,
-						`Bar chart of reported specialisation appearances by role view ${state.role}: ${topSpecs
-							.slice(0, 5)
-							.map((row) => `${row.specName} ${row.appearances}`)
-							.join(', ')}.`,
-						(index) => roleColour(topSpecs[index].role, colours),
-						(index) => {
-							const row = topSpecs[index]
-							return `${row.specName} (${row.className ?? 'unknown class'}): ${row.appearances} appearances (${formatPercent(row.percentage)} of ${state.role === 'all' ? 'all' : `${state.role} `}appearances); ${row.teams} complete teams`
-						}
-					)
-				: emptyOption(colours, 'No reported specialisations in view'),
-			true
-		)
-		if (specChart)
-			specChart.getDom().setAttribute(
-				'aria-label',
-				topSpecs.length
-					? `Reported specialisation appearances: ${topSpecs
-							.slice(0, 5)
-							.map((row) => `${row.specName} ${row.appearances}`)
-							.join(
-								'; '
-							)}${topSpecs.length > 5 ? '; and more' : ''}. See the data table for all values.`
-					: 'No reported specialisations in view'
-			)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="spec"]')!,
-			'Reported specialisation data',
-			[
-				'Reported spec',
-				'Class',
-				'Role',
-				'Appearances',
-				'Share',
-				'Complete teams',
-			],
-			topSpecs.map((row) => [
-				row.specName,
-				row.className ?? '—',
-				row.role ?? '—',
-				String(row.appearances),
-				formatPercent(row.percentage),
-				String(row.teams),
-			])
-		)
+		specChart?.setOption(topSpecs.length ? horizontalOption(topSpecs.map((row) => `${row.specName} · ${row.className ?? 'Unknown'}`), topSpecs.map((row) => row.appearances), colours, `Reported specialisations by class colour and role.`, (index) => topSpecs[index].colour, (index) => `${topSpecs[index].specName} (${topSpecs[index].className ?? 'unknown'}): ${formatCount(topSpecs[index].appearances)} appearances; ${formatPercent(topSpecs[index].percentage)}`, 180) : emptyOption(colours, 'No specialisation appearances in view'), true)
+		specChart?.getDom().setAttribute('aria-label', topSpecs.length ? `Reported specialisations: ${topSpecs.slice(0, 8).map((row) => `${row.specName} ${row.appearances}`).join('; ')}. See the data table.` : 'No specialisation appearances in view')
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="spec"]')!, 'Reported specialisation data', ['Spec', 'Class', 'Role', 'Appearances', 'Share', 'Teams'], topSpecs.map((row) => [row.specName, row.className ?? '—', row.role ?? '—', formatCount(row.appearances), formatPercent(row.percentage), formatCount(row.teams)]))
 
-		const topComps = comps.compositions.slice(0, 8)
+		const comps = compositionAnalysis(runs)
+		const topComps = comps.compositions.slice(0, 12)
 		const compChart = ensureChart('compositions')
-		compChart?.setOption(
-			topComps.length
-				? horizontalOption(
-						topComps.map((row) => row.labels.join(' / ')),
-						topComps.map((row) => row.occurrences),
-						colours,
-						`Bar chart of team compositions: ${topComps
-							.slice(0, 3)
-							.map((row) => `${row.labels.join(', ')}: ${row.occurrences}`)
-							.join('; ')}.`,
-						undefined,
-						(index) => {
-							const row = topComps[index]
-							return `${row.labels.join(' · ')}: ${row.occurrences} of ${comps.eligibleTeams} eligible complete teams (${formatPercent(row.percentage)})`
-						}
-					)
-				: emptyOption(colours, 'No eligible complete teams in view'),
-			true
-		)
-		if (compChart)
-			compChart.getDom().setAttribute(
-				'aria-label',
-				topComps.length
-					? `Team compositions: ${topComps
-							.slice(0, 3)
-							.map((row) => `${row.labels.join(' ')} ${row.occurrences}`)
-							.join(
-								'; '
-							)}${topComps.length > 3 ? '; and more' : ''}. See the data table for all values.`
-					: 'No eligible complete teams in view'
-			)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="compositions"]')!,
-			'Team composition data',
-			['Reported composition', 'Occurrences', 'Share', 'Roles'],
-			topComps.map((row) => [
-				row.labels.join(' · '),
-				String(row.occurrences),
-				formatPercent(row.percentage),
-				row.roles.join(', '),
-			])
-		)
+		compChart?.setOption(topComps.length ? horizontalOption(topComps.map((row) => row.specNames.join(' / ')), topComps.map((row) => row.occurrences), colours, `Most common team compositions.`, undefined, (index) => `${topComps[index].labels.join(' · ')}: ${formatCount(topComps[index].occurrences)} teams`, 250) : emptyOption(colours, 'No eligible complete teams in view'), true)
+		compChart?.getDom().setAttribute('aria-label', topComps.length ? `Top team compositions: ${topComps.slice(0, 4).map((row) => `${row.specNames.join(' ')} ${row.occurrences}`).join('; ')}. See the ranked table.` : 'No eligible complete teams in view')
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="compositions"]')!, 'Team composition data', ['Reported composition', 'Occurrences', 'Share'], topComps.map((row) => [row.labels.join(' · '), formatCount(row.occurrences), formatPercent(row.percentage)]))
+		renderCompositionList(comps)
 
+		const completion = completionHistogram(runs, 30)
 		const completionChart = ensureChart('completion')
-		completionChart?.setOption(
-			completion.length
-				? verticalOption(
-						completion.map((bin) => bin.label),
-						completion.map((bin) => bin.count),
-						colours,
-						`Histogram of clear times in 30 second bins: ${completion.map((bin) => `${bin.label}: ${bin.count}`).join('; ')}.`,
-						undefined,
-						(index) =>
-							`${completion[index].label}: ${completion[index].count} runs`
-					)
-				: emptyOption(colours, 'No completion times in view'),
-			true
-		)
-		if (completionChart)
-			completionChart
-				.getDom()
-				.setAttribute(
-					'aria-label',
-					completion.length
-						? `Clear-time histogram with ${completion.length} bins. See the data table for bin counts.`
-						: 'No completion times in view'
-				)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="completion"]')!,
-			'Completion-time data',
-			['Clear-time bin', 'Runs'],
-			completion.map((bin) => [bin.label, String(bin.count)])
-		)
+		completionChart?.setOption(completion.length ? verticalOption(completion.map((bin) => formatAxisTime(bin.min)), completion.map((bin) => bin.count), colours, `Clear-time histogram in 30-second bins.`, undefined, (index) => `${formatDuration(completion[index].min)}–${formatDuration(completion[index].max)}: ${formatCount(completion[index].count)} runs`) : emptyOption(colours, 'No completion times in view'), true)
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="completion"]')!, 'Completion-time data', ['From', 'To', 'Runs'], completion.map((bin) => [formatDuration(bin.min), formatDuration(bin.max), formatCount(bin.count)]))
 
+		const margins = marginHistogram(runs, 30)
 		const marginChart = ensureChart('margin')
-		marginChart?.setOption(
-			margins.length
-				? verticalOption(
-						margins.map((bin) => bin.label),
-						margins.map((bin) => bin.count),
-						colours,
-						`Histogram of timer margins in 30 second bins: ${margins.map((bin) => `${bin.label}: ${bin.count}`).join('; ')}.`,
-						(index) => (margins[index].min >= 0 ? colours.green : colours.red),
-						(index) => `${margins[index].label}: ${margins[index].count} runs`
-					)
-				: emptyOption(colours, 'No timer margins in view'),
-			true
-		)
-		if (marginChart)
-			marginChart
-				.getDom()
-				.setAttribute(
-					'aria-label',
-					margins.length
-						? `Timer-margin histogram with ${margins.length} bins. See the data table for bin counts.`
-						: 'No timer margins in view'
-				)
-		chartTable(
-			root.querySelector<HTMLElement>('[data-chart-table="margin"]')!,
-			'Timer-margin data',
-			['Timer-margin bin', 'Runs'],
-			margins.map((bin) => [bin.label, String(bin.count)])
-		)
+		marginChart?.setOption(margins.length ? verticalOption(margins.map((bin) => formatMarginAxis(bin.min)), margins.map((bin) => bin.count), colours, `Timer-margin histogram.`, (index) => (margins[index].min >= 0 ? '#047857' : '#B91C1C'), (index) => `${formatMargin(margins[index].min)} to ${formatMargin(margins[index].max)}: ${formatCount(margins[index].count)} runs`) : emptyOption(colours, 'No timer margins in view'), true)
+		semanticTable(root.querySelector<HTMLElement>('[data-chart-table="margin"]')!, 'Timer-margin data', ['From', 'To', 'Runs'], margins.map((bin) => [formatMargin(bin.min), formatMargin(bin.max), formatCount(bin.count)]))
 	}
 
-	const updateSortAria = () => {
+	const updateTable = (runs: RunRow[]) => {
 		if (!state) return
-		for (const button of root.querySelectorAll<HTMLButtonElement>(
-			'[data-sort]'
-		)) {
-			const th = button.closest('th')
-			if (!th) continue
-			if (button.dataset.sort === state.sortKey)
-				th.setAttribute(
-					'aria-sort',
-					state.sortDirection === 'asc' ? 'ascending' : 'descending'
-				)
-			else th.setAttribute('aria-sort', 'none')
-		}
-	}
-
-	const renderTable = (runs: RunRow[]) => {
-		if (!state) return
+		const sorted = sortRuns(runs, state.sortKey, state.sortDirection)
+		const totalPages = Math.max(1, Math.ceil(sorted.length / state.pageSize))
+		if (state.page >= totalPages) state.page = totalPages - 1
+		const start = state.page * state.pageSize
+		const page = sorted.slice(start, start + state.pageSize)
 		const body = root.querySelector<HTMLElement>('[data-runs-body]')
 		const empty = root.querySelector<HTMLElement>('[data-runs-empty]')
 		if (!body || !empty) return
-		const sorted = sortRuns(runs, state.sortKey, state.sortDirection)
 		body.replaceChildren()
 		empty.hidden = sorted.length > 0
-		for (const run of sorted) {
+		for (const run of page) {
 			const tr = document.createElement('tr')
-			tr.className =
-				'border-b border-border/40 align-top last:border-b-0 hover:bg-muted/20'
+			tr.className = 'border-b border-border/40 align-top last:border-0 hover:bg-muted/20'
 			const rank = document.createElement('th')
 			rank.scope = 'row'
 			rank.className = 'px-3 py-2.5 text-left font-normal'
-			rank.append(
-				textElement(
-					'span',
-					'font-mono text-xs font-semibold text-foreground',
-					`#${run.source_rank}`
-				)
-			)
-			rank.append(
-				textElement(
-					'span',
-					'mt-1 block font-mono text-[10px] text-muted-foreground',
-					String(run.run_id)
-				)
-			)
+			rank.append(element('span', 'block font-mono text-xs font-semibold text-foreground', `#${run.source_rank}`), element('span', 'mt-1 block font-mono text-[10px] text-muted-foreground', String(run.run_id)))
 			const key = document.createElement('td')
 			key.className = 'px-3 py-2.5'
-			key.append(
-				textElement(
-					'span',
-					'rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-primary',
-					`+${run.mythic_level}`
-				)
-			)
-			const dungeon = textElement(
-				'td',
-				'px-3 py-2.5 text-xs text-muted-foreground',
-				run.dungeon.name
-			)
-			const clear = textElement(
-				'td',
-				'px-3 py-2.5 font-mono text-xs text-foreground',
-				formatDuration(run.clear_time_seconds)
-			)
-			const margin = textElement(
-				'td',
-				'px-3 py-2.5 font-mono text-xs',
-				formatMargin(run.timer_margin_seconds)
-			)
-			margin.classList.add(
-				run.timer_margin_seconds !== null && run.timer_margin_seconds < 0
-					? 'wow-negative'
-					: 'wow-positive'
-			)
-			const score = textElement(
-				'td',
-				'px-3 py-2.5 font-mono text-xs text-muted-foreground',
-				run.source_score === null ? '—' : `${run.source_score.toFixed(1)}*`
-			)
-			score.title =
-				'* Leaderboard source score; semantics unverified and not a run-details score.'
-			score.setAttribute(
-				'aria-label',
-				run.source_score === null
-					? 'No source score'
-					: `${run.source_score.toFixed(1)} leaderboard source score, semantics unverified`
-			)
+			key.append(element('span', 'rounded-md border border-primary/20 bg-primary/10 px-1.5 py-0.5 font-mono text-xs font-semibold text-primary', `+${run.mythic_level}`))
 			const composition = document.createElement('td')
-			composition.className =
-				'max-w-[20rem] px-3 py-2.5 text-xs text-muted-foreground'
-			const compositionSpan = textElement(
-				'span',
-				'whitespace-normal',
-				compositionText(run)
-			)
-			compositionSpan.title = compositionFullText(run)
-			composition.append(compositionSpan)
+			composition.className = 'min-w-[18rem] px-3 py-2.5'
+			const wrap = element('div', 'flex flex-wrap gap-1')
+			for (const member of [...run.roster].sort((a, b) => (a.spec_id ?? 0) - (b.spec_id ?? 0))) wrap.append(chip(member.spec_name ?? 'Unknown', member.class_id))
+			composition.append(wrap)
 			const source = document.createElement('td')
 			source.className = 'px-3 py-2.5'
 			const link = document.createElement('a')
 			link.href = run.source_url
 			link.target = '_blank'
 			link.rel = 'noopener noreferrer'
-			link.className =
-				'inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline'
+			link.className = 'text-xs font-semibold text-primary hover:underline'
 			link.textContent = 'Raider.IO ↗'
-			link.setAttribute(
-				'aria-label',
-				`Open run ${run.run_id} on Raider.IO (opens in a new tab)`
-			)
+			link.setAttribute('aria-label', `Open run ${run.run_id} on Raider.IO (opens in a new tab)`)
 			source.append(link)
-			tr.append(rank, key, dungeon, clear, margin, score, composition, source)
+			const score = element('td', 'px-3 py-2.5 font-mono text-xs text-muted-foreground', run.source_score === null ? '—' : `${run.source_score.toFixed(1)}*`)
+			score.title = '* Leaderboard source score; semantics unverified'
+			const margin = element('td', `px-3 py-2.5 font-mono text-xs ${run.timer_margin_seconds !== null && run.timer_margin_seconds < 0 ? 'wow-negative' : 'wow-positive'}`, formatMargin(run.timer_margin_seconds))
+			tr.append(rank, key, element('td', 'px-3 py-2.5 text-xs text-muted-foreground', run.dungeon.name), element('td', 'px-3 py-2.5 font-mono text-xs text-foreground', formatDuration(run.clear_time_seconds)), margin, score, composition, source)
 			body.append(tr)
 		}
-		setText(
-			'[data-result-count]',
-			`${sorted.length} run${sorted.length === 1 ? '' : 's'} shown`
-		)
-		updateSortAria()
-		const labels: Record<SortKey, string> = {
-			rank: 'rank',
-			key: 'key level',
-			clear: 'clear time',
-			margin: 'timer margin',
-			score: 'source score',
-			composition: 'reported composition',
-		}
-		setText(
-			'[data-sort-status]',
-			`Sorted by ${labels[state.sortKey]} ${state.sortDirection === 'asc' ? 'ascending' : 'descending'}.`
-		)
+		setText('[data-result-count]', `${formatCount(sorted.length)} runs shown`)
+		setText('[data-page-status]', sorted.length ? `Showing runs ${formatCount(start + 1)}–${formatCount(Math.min(start + state.pageSize, sorted.length))} of ${formatCount(sorted.length)}` : 'No matching runs')
+		const prev = root.querySelector<HTMLButtonElement>('[data-page-prev]')
+		const next = root.querySelector<HTMLButtonElement>('[data-page-next]')
+		if (prev) prev.disabled = state.page <= 0
+		if (next) next.disabled = state.page >= totalPages - 1
+		for (const button of root.querySelectorAll<HTMLButtonElement>('[data-sort]')) button.closest('th')?.setAttribute('aria-sort', button.dataset.sort === state.sortKey ? (state.sortDirection === 'asc' ? 'ascending' : 'descending') : 'none')
+		setText('[data-sort-status]', `Sorted by ${state.sortKey} ${state.sortDirection === 'asc' ? 'ascending' : 'descending'}.`)
 	}
 
 	const render = () => {
 		if (!state) return
-		const { runs, appearances } = currentRuns()
+		const runs = filteredRuns()
+		updateHeader()
 		updateKpis(runs)
 		updateWarnings(runs)
-		updateFilterSummary(runs, appearances)
 		renderCharts(runs)
-		renderTable(runs)
+		updateTable(runs)
 	}
 
-	let searchTimer: ReturnType<typeof setTimeout> | undefined
 	const bindControls = () => {
-		const keySelect = root.querySelector<HTMLSelectElement>('[data-filter-key]')
-		const classSelect = root.querySelector<HTMLSelectElement>(
-			'[data-filter-class]'
-		)
-		const specSelect =
-			root.querySelector<HTMLSelectElement>('[data-filter-spec]')
-		const search = root.querySelector<HTMLInputElement>('[data-filter-search]')
-		keySelect?.addEventListener(
-			'change',
-			() => {
+		root.querySelector<HTMLSelectElement>('[data-filter-dungeon]')?.addEventListener('change', (event) => {
+			void loadSelection((event.target as HTMLSelectElement).value).catch(showError)
+		}, { signal: controller.signal })
+		root.querySelector<HTMLSelectElement>('[data-filter-key]')?.addEventListener('change', (event) => {
+			if (!state) return
+			state.keyLevel = (event.target as HTMLSelectElement).value
+			state.page = 0
+			render()
+		}, { signal: controller.signal })
+		root.querySelector<HTMLSelectElement>('[data-filter-class]')?.addEventListener('change', (event) => {
+			if (!state) return
+			state.classId = (event.target as HTMLSelectElement).value
+			state.specId = 'all'
+			state.page = 0
+			populateSpecs()
+			render()
+		}, { signal: controller.signal })
+		root.querySelector<HTMLSelectElement>('[data-filter-spec]')?.addEventListener('change', (event) => {
+			if (!state) return
+			state.specId = (event.target as HTMLSelectElement).value
+			state.page = 0
+			render()
+		}, { signal: controller.signal })
+		root.querySelector<HTMLInputElement>('[data-filter-search]')?.addEventListener('input', (event) => {
+			if (!state) return
+			if (searchTimer) clearTimeout(searchTimer)
+			searchTimer = setTimeout(() => {
 				if (!state) return
-				state.keyLevel = keySelect.value
+				state.search = (event.target as HTMLInputElement).value
+				state.page = 0
 				render()
-			},
-			{ signal: controller.signal }
-		)
-		classSelect?.addEventListener(
-			'change',
-			() => {
+			}, 180)
+		}, { signal: controller.signal })
+		for (const button of root.querySelectorAll<HTMLButtonElement>('[data-role]')) {
+			button.addEventListener('click', () => {
 				if (!state) return
-				state.classId = classSelect.value
-				state.specId = 'all'
-				populateSpecs()
-				render()
-			},
-			{ signal: controller.signal }
-		)
-		specSelect?.addEventListener(
-			'change',
-			() => {
-				if (!state) return
-				state.specId = specSelect.value
-				render()
-			},
-			{ signal: controller.signal }
-		)
-		search?.addEventListener(
-			'input',
-			() => {
-				if (!state) return
-				if (searchTimer) clearTimeout(searchTimer)
-				searchTimer = setTimeout(() => {
-					if (!state) return
-					state.search = search.value
-					render()
-				}, 200)
-			},
-			{ signal: controller.signal }
-		)
-		for (const button of root.querySelectorAll<HTMLButtonElement>(
-			'[data-role]'
-		)) {
-			button.addEventListener(
-				'click',
-				() => {
-					if (!state) return
-					state.role = (button.dataset.role as RoleView) ?? 'all'
-					for (const peer of root.querySelectorAll<HTMLButtonElement>(
-						'[data-role]'
-					)) {
-						const active = peer === button
-						peer.setAttribute('aria-pressed', String(active))
-						peer.className = active
-							? 'rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary'
-							: 'rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary'
-					}
-					render()
-				},
-				{ signal: controller.signal }
-			)
-		}
-		root.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener(
-			'click',
-			() => {
-				if (!state) return
-				state.keyLevel = 'all'
-				state.classId = 'all'
-				state.specId = 'all'
-				state.role = 'all'
-				state.search = ''
-				state.sortKey = 'rank'
-				state.sortDirection = 'asc'
-				populateFilters()
-				populateSpecs()
-				if (search) search.value = ''
-				for (const peer of root.querySelectorAll<HTMLButtonElement>(
-					'[data-role]'
-				)) {
-					const active = peer.dataset.role === 'all'
+				state.role = (button.dataset.role as RoleView) ?? 'all'
+				for (const peer of root.querySelectorAll<HTMLButtonElement>('[data-role]')) {
+					const active = peer === button
 					peer.setAttribute('aria-pressed', String(active))
-					peer.className = active
-						? 'rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary'
-						: 'rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary'
+					peer.className = active ? 'rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary' : 'rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary'
 				}
 				render()
-			},
-			{ signal: controller.signal }
-		)
-		for (const button of root.querySelectorAll<HTMLButtonElement>(
-			'[data-sort]'
-		)) {
-			button.addEventListener(
-				'click',
-				() => {
-					if (!state) return
-					const key = button.dataset.sort as SortKey
-					if (state.sortKey === key)
-						state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc'
-					else {
-						state.sortKey = key
-						state.sortDirection = key === 'composition' ? 'asc' : 'desc'
-					}
-					renderTable(currentRuns().runs)
-				},
-				{ signal: controller.signal }
-			)
+			}, { signal: controller.signal })
 		}
+		root.querySelector<HTMLSelectElement>('[data-page-size]')?.addEventListener('change', (event) => {
+			if (!state) return
+			state.pageSize = Number((event.target as HTMLSelectElement).value) || DEFAULT_PAGE_SIZE
+			state.page = 0
+			updateTable(filteredRuns())
+		}, { signal: controller.signal })
+		root.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener('click', () => {
+			if (!state) return
+			state.keyLevel = 'all'
+			state.classId = 'all'
+			state.specId = 'all'
+			state.role = 'all'
+			state.search = ''
+			state.page = 0
+			state.sortKey = 'rank'
+			state.sortDirection = 'asc'
+			const search = root.querySelector<HTMLInputElement>('[data-filter-search]')
+			if (search) search.value = ''
+			populateFilters()
+			for (const peer of root.querySelectorAll<HTMLButtonElement>('[data-role]')) {
+				const active = peer.dataset.role === 'all'
+				peer.setAttribute('aria-pressed', String(active))
+				peer.className = active ? 'rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary' : 'rounded-full border border-border bg-muted/30 px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary'
+			}
+			render()
+		}, { signal: controller.signal })
+		for (const button of root.querySelectorAll<HTMLButtonElement>('[data-sort]')) {
+			button.addEventListener('click', () => {
+				if (!state) return
+				const key = button.dataset.sort as SortKey
+				if (state.sortKey === key) state.sortDirection = state.sortDirection === 'asc' ? 'desc' : 'asc'
+				else { state.sortKey = key; state.sortDirection = key === 'composition' ? 'asc' : 'desc' }
+				state.page = 0
+				updateTable(filteredRuns())
+			}, { signal: controller.signal })
+		}
+		root.querySelector<HTMLButtonElement>('[data-page-prev]')?.addEventListener('click', () => {
+			if (!state) return
+			state.page = Math.max(0, state.page - 1)
+			updateTable(filteredRuns())
+		}, { signal: controller.signal })
+		root.querySelector<HTMLButtonElement>('[data-page-next]')?.addEventListener('click', () => {
+			if (!state) return
+			state.page += 1
+			updateTable(filteredRuns())
+		}, { signal: controller.signal })
 	}
 
-	const load = async () => {
+	const showError = (error: unknown) => {
+		loading.hidden = true
+		root.hidden = true
+		errorPanel.hidden = false
+		errorMessage.textContent = error instanceof Error ? error.message : 'Unknown data-loading failure.'
+	}
+
+	const start = async () => {
 		loading.hidden = false
 		errorPanel.hidden = true
 		root.hidden = true
 		root.setAttribute('aria-busy', 'true')
 		try {
-			const dataBase =
-				(import.meta.env.PUBLIC_WOW_MPLUS_DATA_BASE as string | undefined) ||
-				'/data/wow-mythic-plus'
-			const { manifest, dataset } = await loadWowDataset(fetch, dataBase)
+			const index = await loadIndex()
 			if (controller.signal.aborted) return
 			state = {
-				manifest,
-				dataset,
-				keyLevel: 'all',
-				classId: 'all',
-				specId: 'all',
-				role: 'all',
-				search: '',
-				sortKey: 'rank',
-				sortDirection: 'asc',
+				index, datasets: new Map(), selected: 'all', runs: [],
+				totalRuns: index.dungeons.reduce((sum, entry) => sum + entry.run_count, 0),
+				keyLevel: 'all', classId: 'all', specId: 'all', role: 'all',
+				search: '', sortKey: 'rank', sortDirection: 'asc', page: 0, pageSize: DEFAULT_PAGE_SIZE,
 			}
+			bindControls()
 			populateFilters()
-			populateSpecs()
-			const definitions = root.querySelector<HTMLElement>('[data-definitions]')
-			if (definitions) {
-				definitions.replaceChildren()
-				for (const [key, value] of Object.entries(dataset.definitions)) {
-					if (!value || typeof value !== 'object') continue
-					const record = value as Record<string, string>
-					const p = document.createElement('p')
-					const strong = textElement(
-						'strong',
-						'font-semibold text-foreground',
-						key.replaceAll('_', ' ')
-					)
-					p.append(
-						strong,
-						document.createTextNode(`: ${record.description ?? ''} `)
-					)
-					if (record.denominator)
-						p.append(
-							document.createTextNode(`Denominator: ${record.denominator}. `)
-						)
-					if (record.unit)
-						p.append(document.createTextNode(`Unit: ${record.unit}.`))
-					definitions.append(p)
-				}
-			}
-			loading.hidden = true
-			errorPanel.hidden = true
-			root.hidden = false
-			root.setAttribute('aria-busy', 'false')
-			const status = document.querySelector<HTMLElement>(
-				'[data-dashboard-status]'
-			)
-			if (status)
-				status.textContent = `Dashboard loaded: ${dataset.runs.length} collected runs.`
-			render()
-			chartObserver?.disconnect()
-			chartObserver = new MutationObserver(() => {
-				if (state) renderCharts(currentRuns().runs)
-			})
-			chartObserver.observe(document.documentElement, {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-		} catch (error) {
+			await loadSelection('all')
 			if (controller.signal.aborted) return
-			loading.hidden = true
-			root.hidden = true
-			errorPanel.hidden = false
 			root.setAttribute('aria-busy', 'false')
-			errorMessage.textContent =
-				error instanceof Error ? error.message : 'Unknown data-loading failure.'
+			const status = document.querySelector<HTMLElement>('[data-dashboard-status]')
+			if (status) status.textContent = `Dashboard loaded: ${formatCount(state.totalRuns)} collected runs across ${index.dungeons.length} dungeons.`
+			render()
+			themeObserver?.disconnect()
+			themeObserver = new MutationObserver(() => {
+				if (state) renderCharts(filteredRuns())
+			})
+			themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+		} catch (error) {
+			if (!controller.signal.aborted) showError(error)
 		}
 	}
 
-	retryButton?.addEventListener('click', load, { signal: controller.signal })
-	bindControls()
-	if (typeof window !== 'undefined')
-		window.addEventListener(
-			'resize',
-			() => {
-				for (const chart of charts.values()) chart.resize()
-			},
-			{ signal: controller.signal, passive: true }
-		)
-
+	retry?.addEventListener('click', () => void start(), { signal: controller.signal })
 	const cleanup = () => {
 		controller.abort()
 		if (searchTimer) clearTimeout(searchTimer)
-		chartObserver?.disconnect()
-		chartObserver = undefined
-		disposeCharts()
+		themeObserver?.disconnect()
+		observer.disconnect()
+		for (const chart of charts.values()) chart.dispose()
+		charts.clear()
 	}
-	cleanupActive = cleanup
-	load()
+	activeCleanup = cleanup
+	if (typeof document !== 'undefined') document.addEventListener('astro:before-swap', () => activeCleanup?.(), { once: true })
+	void start()
 	return cleanup
 }

@@ -1,24 +1,192 @@
 {
-  "analytics_version": "1.1.0",
-  "cohort": {
-    "complete_rosters": 40,
-    "eligible_complete_teams": 40,
-    "incomplete_rosters": 0,
-    "roster_appearances": 200,
-    "runs": 40
+  "combined": {
+    "file": "analytics-v2-season-mn-2-20261028T181929614871Z-combined.json",
+    "roster_appearances": 800538,
+    "run_count": 160108,
+    "sha256": "b2f4098cd5ebd03e500a2fa510d16de8956896162b97005e321a04cfe61eb223",
+    "size_bytes": 132164
   },
-  "collection_id": 3,
-  "collection_key": "badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
-  "dataset_version": "v1-badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190",
-  "file": "analytics-v1.1.0-badcd5dc-2b5e-4dfa-b677-f8e1f9ab4190-20261028T165517580110Z.json",
-  "generated_at": "2026-10-28T16:55:17.580110+00:00",
-  "manifest_version": 1,
-  "schema_version": "1.1.0",
+  "dataset_version": "v2-season-mn-2-20261028T181929614871Z",
+  "dungeons": [
+    {
+      "complete_rosters": 20007,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 13,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-altar-of-fangs.json",
+      "missing_character_id_appearances": 1269,
+      "name": "Altar of Fangs",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:48:28.436949+00:00",
+        "started_at": "2026-10-28T17:27:44.852030+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100035,
+      "run_count": 20007,
+      "sha256": "639840031ea73a0703c16ae7522552410e7710eb79e37f1735c2012664720296",
+      "size_bytes": 3227408,
+      "slug": "altar-of-fangs"
+    },
+    {
+      "complete_rosters": 20014,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 6,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-den-of-nalorakk.json",
+      "missing_character_id_appearances": 991,
+      "name": "Den of Nalorakk",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:57:32.150954+00:00",
+        "started_at": "2026-10-28T17:27:47.845318+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100070,
+      "run_count": 20014,
+      "sha256": "efcbfa8d0b4161b357051e302a6315cf82651448ffd5d5e9019298257bd08b73",
+      "size_bytes": 3229054,
+      "slug": "den-of-nalorakk"
+    },
+    {
+      "complete_rosters": 20019,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 1,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-kings-rest.json",
+      "missing_character_id_appearances": 1001,
+      "name": "Kings' Rest",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:57:25.203952+00:00",
+        "started_at": "2026-10-28T17:27:50.229886+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100095,
+      "run_count": 20019,
+      "sha256": "2431396ddb770a67ea707282097a48794f2735a3560bfa3af3bca3c9940284bb",
+      "size_bytes": 3226623,
+      "slug": "kings-rest"
+    },
+    {
+      "complete_rosters": 20013,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 7,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-murder-row.json",
+      "missing_character_id_appearances": 951,
+      "name": "Murder Row",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:57:38.516225+00:00",
+        "started_at": "2026-10-28T17:27:54.011875+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100065,
+      "run_count": 20013,
+      "sha256": "b02564de474dd60e948be4e25ab3b11e0bd3376f073f187eace6c42e6786176a",
+      "size_bytes": 3228404,
+      "slug": "murder-row"
+    },
+    {
+      "complete_rosters": 20014,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 5,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-ruby-life-pools.json",
+      "missing_character_id_appearances": 1126,
+      "name": "Ruby Life Pools",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:58:48.515757+00:00",
+        "started_at": "2026-10-28T17:27:58.395748+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100074,
+      "run_count": 20015,
+      "sha256": "a13568b181436f244f5c4b5419beeee913aef710d02c82ef6b6a7ad7bbfd6254",
+      "size_bytes": 3227333,
+      "slug": "ruby-life-pools"
+    },
+    {
+      "complete_rosters": 20014,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 6,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-temple-of-sethraliss.json",
+      "missing_character_id_appearances": 955,
+      "name": "Temple of Sethraliss",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:58:52.255808+00:00",
+        "started_at": "2026-10-28T17:28:05.742862+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100070,
+      "run_count": 20014,
+      "sha256": "846ea2d001963782ab75002aba3378ed32fd95b70817e6241ad69fd441ced9a4",
+      "size_bytes": 3226395,
+      "slug": "temple-of-sethraliss"
+    },
+    {
+      "complete_rosters": 20011,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 9,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-the-blinding-vale.json",
+      "missing_character_id_appearances": 1133,
+      "name": "The Blinding Vale",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:58:53.312580+00:00",
+        "started_at": "2026-10-28T17:28:12.089723+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100055,
+      "run_count": 20011,
+      "sha256": "3e288173f630f95d2fed478c402f447cdfbe9a481051f0d9c1e9ab81d3c5ae6b",
+      "size_bytes": 3226515,
+      "slug": "the-blinding-vale"
+    },
+    {
+      "complete_rosters": 20014,
+      "coverage_status": "api_page_limit",
+      "duplicate_positions": 5,
+      "file": "analytics-v2-season-mn-2-20261028T181929614871Z-voidscar-arena.json",
+      "missing_character_id_appearances": 1216,
+      "name": "Voidscar Arena",
+      "observation_window": {
+        "completed_at": "2026-10-28T17:59:38.448806+00:00",
+        "started_at": "2026-10-28T17:28:44.678828+00:00"
+      },
+      "pages_requested": 1001,
+      "pages_succeeded": 1001,
+      "positions": 20020,
+      "roster_appearances": 100074,
+      "run_count": 20015,
+      "sha256": "7ed644bd5519bae09a86d6545e2bee180a22631c4818bb672e80dffc6c6390ea",
+      "size_bytes": 3228200,
+      "slug": "voidscar-arena"
+    }
+  ],
+  "generated_at": "2026-10-28T18:19:29.614871+00:00",
+  "manifest_version": 2,
+  "notes": [
+    "Cohort is collected top leaderboard runs, not all Mythic+ runs or players.",
+    "Specialisation is reported by the leaderboard and not verified at run completion.",
+    "Roster array order is not in-game group order.",
+    "Class colours are display aids; role is a separate label.",
+    "Combined All Dungeons analysis is assembled from independently loaded dungeon files.",
+    "Source ranking score semantics are unverified and not used for strength claims.",
+    "Dungeon files include all pages accessible under the provider page ceiling; this is not a population census."
+  ],
+  "partial": false,
+  "region": "eu",
+  "schema_version": "2.0.0",
   "scope": {
-    "dungeon": "den-of-nalorakk",
     "region": "eu",
     "season": "season-mn-2"
   },
-  "sha256": "802cbd704d1f6da3102b00f35179868b4639ce8d33106759756c7179d5779d75",
-  "size_bytes": 111087
+  "season": "season-mn-2",
+  "season_name": "MN Season 2"
 }

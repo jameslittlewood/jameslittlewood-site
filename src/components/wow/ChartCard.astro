@@ -5,6 +5,7 @@ interface Props {
 	description: string
 	height?: string
 	showRoleLegend?: boolean
+	wide?: boolean
 }
 
 const {
@@ -13,10 +14,16 @@ const {
 	description,
 	height = 'h-64',
 	showRoleLegend = false,
+	wide = false,
 } = Astro.props
 ---
 
-<section class="min-w-0 rounded-2xl border border-border/60 bg-card p-4 sm:p-5">
+<section
+	class:list={[
+		'min-w-0 rounded-2xl border border-border/60 bg-card p-4 sm:p-5',
+		wide && 'lg:col-span-2',
+	]}
+>
 	<div class="mb-4">
 		<h3 class="text-sm font-bold">{title}</h3>
 		<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
@@ -24,7 +31,7 @@ const {
 		</p>
 	</div>
 	<div
-		class:list={['w-full', height]}
+		class:list={['relative w-full overflow-hidden', height]}
 		data-chart={chart}
 		role="img"
 		aria-label={`${title}. Chart data is also available in the table below.`}

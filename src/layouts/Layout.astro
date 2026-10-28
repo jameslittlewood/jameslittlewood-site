@@ -3,20 +3,26 @@ import Sidebar from "@/components/layout/Sidebar.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { HeadProps } from "@/types";
 
-type Props = HeadProps;
+type Props = HeadProps & { wide?: boolean; standalone?: boolean };
 
-const head = Astro.props;
+const { wide = false, standalone = false, ...head } = Astro.props;
 ---
 
 <BaseLayout {...head}>
   <div
-    class="relative flex h-auto w-full max-w-5xl flex-col overflow-hidden rounded-none border border-border bg-card shadow-main md:flex-row md:rounded-[2.5rem]"
+    class:list={[
+      "relative flex h-auto w-full flex-col overflow-hidden rounded-none border border-border bg-card shadow-main md:flex-row md:rounded-[2.5rem]",
+      standalone ? "max-w-[1400px]" : wide ? "max-w-[100rem]" : "max-w-5xl",
+    ]}
   >
-    <Sidebar />
+    {!standalone && <Sidebar />}
 
     <main
       data-pagefind-body
-      class="custom-scrollbar flex-1 overflow-x-hidden overflow-y-auto md:h-200"
+      class:list={[
+        "custom-scrollbar flex-1 overflow-x-hidden",
+        !standalone && "overflow-y-auto md:h-200",
+      ]}
     >
       <slot />
     </main>

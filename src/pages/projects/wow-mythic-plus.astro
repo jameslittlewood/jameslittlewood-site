@@ -2,19 +2,24 @@
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
 import ChartCard from '@/components/wow/ChartCard.astro'
+import ThemeToggle from '@/components/layout/ThemeToggle.astro'
 ---
 
 <Layout
+	standalone
 	title="Mythic+ Leaderboard Analytics"
 	description="An interactive view of collected top Mythic+ leaderboard runs, reported class and specialisation representation, team compositions, timings and key levels."
 >
-	<article class="mx-auto max-w-3xl space-y-8 p-6 sm:p-8 md:p-10">
-		<a
-			href="/projects/"
-			class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-		>
-			← Back to Projects
-		</a>
+	<article class="mx-auto max-w-none space-y-8 p-4 sm:p-6 md:p-8 lg:p-10">
+		<div class="flex items-center justify-between gap-4">
+			<a
+				href="/projects/"
+				class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+			>
+				← Back to Projects
+			</a>
+			<ThemeToggle />
+		</div>
 
 		<header class="space-y-4">
 			<div class="inline-flex flex-wrap items-center gap-2">
@@ -35,9 +40,9 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 			<p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
 				An interactive view of <strong class="font-semibold text-foreground"
 					>collected top leaderboard runs</strong
-				> for one dungeon and season. Filter runs, compare key levels, inspect reported
-				roster composition and read run-level timings. This is a leaderboard sample,
-				not the whole Mythic+ population.
+				> for all eight current EU dungeons. Filter runs, compare key levels, inspect
+				reported roster composition and read run-level timings. This is a collected
+				leaderboard sample, not the whole Mythic+ population.
 			</p>
 			<div
 				class="flex flex-wrap gap-2"
@@ -50,16 +55,16 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 				>
 				<span
 					class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs text-primary"
-					data-scope-season>season-mn-2</span
+					data-scope-season>MN Season 2</span
 				>
 				<span
 					class="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs text-primary"
-					data-scope-dungeon>Den of Nalorakk</span
+					data-scope-dungeon>All dungeons</span
 				>
 			</div>
 			<p class="text-xs text-muted-foreground">
-				Only this scope is published. Region, season and dungeon selectors are
-				intentionally absent until additional datasets exist.
+				Region and season are fixed for this publication. All eight verified
+				dungeons are available in the dungeon filter.
 			</p>
 		</header>
 
@@ -73,6 +78,8 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 			</div>
 		</noscript>
 
+		<p class="sr-only" data-dashboard-status role="status" aria-live="polite">
+		</p>
 		<div
 			data-dashboard-loading
 			role="status"
@@ -226,6 +233,18 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 						<span data-selection-method>—</span>
 					</p>
 				</div>
+				<details
+					class="rounded-2xl border border-border/50 bg-muted/20 p-4 text-xs text-muted-foreground"
+				>
+					<summary class="cursor-pointer font-semibold text-primary"
+						>Dataset and technical details</summary
+					>
+					<div class="mt-2 grid gap-2 sm:grid-cols-2">
+						<p>Dataset: <span data-dataset-version>—</span></p>
+						<p>Pages: <span data-pages-detail>—</span></p>
+						<p>Coverage: <span data-coverage-status>—</span></p>
+					</div>
+				</details>
 			</section>
 
 			<section aria-labelledby="filters-title" class="space-y-4">
@@ -237,7 +256,17 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 					</p>
 				</div>
 				<div class="rounded-2xl border border-border/60 bg-card p-4 sm:p-5">
-					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+					<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+						<label class="block text-xs font-semibold" for="filter-dungeon">
+							Dungeon
+							<select
+								id="filter-dungeon"
+								data-filter-dungeon
+								class="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm font-normal text-foreground focus-visible:border-primary"
+							>
+								<option value="all">All dungeons</option>
+							</select>
+						</label>
 						<label class="block text-xs font-semibold" for="filter-key">
 							Key level
 							<select
@@ -358,12 +387,14 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 					/>
 					<ChartCard
 						chart="spec"
+						wide
 						title="Reported specialisation"
 						description="Reported specialisations by role. This is not verified run-time specialisation."
 						height="h-80"
 					/>
 					<ChartCard
 						chart="compositions"
+						wide
 						title="Most common team compositions"
 						description="Sorted five-spec multisets from eligible complete rosters; repeated specs are preserved."
 						height="h-80"
@@ -371,13 +402,33 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 					<ChartCard
 						chart="completion"
 						title="Completion-time distribution"
-						description="Reported clear time converted to seconds. Missing timings are excluded."
+						description="Clear time shown as MM:SS.mmm; chart bins use MM:SS. Missing timings are excluded."
 					/>
 					<ChartCard
 						chart="margin"
 						title="Timer-margin analysis"
-						description="Dungeon timer minus clear time. Positive bins are ahead of the timer; negative bins are overtime."
+						description="Dungeon timer minus clear time. Positive margins are ahead; negative margins are overtime. Tooltips and tables use MM:SS.mmm."
 					/>
+				</div>
+			</section>
+
+			<section aria-labelledby="compositions-title" class="space-y-4">
+				<div>
+					<h2 id="compositions-title" class="text-lg font-bold">
+						Ranked team compositions
+					</h2>
+					<p class="text-xs text-muted-foreground">
+						Class-coloured chips preserve repeated specialisations. Percentages
+						use eligible complete teams.
+					</p>
+				</div>
+				<div
+					class="overflow-x-auto rounded-2xl border border-border/60"
+					data-composition-list
+					tabindex="0"
+					role="region"
+					aria-label="Ranked team compositions, horizontally scrollable"
+				>
 				</div>
 			</section>
 
@@ -468,6 +519,8 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 						</thead>
 						<tbody data-runs-body></tbody>
 					</table>
+					<p class="sr-only" data-sort-status role="status" aria-live="polite">
+					</p>
 					<div
 						data-runs-empty
 						hidden
@@ -475,6 +528,35 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 					>
 						No runs match the current filters. Reset the filters or search term
 						to see the cohort.
+					</div>
+				</div>
+				<div class="flex flex-wrap items-center justify-between gap-3">
+					<p class="text-xs text-muted-foreground" data-page-status></p>
+					<div class="flex flex-wrap items-center gap-2">
+						<label for="page-size" class="text-xs text-muted-foreground"
+							>Rows per page</label
+						>
+						<select
+							id="page-size"
+							data-page-size
+							class="rounded-xl border border-border bg-background px-2 py-1.5 text-xs text-foreground focus-visible:border-primary"
+						>
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+						</select>
+						<button
+							type="button"
+							data-page-prev
+							class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+							>Previous</button
+						>
+						<button
+							type="button"
+							data-page-next
+							class="rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+							>Next</button
+						>
 					</div>
 				</div>
 			</section>
@@ -529,8 +611,9 @@ import ChartCard from '@/components/wow/ChartCard.astro'
 						<p>
 							Timings and margins are descriptive. Key level, composition,
 							player skill and selection effects are confounded, and the cohort
-							is only the top two pages of one dungeon leaderboard. No
-							class-strength or overall-popularity conclusion is valid.
+							covers only the accessible provider page ceiling of each dungeon
+							leaderboard, not all runs. No class-strength or overall-popularity
+							conclusion is valid.
 						</p>
 					</div>
 				</div>
