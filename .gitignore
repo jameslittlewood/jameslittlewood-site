@@ -19,3 +19,6 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Private screenshot originals; publish only reviewed derivatives in public/images/.
+/screenshots-source/

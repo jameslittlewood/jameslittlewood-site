@@ -1,30 +1,40 @@
 ---
 import Layout from '@/layouts/Layout.astro'
+import { Icon } from 'astro-icon/components'
 
 const technologies = [
 	'Open WebUI',
 	'OpenRouter',
-	'Unsloth',
-	'Qwen',
-	'Gemma 4',
+	'Unsloth Studio',
+	'Qwen3.5 2B',
+	'Gemma 4 12B',
 	'Google DeepMind',
 	'Docker',
 	'Ubuntu Linux',
 	'Cloudflare',
 	'SearXNG',
 	'GGUF',
+	'DDGS',
+	'PostgreSQL 16',
+	'Homepage',
+	'Glances',
+	'Uptime Kuma',
+	'Tailscale',
+	'SSH',
+	'macOS',
+	'VS Code',
 ]
 
 const features = [
 	{
 		title: 'Hybrid AI Models',
 		description:
-			'Cloud-hosted models through OpenRouter alongside locally hosted open-weight models using Unsloth and OpenAI-compatible APIs.',
+			'Open WebUI connects to OpenRouter cloud models, Ubuntu-hosted Qwen3.5 2B and Windows-hosted Gemma 4 12B through configured inference APIs.',
 	},
 	{
 		title: 'Secure Remote Access',
 		description:
-			'Cloudflare Tunnel and Access provide authenticated remote access without exposing the chatbot directly to the public internet.',
+			'Cloudflare Tunnel and Access provide authenticated browser access. The MacBook Pro uses Tailscale and SSH for remote administration of Ubuntu.',
 	},
 	{
 		title: 'Web Search',
@@ -44,16 +54,93 @@ const features = [
 	{
 		title: 'Self-Hosted Infrastructure',
 		description:
-			'Docker-based deployment on an Ubuntu mini PC with persistent storage, remote administration and external model connections.',
+			'Ubuntu Linux and Docker host Open WebUI and supporting services, including PostgreSQL 16, Homepage, Glances and Uptime Kuma. Development uses VS Code on a MacBook Pro.',
 	},
 ]
 
-// Add screenshots when ready.
-const screenshots: {
-	src: string
-	alt: string
-	caption: string
-}[] = []
+const modelLinks = {
+	qwen: 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF',
+	gemma: 'https://huggingface.co/unsloth/gemma-4-12b-it-GGUF',
+}
+
+const screenshots = [
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/open-webui.webp',
+		thumbnail: '/images/projects/self-hosted-ai-chatbot/open-webui-thumb.webp',
+		width: 2400,
+		height: 1198,
+		thumbnailWidth: 1200,
+		thumbnailHeight: 599,
+		title: 'Open WebUI interface',
+		alt: 'Open WebUI showing the locally hosted Gemma model in the model selector.',
+		caption:
+			'Self-hosted Open WebUI interface providing access to locally hosted and cloud-based language models.',
+	},
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/deepseek-assistants.webp',
+		thumbnail:
+			'/images/projects/self-hosted-ai-chatbot/deepseek-assistants-thumb.webp',
+		width: 2400,
+		height: 1183,
+		thumbnailWidth: 768,
+		thumbnailHeight: 378,
+		title: 'Specialised DeepSeek assistants',
+		alt: 'Open WebUI model menu listing DeepSeek General, Coder, Documents and Tutor assistants.',
+		caption:
+			'Specialised DeepSeek assistants configured for general use, programming, document analysis and technical learning.',
+	},
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/gemma-programming-tutor.webp',
+		thumbnail:
+			'/images/projects/self-hosted-ai-chatbot/gemma-programming-tutor-thumb.webp',
+		width: 2400,
+		height: 1424,
+		thumbnailWidth: 768,
+		thumbnailHeight: 456,
+		title: 'Gemma 4 programming tutor',
+		alt: 'Gemma programming tutor providing progressive Python hints about finding the longest sales streak.',
+		caption:
+			'Locally hosted Gemma 4 programming tutor demonstrating progressive, structured Python guidance.',
+	},
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/ubuntu-monitoring.webp',
+		thumbnail:
+			'/images/projects/self-hosted-ai-chatbot/ubuntu-monitoring-thumb.webp',
+		width: 1920,
+		height: 508,
+		thumbnailWidth: 768,
+		thumbnailHeight: 203,
+		title: 'Ubuntu monitoring dashboard',
+		alt: 'Cropped Ubuntu dashboard showing Open WebUI, PostgreSQL, Glances, Homepage, SearXNG and Uptime Kuma; operational values are redacted.',
+		caption:
+			'Ubuntu server dashboard combining service availability, resource monitoring and infrastructure status.',
+	},
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/ubuntu-qwen.webp',
+		thumbnail: '/images/projects/self-hosted-ai-chatbot/ubuntu-qwen-thumb.webp',
+		width: 1920,
+		height: 958,
+		thumbnailWidth: 768,
+		thumbnailHeight: 383,
+		title: 'Ubuntu Qwen inference',
+		alt: 'Unsloth Studio running Qwen3.5 2B on Ubuntu and answering a question about context windows.',
+		caption:
+			'Qwen3.5 2B running locally through Unsloth Studio on the Ubuntu mini PC.',
+	},
+	{
+		src: '/images/projects/self-hosted-ai-chatbot/windows-gemma.webp',
+		thumbnail:
+			'/images/projects/self-hosted-ai-chatbot/windows-gemma-thumb.webp',
+		width: 1920,
+		height: 890,
+		thumbnailWidth: 768,
+		thumbnailHeight: 356,
+		title: 'Windows Gemma inference',
+		alt: 'Unsloth Studio running Gemma 4 12B and explaining Python data generation, cleaning and analytical calculations.',
+		caption:
+			'Gemma 4 12B running locally on the RTX 4070 desktop, demonstrating Python-based analytical tasks.',
+	},
+]
 ---
 
 <Layout
@@ -90,72 +177,116 @@ const screenshots: {
 		</header>
 
 		<!-- System Architecture -->
-		<section class="space-y-5">
-			<h2 class="text-xl font-bold">System Architecture</h2>
-
+		<section class="space-y-5" aria-labelledby="architecture-title">
+			<h2 id="architecture-title" class="text-xl font-bold">
+				System Architecture
+			</h2>
 			<div class="rounded-2xl border border-border/50 bg-muted/20 p-5">
 				<div class="flex flex-col items-center text-center">
-					<!-- Browser -->
 					<div
-						class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
+						class="grid w-full items-center gap-3 sm:grid-cols-[1fr_auto_1fr]"
+						role="group"
+						aria-label="Authenticated browser access"
 					>
-						<p class="text-sm font-semibold">Web Browser</p>
-						<p class="mt-1 text-xs text-muted-foreground">Authorised users</p>
-					</div>
-
-					<span aria-hidden="true" class="my-3 text-xl text-primary">↓</span>
-
-					<!-- Cloudflare -->
-					<div
-						class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
-					>
-						<p class="text-sm font-semibold">Cloudflare Access + Tunnel</p>
-						<p class="mt-1 text-sm leading-relaxed text-muted-foreground">
-							Authentication and secure connectivity
-						</p>
-					</div>
-
-					<span aria-hidden="true" class="my-3 text-xl text-primary">↓</span>
-
-					<!-- Central deployment and its supporting services -->
-					<div
-						class="w-full max-w-sm rounded-xl border border-border bg-card p-4"
-					>
-						<p class="text-sm font-semibold">Ubuntu Mini PC</p>
-						<p class="mt-1 text-base font-semibold text-primary">Open WebUI</p>
-						<p class="mt-1 text-sm text-muted-foreground">
-							Docker · Persistent Storage
-						</p>
-						<p class="mt-2 text-xs text-muted-foreground">
-							Central AI interface
-						</p>
-
-						<div class="mt-4 border-t border-dashed border-border pt-4">
-							<p class="text-sm font-semibold">
-								Additional Open WebUI Services
-							</p>
-							<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-								SearXNG · DDGS · Document RAG · Assistant Presets
+						<div class="rounded-xl border border-border bg-card p-4">
+							<p class="text-sm font-semibold">Web Browser</p>
+							<p class="mt-1 text-xs text-muted-foreground">Authorised users</p>
+						</div>
+						<span aria-hidden="true" class="text-xl text-primary"
+							><span class="sm:hidden">↓</span><span class="hidden sm:inline"
+								>→</span
+							></span
+						>
+						<div
+							id="browser-access"
+							class="rounded-xl border border-border bg-card p-4"
+						>
+							<p class="text-sm font-semibold">Cloudflare Access + Tunnel</p>
+							<p class="mt-1 text-xs text-muted-foreground">
+								Secure browser access to Open WebUI
 							</p>
 						</div>
 					</div>
-
-					<p
-						id="model-inference-options"
-						class="mt-5 mb-3 text-sm font-semibold text-muted-foreground sm:mb-0"
-					>
-						Model Inference Options
-					</p>
-
-					<!-- Both inference routes connect to the same Open WebUI deployment. -->
+					<span aria-hidden="true" class="my-3 text-xl text-primary">↓</span>
 					<div
+						id="ubuntu-server"
+						class="w-full rounded-xl border border-border bg-card p-4"
+					>
+						<h3 class="text-sm font-semibold">
+							Ubuntu Mini PC — Central Server
+						</h3>
+						<p class="mt-1 text-base font-semibold text-primary">Open WebUI</p>
+						<p class="mt-1 text-xs text-muted-foreground">
+							Central chatbot interface · Ubuntu Linux · Docker · Persistent
+							storage
+						</p>
+						<div class="mt-3 grid gap-3 text-left sm:grid-cols-2">
+							<div>
+								<p class="text-sm font-semibold">Chatbot services</p>
+								<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
+									SearXNG · DDGS · Document RAG · Custom assistant presets
+								</p>
+							</div>
+							<div>
+								<p class="text-sm font-semibold">Supporting services</p>
+								<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
+									PostgreSQL 16 · Homepage dashboard · Glances · Uptime Kuma
+								</p>
+							</div>
+						</div>
+						<p class="mt-2 text-xs text-muted-foreground">
+							Separate services on the Ubuntu host, not one Open WebUI
+							container.
+						</p>
+						<div
+							id="ubuntu-local-inference"
+							class="mt-3 border-t border-dashed border-border pt-3"
+						>
+							<h4 class="text-sm font-semibold">Ubuntu local inference</h4>
+							<a
+								href={modelLinks.qwen}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Qwen3.5 2B GGUF model on Hugging Face (opens in a new tab)"
+								class="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
+							>
+								Qwen3.5 2B <Icon
+									name="mdi:open-in-new"
+									size={13}
+									aria-hidden="true"
+								/>
+							</a>
+							<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
+								Unsloth Studio · GGUF · Lightweight inference on this same
+								Ubuntu mini PC
+							</p>
+							<p class="mt-1 text-xs text-muted-foreground">
+								Open WebUI ↔ configured local inference API
+							</p>
+						</div>
+					</div>
+					<h3 id="model-inference-options" class="mt-5 text-sm font-semibold">
+						AI Model Providers
+					</h3>
+					<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+						Three routes: <a
+							href="#ubuntu-local-inference"
+							class="text-primary underline underline-offset-4"
+							>Ubuntu local inference above</a
+						>, cloud inference and Windows GPU inference below. Each connects
+						directly to Open WebUI through its configured API.
+					</p>
+					<div
+						class="w-full"
 						role="group"
 						aria-labelledby="model-inference-options"
-						class="w-full"
 					>
+						<p class="mt-3 text-xs text-muted-foreground">
+							Open WebUI ↔ external provider APIs
+						</p>
 						<div
 							aria-hidden="true"
-							class="mx-auto hidden h-5 w-px bg-primary/40 sm:block"
+							class="mx-auto hidden h-4 w-px bg-primary/40 sm:block"
 						>
 						</div>
 						<div class="relative grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -164,14 +295,7 @@ const screenshots: {
 								class="absolute top-0 right-[calc(25%_-_0.1875rem)] left-[calc(25%_-_0.1875rem)] hidden border-t border-primary/40 sm:block"
 							>
 							</div>
-
-							<!-- Cloud inference -->
 							<div class="flex min-w-0 flex-col items-center">
-								<div
-									aria-hidden="true"
-									class="hidden h-4 w-px bg-primary/40 sm:block"
-								>
-								</div>
 								<span
 									aria-hidden="true"
 									class="mb-2 hidden text-lg text-primary sm:block">↓</span
@@ -179,42 +303,97 @@ const screenshots: {
 								<div
 									class="w-full flex-1 rounded-xl border border-border bg-card p-4"
 								>
-									<p class="text-sm font-semibold text-primary">OpenRouter</p>
-									<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-										Cloud-hosted language models
+									<h4 class="text-sm font-semibold text-primary">OpenRouter</h4>
+									<p class="mt-2 text-sm text-muted-foreground">
+										Cloud AI Models
 									</p>
-									<p class="mt-2 text-xs text-muted-foreground">
-										Remote API requests
+									<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+										External API inference · Includes DeepSeek
+									</p>
+									<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+										Direct Open WebUI integration; inference does not pass
+										through Cloudflare Access.
 									</p>
 								</div>
 							</div>
-
-							<!-- Local inference -->
 							<div class="flex min-w-0 flex-col items-center">
-								<div
-									aria-hidden="true"
-									class="hidden h-4 w-px bg-primary/40 sm:block"
-								>
-								</div>
 								<span
 									aria-hidden="true"
 									class="mb-2 hidden text-lg text-primary sm:block">↓</span
 								>
 								<div
+									id="windows-inference"
 									class="w-full flex-1 rounded-xl border border-border bg-card p-4"
 								>
-									<p class="text-sm font-semibold text-primary">Windows PC</p>
-									<p class="mt-2 text-sm leading-relaxed text-muted-foreground">
-										Local language models
+									<h4 class="text-sm font-semibold text-primary">
+										Windows Desktop
+									</h4>
+									<p class="mt-2 text-sm text-muted-foreground">
+										Local GPU Inference
+									</p>
+									<a
+										href={modelLinks.gemma}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Gemma 4 12B GGUF model on Hugging Face (opens in a new tab)"
+										class="mt-2 inline-flex items-center gap-1 text-sm text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary"
+									>
+										Gemma 4 12B <Icon
+											name="mdi:open-in-new"
+											size={13}
+											aria-hidden="true"
+										/>
+									</a>
+									<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+										Unsloth Studio · GGUF · OpenAI-compatible inference API
 									</p>
 									<p class="mt-2 text-xs text-muted-foreground">
-										Unsloth · Qwen · Gemma 4
+										RTX 4070 · 12 GB VRAM
+									</p>
+									<p class="mt-1 text-xs text-muted-foreground">
+										Ryzen 7 5700X3D · 32 GB RAM
 									</p>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<section
+					class="mt-5 border-t border-border pt-5"
+					aria-labelledby="administration-title"
+				>
+					<h3 id="administration-title" class="mb-3 text-sm font-semibold">
+						Development &amp; Remote Administration
+					</h3>
+					<div
+						id="macbook-client"
+						class="rounded-xl border border-border bg-card p-4"
+					>
+						<h4 class="text-sm font-semibold text-primary">MacBook Pro</h4>
+						<p class="mt-1 text-xs text-muted-foreground">
+							Apple M5 · 16 GB unified memory · macOS
+						</p>
+						<p class="mt-2 text-sm text-muted-foreground">
+							Browser · VS Code · Tailscale · SSH
+						</p>
+						<dl class="mt-3 grid gap-3 text-xs leading-relaxed sm:grid-cols-2">
+							<div>
+								<dt class="font-semibold">Browser access</dt><dd
+									class="mt-1 text-muted-foreground"
+								>
+									MacBook → Cloudflare Access + Tunnel → Open WebUI
+								</dd>
+							</div>
+							<div>
+								<dt class="font-semibold">Remote administration</dt><dd
+									class="mt-1 text-muted-foreground"
+								>
+									MacBook → Tailscale / SSH → Ubuntu Mini PC
+								</dd>
+							</div>
+						</dl>
+					</div>
+				</section>
 			</div>
 		</section>
 
@@ -255,25 +434,125 @@ const screenshots: {
 		<!-- Screenshots -->
 		{
 			screenshots.length > 0 && (
-				<section class="space-y-5">
-					<h2 class="text-xl font-bold">Interface Screenshots</h2>
-
-					<div class="space-y-5">
-						{screenshots.map((screenshot) => (
-							<figure class="space-y-2">
-								<img
-									src={screenshot.src}
-									alt={screenshot.alt}
-									loading="lazy"
-									class="w-full rounded-xl border border-border"
-								/>
-
-								<figcaption class="text-xs text-muted-foreground">
+				<section
+					id="platform-screenshots"
+					class="space-y-5"
+					aria-labelledby="screenshots-title"
+				>
+					<h2 id="screenshots-title" class="text-xl font-bold">
+						Platform Screenshots
+					</h2>
+					<p class="text-xs leading-relaxed text-muted-foreground">
+						Select an image to enlarge it. Browser chrome has been cropped and
+						monitoring values redacted for public viewing.
+					</p>
+					<div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+						{screenshots.map((screenshot, index) => (
+							<figure
+								class:list={[
+									'min-w-0 space-y-2',
+									index === 0 && 'sm:col-span-2',
+								]}
+							>
+								<a
+									data-project-screenshot
+									data-index={index}
+									data-title={screenshot.title}
+									data-alt={screenshot.alt}
+									data-caption={screenshot.caption}
+									data-width={screenshot.width}
+									data-height={screenshot.height}
+									href={screenshot.src}
+									aria-label={`Enlarge ${screenshot.title}`}
+									aria-haspopup="dialog"
+									class="group relative block rounded-xl"
+								>
+									<img
+										src={screenshot.thumbnail}
+										alt={screenshot.alt}
+										width={screenshot.thumbnailWidth}
+										height={screenshot.thumbnailHeight}
+										loading="lazy"
+										decoding="async"
+										class="h-auto w-full rounded-xl border border-border"
+									/>
+									<span
+										aria-hidden="true"
+										class="absolute top-2 right-2 rounded-lg border border-border bg-card p-1.5 text-primary opacity-80 group-hover:opacity-100 group-focus-visible:opacity-100"
+									>
+										<Icon name="mdi:magnify-plus-outline" size={16} />
+									</span>
+								</a>
+								<figcaption class="text-xs leading-relaxed text-muted-foreground">
 									{screenshot.caption}
 								</figcaption>
 							</figure>
 						))}
 					</div>
+					<dialog
+						id="screenshot-viewer"
+						aria-labelledby="screenshot-viewer-title"
+						aria-describedby="screenshot-viewer-caption"
+						class="fixed inset-0 m-auto max-h-[92dvh] w-[calc(100%-2rem)] max-w-6xl overflow-y-auto rounded-2xl border border-border bg-card p-4 text-foreground shadow-main backdrop:bg-background/80 sm:p-6"
+					>
+						<div class="mb-4 flex items-start justify-between gap-4">
+							<h3
+								id="screenshot-viewer-title"
+								class="text-base font-semibold"
+							/>
+							<button
+								data-viewer-close
+								type="button"
+								autofocus
+								class="shrink-0 rounded-xl border border-border px-3 py-2 text-sm text-primary hover:bg-muted"
+							>
+								Close
+							</button>
+						</div>
+						<img
+							data-viewer-image
+							alt=""
+							class="mx-auto h-auto max-h-[65dvh] w-auto max-w-full object-contain"
+						/>
+						<p
+							id="screenshot-viewer-caption"
+							class="mt-3 text-sm leading-relaxed text-muted-foreground"
+						/>
+						<div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+							<div class="flex items-center gap-3">
+								<button
+									data-viewer-previous
+									type="button"
+									aria-label="Previous screenshot"
+									class="rounded-xl border border-border px-3 py-2 text-sm text-primary hover:bg-muted"
+								>
+									Previous
+								</button>
+								<span
+									data-viewer-count
+									aria-live="polite"
+									class="text-xs text-muted-foreground"
+								/>
+								<button
+									data-viewer-next
+									type="button"
+									aria-label="Next screenshot"
+									class="rounded-xl border border-border px-3 py-2 text-sm text-primary hover:bg-muted"
+								>
+									Next
+								</button>
+							</div>
+							<a
+								data-viewer-original
+								target="_blank"
+								rel="noopener noreferrer"
+								class="text-xs text-primary underline underline-offset-4"
+							>
+								Open full-size image{' '}
+								<span class="sr-only">(opens in a new tab)</span>
+							</a>
+						</div>
+					</dialog>
 				</section>
 			)
 		}
@@ -289,3 +568,106 @@ const screenshots: {
 		</footer>
 	</article>
 </Layout>
+
+<script>
+	let galleryController: AbortController | undefined
+
+	function setupScreenshotGallery() {
+		galleryController?.abort()
+		galleryController = new AbortController()
+		const { signal } = galleryController
+		const dialog = document.getElementById('screenshot-viewer')
+		const links = [
+			...document.querySelectorAll<HTMLAnchorElement>(
+				'[data-project-screenshot]'
+			),
+		]
+		if (!(dialog instanceof HTMLDialogElement) || !links.length) return
+		const image = dialog.querySelector<HTMLImageElement>('[data-viewer-image]')!
+		const title = dialog.querySelector<HTMLElement>('#screenshot-viewer-title')!
+		const caption = dialog.querySelector<HTMLElement>(
+			'#screenshot-viewer-caption'
+		)!
+		const count = dialog.querySelector<HTMLElement>('[data-viewer-count]')!
+		const original = dialog.querySelector<HTMLAnchorElement>(
+			'[data-viewer-original]'
+		)!
+		const close = dialog.querySelector<HTMLButtonElement>(
+			'[data-viewer-close]'
+		)!
+		let index = 0
+		let opener: HTMLAnchorElement | undefined
+
+		const show = (next: number) => {
+			index = (next + links.length) % links.length
+			const link = links[index]
+			image.src = link.href
+			image.alt = link.dataset.alt || ''
+			image.width = Number(link.dataset.width)
+			image.height = Number(link.dataset.height)
+			title.textContent = link.dataset.title || ''
+			caption.textContent = link.dataset.caption || ''
+			count.textContent = `${index + 1} of ${links.length}`
+			original.href = link.href
+		}
+		links.forEach((link, i) =>
+			link.addEventListener(
+				'click',
+				(event) => {
+					if (
+						event.button !== 0 ||
+						event.metaKey ||
+						event.ctrlKey ||
+						event.shiftKey ||
+						event.altKey ||
+						typeof dialog.showModal !== 'function'
+					)
+						return
+					event.preventDefault()
+					opener = link
+					show(i)
+					dialog.showModal()
+					close.focus()
+				},
+				{ signal }
+			)
+		)
+		close.addEventListener('click', () => dialog.close(), { signal })
+		dialog
+			.querySelector('[data-viewer-previous]')
+			?.addEventListener('click', () => show(index - 1), { signal })
+		dialog
+			.querySelector('[data-viewer-next]')
+			?.addEventListener('click', () => show(index + 1), { signal })
+		dialog.addEventListener(
+			'keydown',
+			(event) => {
+				if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+					event.preventDefault()
+					show(index + (event.key === 'ArrowRight' ? 1 : -1))
+				}
+			},
+			{ signal }
+		)
+		dialog.addEventListener(
+			'click',
+			(event) => {
+				if (event.target === dialog) dialog.close()
+			},
+			{ signal }
+		)
+		dialog.addEventListener(
+			'close',
+			() => {
+				if (opener?.isConnected) opener.focus()
+			},
+			{ signal }
+		)
+	}
+	document.addEventListener('astro:page-load', setupScreenshotGallery)
+	document.addEventListener('astro:before-swap', () => {
+		const dialog = document.getElementById('screenshot-viewer')
+		if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close()
+		galleryController?.abort()
+	})
+</script>
