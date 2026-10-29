@@ -27,15 +27,15 @@ const projects = await getCollection("projects");
         </div>
       ) : (
         projects.map((project) => (
-          <div class="group flex h-full flex-col rounded-2xl border border-border/50 bg-muted/20 p-5 transition-[background-color,border-color,box-shadow,transform,translate] duration-300 hover:border-primary/30 hover:bg-muted/40 motion-safe:hover:-translate-y-0.5 hover:shadow-sm">
+          <div class="group flex flex-col rounded-2xl border border-border/50 bg-muted/20 p-6 transition-[background-color,border-color,box-shadow,transform,translate] duration-300 hover:border-primary/30 hover:bg-muted/40 motion-safe:hover:-translate-y-0.5 hover:shadow-sm">
 
-            <div class="mb-4 flex items-start justify-between">
-              <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary transition-all duration-300 group-hover:bg-primary/25">
+            <div class="mb-3 flex items-start justify-between">
+              <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary transition-all duration-300 group-hover:bg-primary/25">
                 {project.data.image ? (
                   <Image
                     src={project.data.image}
-                    width={28}
-                    height={28}
+                    width={24}
+                    height={24}
                     alt={`${project.data.title} logo`}
                     loading="lazy"
                   />
@@ -53,17 +53,9 @@ const projects = await getCollection("projects");
               {project.data.title}
             </h3>
 
-            <p class="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+            <p class="mb-4 flex-1 text-sm leading-relaxed text-muted-foreground">
               {project.data.description}
             </p>
-
-            <div class="mb-3 flex flex-wrap gap-2">
-              {project.data.tech.map((t) => (
-                <span class="font-mono text-xs text-primary">
-                  #{t}
-                </span>
-              ))}
-            </div>
 
             {/* Project overview and external links */}
             <div class="flex flex-wrap gap-2">

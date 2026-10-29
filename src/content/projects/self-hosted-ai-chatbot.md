@@ -1,7 +1,7 @@
 
 ---
 title: Self-Hosted AI Chatbot Platform
-description: A self-hosted AI chatbot integrating local and cloud-based large language models, with secure remote access and Docker-based infrastructure.
+description: A private AI chatbot platform running on my Ubuntu server, integrating locally hosted and cloud-based language models through Open WebUI. The project explores Docker, model deployment, secure remote access, API integrations and managing a self-hosted AI environment.
 tech:
   - Open WebUI
   - OpenRouter

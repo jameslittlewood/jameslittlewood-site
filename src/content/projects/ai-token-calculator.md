@@ -1,6 +1,6 @@
 ---
 title: AI Token Cost Calculator
-description: An interactive calculator for estimating OpenRouter API costs across a curated model selection, with cache savings, peak pricing and manual rate overrides.
+description: An interactive tool for estimating OpenRouter API costs across different AI models. Compare input, output and cached-token pricing, explore potential savings from prompt caching, and understand how token usage affects the cost of running AI applications.
 tech:
   - Astro
   - TypeScript
