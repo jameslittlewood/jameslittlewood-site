@@ -65,7 +65,7 @@ const initialWarnings = [
 const initialSourceDetail =
 	defaultModel.source === 'custom'
 		? 'User-supplied rates'
-		: `Retrieved ${formatRetrievedAt(catalogue.retrievedAt)}${defaultModel.fromFallback ? '' : ' at build'}`
+		: `Retrieved ${formatRetrievedAt(catalogue.retrievedAt)}`
 
 const initialBarWidth = (cost: number | null) => {
 	if (initial.totalCost === null || initial.totalCost <= 0 || cost === null) {
@@ -832,30 +832,6 @@ const inactivePeriodClasses =
 			</div>
 		</section>
 
-		<!-- Pricing conditions -->
-		<section
-			class="rounded-2xl border border-border/50 bg-muted/20 p-5"
-			aria-labelledby="conditions-title"
-		>
-			<h2 id="conditions-title" class="text-sm font-bold">
-				Pricing conditions and assumptions
-			</h2>
-			<ul
-				id="pricing-notes"
-				class="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground"
-			>
-				<li>
-					Estimates cover text input and output tokens only. Multimodal inputs,
-					tool-use fees, cache writes and provider-specific charges are
-					excluded.
-				</li>
-				<li>
-					Prices are USD per million tokens. Source: OpenRouter public models
-					API.
-				</li>
-			</ul>
-		</section>
-
 		<!-- Footer -->
 		<footer
 			class="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-5"
@@ -1409,7 +1385,7 @@ const inactivePeriodClasses =
 			let classes = ACTIVE_BADGE
 			let detail = `Retrieved ${formatRetrievedAt(
 				catalogue.retrievedAt
-			)} at build`
+			)}`
 
 			if (model.source === 'custom') {
 				label = 'Manual rates'
@@ -1456,100 +1432,6 @@ const inactivePeriodClasses =
 			}
 		}
 
-		function renderNotes() {
-			const model = currentModel()
-			const modelState = currentModelState()
-			const notes: string[] = []
-
-			if (model.timePricingNote) notes.push(model.timePricingNote)
-			const peak = model.periods.find((period) => period.kind === 'peak')
-			if (peak) {
-				if (peak.condition) {
-					notes.push(
-						`OpenRouter time-based override: peak rates apply ${peak.condition}.`
-					)
-				}
-				notes.push(
-					'The period is selected manually; it is not inferred from your local time.'
-				)
-			}
-
-			if (model.longContext) {
-				const context = model.longContext
-				const parts = [`input ${formatRate(context.rates.input)}/M`]
-				if (context.rates.cachedInput !== null) {
-					parts.push(`cached ${formatRate(context.rates.cachedInput)}/M`)
-				}
-				parts.push(`output ${formatRate(context.rates.output)}/M`)
-				notes.push(
-					`Long-context pricing applies above ${formatTokens(
-						context.minPromptTokens
-					)} prompt tokens (${parts.join(
-						', '
-					)}). This estimate uses the rates shown and does not switch automatically.`
-				)
-			}
-
-			if (model.cacheWriteRate !== null || model.cacheWrite1hRate !== null) {
-				const cacheRates: string[] = []
-				if (model.cacheWriteRate !== null) {
-					cacheRates.push(`${formatRate(model.cacheWriteRate)}/M`)
-				}
-				if (model.cacheWrite1hRate !== null) {
-					cacheRates.push(
-						`${formatRate(model.cacheWrite1hRate)}/M for 1-hour cache`
-					)
-				}
-				notes.push(
-					`Cache-write charges (${cacheRates.join(
-						'; '
-					)}) are not included. Enter cache-read tokens only.`
-				)
-			}
-
-			if (model.otherConditionalPricing) {
-				notes.push(
-					'This model has additional conditional pricing that this calculator does not model.'
-				)
-			}
-			if (currentRates().cachedInput === null) {
-				notes.push(
-					'No cached-input rate is published; enter one manually before including cached tokens.'
-				)
-			}
-			if (model.source === 'custom') {
-				notes.push(
-					'Custom rates are user-supplied; replace the example values with your provider’s published prices.'
-				)
-			}
-			if (model.fromFallback) {
-				notes.push(
-					'These rates came from the committed OpenRouter snapshot, not a live build-time request.'
-				)
-			}
-			if (modelState.edited) {
-				notes.push(
-					'Rates have been edited in this session. Use Restore fetched pricing to return to the OpenRouter values.'
-				)
-			}
-			notes.push(
-				'Estimates cover text input and output tokens only. Multimodal inputs, tool-use fees, cache writes and provider-specific charges are excluded.'
-			)
-			notes.push(
-				model.source === 'custom'
-					? 'Prices are USD per million tokens. Custom rates are user-supplied.'
-					: 'Prices are USD per million tokens. Source: OpenRouter public models API.'
-			)
-
-			const list = byId<HTMLUListElement>('pricing-notes')
-			list.replaceChildren()
-			for (const note of [...new Set(notes)]) {
-				const item = document.createElement('li')
-				item.textContent = note
-				list.append(item)
-			}
-		}
-
 		function renderAll() {
 			renderPeriods()
 			renderPriceInputs()
@@ -1557,7 +1439,7 @@ const inactivePeriodClasses =
 			renderValidation()
 			renderResults()
 			renderSource()
-			renderNotes()
+
 		}
 
 		function clearRateErrors() {
@@ -1620,7 +1502,7 @@ const inactivePeriodClasses =
 				modelState.edited = true
 				setError(input.id, `${input.id}-error`, message)
 				renderSource()
-				renderNotes()
+
 				renderResults()
 			})
 		}
@@ -1646,7 +1528,7 @@ const inactivePeriodClasses =
 			renderPeriods()
 			renderPriceInputs()
 			renderResults()
-			renderNotes()
+
 		})
 
 		for (const button of modeButtons) {
@@ -1708,7 +1590,7 @@ const inactivePeriodClasses =
 			clearRateErrors()
 			renderPriceInputs()
 			renderSource()
-			renderNotes()
+
 			renderResults()
 		})
 

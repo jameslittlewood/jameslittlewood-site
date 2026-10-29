@@ -26,7 +26,7 @@ const costBarPercent = c.withoutCachingUsd > 0
 <Layout title="Building with DeepSeek Harness" description="Building an AI Token Cost Calculator with DeepSeek Harness: development, token usage, caching and subscription-based token valuations.">
 <article id="harness-case-study">
   <div class="hr-wrap">
-    <nav class="hr-top" aria-label="Project navigation"><a href="/projects/">← Back to Projects</a><span>29 October 2026</span></nav>
+    <nav class="hr-top" aria-label="Project navigation"><a href="/projects/">← Back to Projects</a></nav>
     <header class="hr-hero">
       <div class="hr-eyebrow">CASE STUDY · AI DEVELOPMENT</div>
       <h1>Building with<br>DeepSeek Harness</h1>
@@ -93,7 +93,6 @@ const costBarPercent = c.withoutCachingUsd > 0
         <figcaption>The finished calculator, showing model selection, pricing and token inputs.</figcaption>
       </figure>
       <div class="hr-build-detail"><h3>Pricing captured when the site is built</h3><p>The project uses Astro, a framework for building websites, with TypeScript for the calculator logic. Model pricing is retrieved from OpenRouter during the website build and included in the published page.</p><p>Calculations run in the visitor’s browser, so visitors need no API key and do not trigger a pricing request every time they use the tool. A saved pricing snapshot provides a fallback if the live request fails; the displayed rates reflect the latest successful refresh.</p></div>
-      <a class="hr-text-link" href="/projects/ai-token-calculator/">Try the AI Token Cost Calculator <span aria-hidden="true">↗</span></a>
     </section>
 
     <section class="hr-section" aria-labelledby="hr-process-heading">
@@ -112,7 +111,7 @@ const costBarPercent = c.withoutCachingUsd > 0
 </article>
 </Layout>
 <style>
-#harness-case-study {color-scheme:light;--hr-bg:light-dark(#ffffff,#18141f);--hr-ink:light-dark(#292331,#f4eff9);--hr-muted:light-dark(#615869,#c8becf);--hr-line:light-dark(#e7dfec,#403647);--hr-tint:light-dark(#f7f2fb,#272030);--hr-purple:light-dark(#70409c,#c5a4e7);--hr-quiet:light-dark(#b99bce,#79618e);background:var(--hr-bg);color:var(--hr-ink);font:15px/1.75 system-ui,-apple-system,sans-serif;padding:34px 26px 56px;box-sizing:border-box}
+#harness-case-study {--hr-bg:var(--card);--hr-ink:var(--foreground);--hr-muted:var(--muted-foreground);--hr-line:color-mix(in oklab,var(--border) 50%,transparent);--hr-tint:color-mix(in oklab,var(--muted) 20%,var(--card));--hr-purple:var(--primary);--hr-quiet:color-mix(in oklab,var(--primary) 55%,var(--card));background:var(--hr-bg);color:var(--hr-ink);font:15px/1.75 system-ui,-apple-system,sans-serif;padding:34px 26px 56px;box-sizing:border-box}
 #harness-case-study * {box-sizing:border-box}
 #harness-case-study .hr-wrap {max-width:750px;margin:auto}
 #harness-case-study h1,#harness-case-study h2,#harness-case-study h3,#harness-case-study p,#harness-case-study figure,#harness-case-study dl {margin:0}
@@ -185,7 +184,6 @@ const costBarPercent = c.withoutCachingUsd > 0
   #harness-case-study .hr-comparison {padding:18px}
 }
 
-:global(.dark) #harness-case-study {color-scheme:dark}
 #harness-case-study .hr-screenshot img {display:block;width:100%;max-width:664px;height:auto;margin-inline:auto;border:1px solid var(--hr-line);border-radius:12px}
 #harness-case-study .hr-screenshot .hr-calculator-dark {display:none}
 :global(.dark) #harness-case-study .hr-screenshot .hr-calculator-light {display:none}
