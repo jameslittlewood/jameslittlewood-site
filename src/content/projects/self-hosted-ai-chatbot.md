@@ -14,4 +14,5 @@ tech:
   - Cloudflare
   - GGUF
 status: in-progress
+page: /projects/self-hosted-ai-chatbot/
 ---
