@@ -287,7 +287,7 @@ const inactivePeriodClasses =
 					</p>
 				</div>
 
-				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+				<div class="pricing-fields mt-4">
 					<div>
 						<label for="input-price" class="mb-1.5 block text-xs font-semibold">
 							Input (uncached)
@@ -321,6 +321,14 @@ const inactivePeriodClasses =
 						</p>
 					</div>
 
+                    <div id="price-bridge" class="price-bridge" data-linked="false">
+                      <div class="price-bridge-row">
+                        <button id="link-prices" type="button" aria-pressed="false" aria-controls="cached-price cache-hit-percent cached-tokens" aria-label="Caching supported. Link prices to mark input caching unavailable." title="Link prices — caching unavailable" class="price-link-button">
+                          <Icon name="mdi:link-variant" size={22} aria-hidden="true" />
+                        </button>
+                      </div>
+                      <span id="price-link-status" class="price-link-status" aria-live="polite">Link prices</span>
+                    </div>
 					<div>
 						<label
 							for="cached-price"
@@ -343,7 +351,7 @@ const inactivePeriodClasses =
 								placeholder={defaultPeriod.rates.cachedInput === null
 									? 'Not published'
 									: '0'}
-								aria-describedby="cached-price-help cached-price-error"
+								aria-describedby="cached-price-help cached-price-error price-link-status"
 								class="w-full rounded-xl border border-border bg-card py-2 pr-3 pl-7 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
 							/>
 						</div>
@@ -893,6 +901,7 @@ const inactivePeriodClasses =
 		formatUSD,
 	} from '@/lib/format'
 	import type { ModelPricing, PricingPeriod } from '@/lib/pricing'
+	import { effectiveRates, effectiveTokenState, withExactTotalInput } from '@/lib/linked-pricing'
 
 	type Mode = 'exact' | 'simplified'
 
@@ -907,6 +916,7 @@ const inactivePeriodClasses =
 
 	interface ModelState {
 		periods: Record<string, Rates>
+		linked: boolean
 		edited: boolean
 	}
 
@@ -1010,6 +1020,8 @@ const inactivePeriodClasses =
 		const inputPrice = byId<HTMLInputElement>('input-price')
 		const cachedPrice = byId<HTMLInputElement>('cached-price')
 		const outputPrice = byId<HTMLInputElement>('output-price')
+		const linkPrices = byId<HTMLButtonElement>('link-prices')
+		const priceBridge = byId<HTMLDivElement>('price-bridge')
 		const uncachedTokens = byId<HTMLInputElement>('uncached-tokens')
 		const cachedTokens = byId<HTMLInputElement>('cached-tokens')
 		const totalInputTokens = byId<HTMLInputElement>('total-input-tokens')
@@ -1048,7 +1060,7 @@ const inactivePeriodClasses =
 			for (const period of model.periods) {
 				periods[period.id] = { ...period.rates }
 			}
-			const created = { periods, edited: false }
+			const created = { periods, linked: false, edited: false }
 			modelStates.set(model.id, created)
 			return created
 		}
@@ -1061,24 +1073,39 @@ const inactivePeriodClasses =
 			)
 		}
 
-		function currentRates(): Rates {
-			const model = currentModel()
-			const period = currentPeriod()
-			return currentModelState().periods[period.id] ?? { ...period.rates }
-		}
+		function ratesForPeriod(period: PricingPeriod): Rates {
+            const modelState = currentModelState()
+            return effectiveRates(modelState.periods[period.id] ?? period.rates, modelState.linked)
+        }
 
-		function currentUsage(): TokenUsage | null {
-			if (state.mode === 'exact') {
-				return Object.keys(validateUsage(state.exact)).length
-					? null
-					: state.exact
-			}
-			return deriveSimplified(
-				state.simplified.totalInput,
-				state.simplified.cacheHitPercent,
-				state.simplified.output
-			)
-		}
+        function currentRates(): Rates {
+            return ratesForPeriod(currentPeriod())
+        }
+
+        function renderPriceLink() {
+            const linked = currentModelState().linked
+            priceBridge.dataset.linked = String(linked)
+            linkPrices.setAttribute('aria-pressed', String(linked))
+            linkPrices.setAttribute('aria-label', linked
+                ? 'Caching unavailable. Unlink prices to enable input caching.'
+                : 'Caching supported. Link prices to mark input caching unavailable.')
+            linkPrices.title = linked ? 'Caching unavailable — unlink to enable caching' : 'Link prices — caching unavailable'
+            setText('price-link-status', linked ? 'Linked' : 'Link prices')
+            cachedPrice.disabled = linked
+            if (linked) cachedPrice.value = formatInput(currentRates().cachedInput ?? Number.NaN)
+        }
+
+		function effectiveTokens() {
+            return effectiveTokenState(state.exact, state.simplified, currentModelState().linked)
+        }
+
+        function currentUsage(): TokenUsage | null {
+            const tokens = effectiveTokens()
+            if (state.mode === 'exact') {
+                return Object.keys(validateUsage(tokens.exact)).length ? null : tokens.exact
+            }
+            return deriveSimplified(tokens.simplified.totalInput, tokens.simplified.cacheHitPercent, tokens.simplified.output)
+        }
 
 		function buildModelStates() {
 			modelStates = new Map()
@@ -1087,7 +1114,7 @@ const inactivePeriodClasses =
 				for (const period of model.periods) {
 					periods[period.id] = { ...period.rates }
 				}
-				modelStates.set(model.id, { periods, edited: false })
+				modelStates.set(model.id, { periods, linked: false, edited: false })
 			}
 		}
 
@@ -1154,16 +1181,19 @@ const inactivePeriodClasses =
 			cachedPrice.placeholder =
 				rates.cachedInput === null ? 'Not published' : '0'
 			setText('editing-period', `Editing: ${currentPeriod().label}`)
+            renderPriceLink()
 		}
 
 		function renderTokenInputs() {
-			uncachedTokens.value = formatInput(state.exact.uncachedInput)
-			cachedTokens.value = formatInput(state.exact.cachedInput)
-			totalInputTokens.value = formatInput(state.simplified.totalInput)
-			cacheHitPercent.value = formatPercentInput(
-				state.simplified.cacheHitPercent
-			)
-			outputTokens.value = formatInput(state.exact.output)
+            const tokens = effectiveTokens()
+            const linked = currentModelState().linked
+            uncachedTokens.value = formatInput(tokens.exact.uncachedInput)
+            cachedTokens.value = formatInput(tokens.exact.cachedInput)
+            cachedTokens.disabled = linked
+            totalInputTokens.value = formatInput(tokens.simplified.totalInput)
+            cacheHitPercent.value = formatPercentInput(tokens.simplified.cacheHitPercent)
+            cacheHitPercent.disabled = linked
+            outputTokens.value = formatInput(tokens.exact.output)
 
 			setHidden('exact-fields', state.mode !== 'exact')
 			setHidden('simplified-fields', state.mode !== 'simplified')
@@ -1193,8 +1223,9 @@ const inactivePeriodClasses =
 
 		function renderValidation() {
 			clearTokenErrors()
+            const tokens = effectiveTokens()
 			if (state.mode === 'exact') {
-				const errors = validateUsage(state.exact)
+				const errors = validateUsage(tokens.exact)
 				setError(
 					'uncached-tokens',
 					'uncached-tokens-error',
@@ -1203,9 +1234,9 @@ const inactivePeriodClasses =
 				setError('cached-tokens', 'cached-tokens-error', errors.cachedInput)
 			} else {
 				const errors = validateSimplified(
-					state.simplified.totalInput,
-					state.simplified.cacheHitPercent,
-					state.simplified.output
+					tokens.simplified.totalInput,
+					tokens.simplified.cacheHitPercent,
+					tokens.simplified.output
 				)
 				setError(
 					'total-input-tokens',
@@ -1221,7 +1252,7 @@ const inactivePeriodClasses =
 			setError(
 				'output-tokens',
 				'output-tokens-error',
-				tokenCountError(state.exact.output, 'Output tokens')
+				tokenCountError(tokens.exact.output, 'Output tokens')
 			)
 		}
 
@@ -1243,11 +1274,10 @@ const inactivePeriodClasses =
 				return
 			}
 
-			const periods = currentModelState().periods
 			const comparison = comparePeriods(
 				usage,
-				periods[standard.id] ?? standard.rates,
-				periods[peak.id] ?? peak.rates
+				ratesForPeriod(standard),
+				ratesForPeriod(peak)
 			)
 			setHidden('peak-comparison', false)
 			setText('peak-standard-label', standard.label)
@@ -1465,6 +1495,10 @@ const inactivePeriodClasses =
 					state.simplified.output
 				)
 				if (derived) state.exact = derived
+                else if (currentModelState().linked) {
+                    const noCache = deriveSimplified(state.simplified.totalInput, 0, state.simplified.output)
+                    if (noCache) state.exact = noCache
+                }
 			}
 			state.mode = mode
 			renderTokenInputs()
@@ -1477,6 +1511,7 @@ const inactivePeriodClasses =
 			key: 'input' | 'cachedInput' | 'output'
 		) {
 			input.addEventListener('input', () => {
+                if (input.disabled) return
 				const modelState = currentModelState()
 				const period = currentPeriod()
 				const rates = modelState.periods[period.id] ?? {
@@ -1501,11 +1536,25 @@ const inactivePeriodClasses =
 				modelState.periods[period.id] = rates
 				modelState.edited = true
 				setError(input.id, `${input.id}-error`, message)
+                renderPriceLink()
 				renderSource()
 
 				renderResults()
 			})
 		}
+
+        linkPrices.addEventListener('click', () => {
+            const modelState = currentModelState()
+            modelState.linked = !modelState.linked
+            modelState.edited = true
+            setError('cached-price', 'cached-price-error', '')
+            cachedPrice.value = formatInput(currentRates().cachedInput ?? Number.NaN)
+            renderPriceLink()
+            renderTokenInputs()
+            renderValidation()
+            renderSource()
+            renderResults()
+        })
 
 		modelSelect.addEventListener('change', () => {
 			const model = findModel(modelSelect.value)
@@ -1538,12 +1587,15 @@ const inactivePeriodClasses =
 		}
 
 		uncachedTokens.addEventListener('input', () => {
-			state.exact.uncachedInput = readNumber(uncachedTokens)
+            if (cachedTokens.disabled) return
+            if (currentModelState().linked) state.exact = withExactTotalInput(state.exact, readNumber(uncachedTokens))
+            else state.exact.uncachedInput = readNumber(uncachedTokens)
 			renderValidation()
 			renderResults()
 		})
 
 		cachedTokens.addEventListener('input', () => {
+            if (cachedTokens.disabled) return
 			state.exact.cachedInput = readNumber(cachedTokens)
 			renderValidation()
 			renderResults()
@@ -1556,6 +1608,7 @@ const inactivePeriodClasses =
 		})
 
 		cacheHitPercent.addEventListener('input', () => {
+            if (cacheHitPercent.disabled) return
 			state.simplified.cacheHitPercent = readNumber(cacheHitPercent)
 			renderValidation()
 			renderResults()
@@ -1586,7 +1639,7 @@ const inactivePeriodClasses =
 			for (const period of model.periods) {
 				periods[period.id] = { ...period.rates }
 			}
-			modelStates.set(model.id, { periods, edited: false })
+			modelStates.set(model.id, { periods, linked: currentModelState().linked, edited: false })
 			clearRateErrors()
 			renderPriceInputs()
 			renderSource()
@@ -1608,3 +1661,30 @@ const inactivePeriodClasses =
 	}
 	initCalculator()
 </script>
+
+<style>
+  .pricing-fields {display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);gap:0;align-items:start}
+  .pricing-fields > :last-child {grid-column:1 / -1;margin-top:16px}
+  .pricing-fields > div {min-width:0}
+  .pricing-fields label {min-height:32px}
+  .price-bridge {padding-top:38px;color:var(--muted-foreground)}
+  .price-bridge-row {display:flex;align-items:center;height:38px}
+  .price-bridge-row::before,.price-bridge-row::after {content:"";flex:1;border-top:1px dashed var(--muted-foreground);opacity:.6}
+  .price-link-button {display:flex;align-items:center;justify-content:center;flex-shrink:0;width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--card);color:var(--muted-foreground);cursor:pointer;transition:background-color .2s,border-color .2s,color .2s}
+  .price-link-button:hover {border-color:var(--primary);color:var(--primary)}
+  .price-link-status {display:block;text-align:center;white-space:nowrap;font-size:11px;line-height:16px;margin-top:4px}
+  .price-bridge[data-linked="true"] {color:var(--primary)}
+  .price-bridge[data-linked="true"] .price-link-button {background:var(--primary);border-color:var(--primary);color:white}
+  .price-bridge[data-linked="true"] .price-bridge-row::before,.price-bridge[data-linked="true"] .price-bridge-row::after {border-top:1px solid var(--primary);opacity:1}
+  #cached-price:disabled, #cached-tokens:disabled, #cache-hit-percent:disabled {background:var(--muted);color:var(--muted-foreground);cursor:not-allowed;opacity:.7}
+  @media(max-width:639px) {
+    .price-link-status {max-width:44px;margin-inline:auto;white-space:normal}
+    .pricing-fields input[type="number"] {appearance:textfield;padding-left:20px;padding-right:4px;font-size:13px}
+    .pricing-fields input::-webkit-inner-spin-button,.pricing-fields input::-webkit-outer-spin-button {appearance:none;margin:0}
+    .pricing-fields .relative > span {left:8px}
+  }
+  @media(min-width:640px) {
+    .pricing-fields {grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr) minmax(0,1fr)}
+    .pricing-fields > :last-child {grid-column:auto;margin-top:0;margin-left:16px}
+  }
+</style>
