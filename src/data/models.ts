@@ -39,11 +39,15 @@ export const CURATED_GROUPS: CuratedModelGroup[] = [
 		models: [
 			{ id: 'openai/gpt-6-luna', name: 'GPT-6 Luna' },
 			{ id: 'openai/gpt-6-sol', name: 'GPT-6 Sol' },
+			{ id: 'openai/gpt-6.1-sol', name: 'GPT-6.1 Sol' },
+			{ id: 'openai/gpt-6-astra', name: 'GPT-6 Astra' },
 		],
 	},
 	{
 		provider: 'Anthropic',
 		models: [
+			{ id: 'anthropic/claude-fable-5.1', name: 'Claude Fable 5.1' },
+			{ id: 'anthropic/claude-haiku-5.5', name: 'Claude Haiku 5.5' },
 			{ id: 'anthropic/claude-sonnet-5.5', name: 'Claude Sonnet 5.5' },
 			{ id: 'anthropic/claude-opus-5.5', name: 'Claude Opus 5.5' },
 		],

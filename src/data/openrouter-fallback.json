@@ -1,5 +1,5 @@
 {
-	"retrievedAt": "2026-10-29T17:36:47.986Z",
+	"retrievedAt": "2026-10-29T21:03:39.671Z",
 	"source": "https://openrouter.ai/api/v1/models",
 	"models": {
 		"deepseek/deepseek-v4.1-flash-1017": {
@@ -10,7 +10,10 @@
 				"input_cache_read": "0.000000003",
 				"overrides": [
 					{
-						"utc_days": ["saturday", "sunday"],
+						"utc_days": [
+							"saturday",
+							"sunday"
+						],
 						"prompt": "0.00000015",
 						"completion": "0.0000006",
 						"input_cache_read": "0.000000003"
@@ -96,7 +99,10 @@
 				"input_cache_read": "0.000000022",
 				"overrides": [
 					{
-						"utc_days": ["saturday", "sunday"],
+						"utc_days": [
+							"saturday",
+							"sunday"
+						],
 						"prompt": "0.00000066",
 						"completion": "0.00000198",
 						"input_cache_read": "0.000000022"
@@ -214,6 +220,72 @@
 						"completion": "0.000015",
 						"input_cache_read": "0.0000004",
 						"input_cache_write": "0.000005"
+					}
+				]
+			}
+		},
+		"openai/gpt-6.1-sol": {
+			"name": "OpenAI: GPT-6.1 Sol",
+			"pricing": {
+				"prompt": "0.000002",
+				"completion": "0.00001",
+				"input_cache_read": "0.0000001",
+				"input_cache_write": "0.0000025",
+				"overrides": [
+					{
+						"min_prompt_tokens": 272000,
+						"prompt": "0.000004",
+						"completion": "0.000015",
+						"input_cache_read": "0.0000002",
+						"input_cache_write": "0.000005"
+					}
+				]
+			}
+		},
+		"openai/gpt-6-astra": {
+			"name": "OpenAI: GPT-6 Astra",
+			"pricing": {
+				"prompt": "0.00001",
+				"completion": "0.00005",
+				"input_cache_read": "0.000001",
+				"input_cache_write": "0.0000125",
+				"overrides": [
+					{
+						"min_prompt_tokens": 272000,
+						"prompt": "0.00002",
+						"completion": "0.000075",
+						"input_cache_read": "0.000002",
+						"input_cache_write": "0.000025"
+					}
+				]
+			}
+		},
+		"anthropic/claude-fable-5.1": {
+			"name": "Anthropic: Claude Fable 5.1",
+			"pricing": {
+				"prompt": "0.00001",
+				"completion": "0.00005",
+				"input_cache_read": "0.00000025",
+				"input_cache_write": "0.0000125",
+				"input_cache_write_1h": "0.00002"
+			}
+		},
+		"anthropic/claude-haiku-5.5": {
+			"name": "Anthropic: Claude Haiku 5.5",
+			"pricing": {
+				"prompt": "0.0000001",
+				"completion": "0.0000005",
+				"input_cache_read": "0.00000001",
+				"input_cache_write": "0.000000125",
+				"input_cache_write_1h": "0.0000002",
+				"overrides": [
+					{
+						"min_prompt_tokens": 100000,
+						"prompt": "0.0000005",
+						"completion": "0.0000025",
+						"input_cache_read": "0.00000005",
+						"input_cache_write": "0.000000625",
+						"input_cache_write_1h": "0.000001"
 					}
 				]
 			}
