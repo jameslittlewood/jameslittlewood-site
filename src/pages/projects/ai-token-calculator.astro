@@ -1,0 +1,1728 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { Icon } from 'astro-icon/components'
+import {
+	CURATED_GROUPS,
+	CUSTOM_MODEL_ID,
+	DEFAULT_MODEL_ID,
+} from '@/data/models'
+import { getPricingCatalogue } from '@/lib/openrouter-pricing'
+import { createCustomModelPricing } from '@/lib/pricing'
+import { calculateCost, comparePeriods } from '@/lib/token-cost'
+import {
+	formatPercent,
+	formatRetrievedAt,
+	formatTokens,
+	formatUSD,
+} from '@/lib/format'
+
+const catalogue = await getPricingCatalogue()
+const models = [...catalogue.models, createCustomModelPricing()]
+const defaultModel =
+	models.find((model) => model.id === DEFAULT_MODEL_ID) ?? models[0]
+
+if (!defaultModel) {
+	throw new Error('No pricing models are available')
+}
+
+const defaultPeriod =
+	defaultModel.periods.find((period) => period.kind === 'standard') ??
+	defaultModel.periods[0]
+
+if (!defaultPeriod) {
+	throw new Error('The default model has no pricing periods')
+}
+
+const defaultUsage = {
+	uncachedInput: 250_000,
+	cachedInput: 750_000,
+	output: 50_000,
+}
+const initial = calculateCost(defaultUsage, defaultPeriod.rates)
+const initialPeak = defaultModel.periods.find(
+	(period) => period.kind === 'peak'
+)
+const initialComparison = initialPeak
+	? comparePeriods(defaultUsage, defaultPeriod.rates, initialPeak.rates)
+	: null
+
+const initialSourceLabel =
+	defaultModel.source === 'custom'
+		? 'Manual rates'
+		: defaultModel.fromFallback
+			? 'Cached snapshot'
+			: 'Live OpenRouter'
+const initialBadgeClasses =
+	defaultModel.source === 'custom' || defaultModel.fromFallback
+		? 'rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground'
+		: 'rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary'
+const initialWarnings = [
+	...catalogue.warnings,
+	...(defaultModel.fromFallback && catalogue.source === 'live'
+		? [`${defaultModel.name} used cached snapshot rates.`]
+		: []),
+].join(' ')
+const initialSourceDetail =
+	defaultModel.source === 'custom'
+		? 'User-supplied rates'
+		: `Retrieved ${formatRetrievedAt(catalogue.retrievedAt)}${defaultModel.fromFallback ? '' : ' at build'}`
+
+const initialBarWidth = (cost: number | null) => {
+	if (initial.totalCost === null || initial.totalCost <= 0 || cost === null) {
+		return 0
+	}
+	return Math.max(0, Math.min(100, (cost / initial.totalCost) * 100))
+}
+
+const signedUSD = (value: number | null) => {
+	if (value === null) return '—'
+	if (Math.abs(value) < 1e-12) return formatUSD(0)
+	return `${value > 0 ? '+' : ''}${formatUSD(value)}`
+}
+const signedPercent = (value: number | null) => {
+	if (value === null) return ''
+	if (Math.abs(value) < 1e-12) return '(0%)'
+	return `(${value > 0 ? '+' : ''}${formatPercent(value)})`
+}
+
+const initialSavingsLabel =
+	initial.cacheSavings !== null && initial.cacheSavings < 0
+		? 'Caching premium'
+		: 'Estimated savings'
+const initialSavingsValue =
+	initial.cacheSavings === null
+		? '—'
+		: formatUSD(Math.abs(initial.cacheSavings))
+const initialSavingsNote =
+	initial.cacheSavings !== null && initial.cacheSavings < 0
+		? 'Cached-input pricing is higher than uncached pricing.'
+		: 'Compared with charging all input at the uncached rate.'
+
+const pricingData = {
+	models,
+	source: catalogue.source,
+	retrievedAt: catalogue.retrievedAt,
+	warnings: catalogue.warnings,
+	defaultModelId: defaultModel.id,
+	customModelId: CUSTOM_MODEL_ID,
+}
+const serialisedPricing = JSON.stringify(pricingData).replace(/</g, '\\u003c')
+
+const activePeriodClasses =
+	'rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary'
+const inactivePeriodClasses =
+	'rounded-xl border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary'
+---
+
+<Layout
+	title="AI Token Cost Calculator"
+	description="Estimate OpenRouter API costs by model, token mix, cache hit rate and peak or off-peak pricing."
+>
+	<article
+		id="calculator"
+		class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-3xl space-y-8 p-8 duration-700 md:p-12"
+	>
+		<!-- Back Navigation -->
+		<a
+			href="/projects/"
+			class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+		>
+			← Back to Projects
+		</a>
+
+		<!-- Header -->
+		<header class="space-y-4">
+			<div
+				class="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
+			>
+				Interactive tool · OpenRouter pricing
+			</div>
+
+			<h1 class="text-3xl font-bold tracking-tight">
+				AI Token Cost Calculator
+			</h1>
+
+			<p class="text-sm leading-relaxed text-muted-foreground">
+				Estimate the cost of a text workload across a curated set of OpenRouter
+				models. Enter exact token counts or a total input figure with a
+				cache-hit rate; the calculator separates uncached input, cached input
+				and output charges.
+			</p>
+		</header>
+
+		<!-- Calculator -->
+		<section
+			class="rounded-2xl border border-border/50 bg-muted/20 p-5 md:p-6"
+			aria-labelledby="calculator-title"
+		>
+			<h2 id="calculator-title" class="sr-only">Token cost calculator</h2>
+
+			<!-- Model -->
+			<div class="space-y-3">
+				<div class="flex flex-wrap items-center justify-between gap-2">
+					<label
+						for="model-select"
+						class="text-xs font-bold tracking-widest text-primary uppercase"
+					>
+						Model
+					</label>
+					<span id="pricing-source-badge" class={initialBadgeClasses}>
+						{initialSourceLabel}
+					</span>
+				</div>
+
+				<select
+					id="model-select"
+					class="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-medium text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+				>
+					{
+						CURATED_GROUPS.map((group) => (
+							<optgroup label={group.provider}>
+								{group.models.map((model) => (
+									<option
+										value={model.id}
+										selected={model.id === defaultModel.id}
+									>
+										{model.name}
+									</option>
+								))}
+							</optgroup>
+						))
+					}
+					<optgroup label="Custom">
+						<option value={CUSTOM_MODEL_ID}>Custom model</option>
+					</optgroup>
+				</select>
+
+				<div
+					class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground"
+				>
+					<span id="pricing-retrieved">{initialSourceDetail}</span>
+					<a
+						id="openrouter-link"
+						href={`https://openrouter.ai/${defaultModel.id}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-1 text-primary hover:underline"
+					>
+						View on OpenRouter
+						<Icon name="mdi:open-in-new" size={11} aria-hidden="true" />
+					</a>
+				</div>
+
+				<p
+					id="pricing-warning"
+					class:list={[
+						'rounded-xl border border-border bg-card p-3 text-[11px] leading-relaxed text-muted-foreground',
+						!initialWarnings && 'hidden',
+					]}
+					role="status"
+				>
+					{initialWarnings}
+				</p>
+			</div>
+
+			<!-- Pricing period and rates -->
+			<div class="mt-6 border-t border-border/60 pt-5">
+				<div class="flex flex-wrap items-center justify-between gap-2">
+					<span
+						class="text-xs font-bold tracking-widest text-primary uppercase"
+					>
+						Pricing
+					</span>
+					<span id="editing-period" class="text-[11px] text-muted-foreground">
+						Editing: {defaultPeriod.label}
+					</span>
+				</div>
+
+				<div class="mt-3 space-y-2">
+					<div
+						id="period-controls"
+						role="group"
+						aria-label="Pricing period"
+						class="grid grid-cols-1 gap-2 sm:grid-cols-2"
+					>
+						{
+							defaultModel.periods.length === 1 ? (
+								<span class={activePeriodClasses}>
+									{defaultModel.periods[0].label}
+								</span>
+							) : (
+								defaultModel.periods.map((period) => (
+									<button
+										type="button"
+										data-period={period.id}
+										aria-pressed={
+											period.id === defaultPeriod.id ? 'true' : 'false'
+										}
+										class={
+											period.id === defaultPeriod.id
+												? activePeriodClasses
+												: inactivePeriodClasses
+										}
+									>
+										{period.label}
+									</button>
+								))
+							)
+						}
+					</div>
+
+					<p
+						id="period-mode-note"
+						class="text-[11px] leading-relaxed text-muted-foreground"
+					>
+						{
+							defaultModel.periods.length > 1
+								? 'Manual selection · not based on your local time'
+								: (defaultModel.timePricingNote ?? 'One rate applies all day')
+						}
+					</p>
+
+					<p
+						id="period-condition"
+						class="text-[11px] leading-relaxed text-muted-foreground"
+					>
+						{defaultPeriod.condition ?? defaultModel.timePricingNote ?? ''}
+					</p>
+				</div>
+
+				<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+					<div>
+						<label for="input-price" class="mb-1.5 block text-xs font-semibold">
+							Input (uncached)
+						</label>
+						<div class="relative">
+							<span
+								class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xs text-muted-foreground"
+								aria-hidden="true">$</span
+							>
+							<input
+								id="input-price"
+								type="number"
+								min="0"
+								step="any"
+								inputmode="decimal"
+								value={defaultPeriod.rates.input ?? ''}
+								aria-describedby="input-price-help input-price-error"
+								class="w-full rounded-xl border border-border bg-card py-2 pr-3 pl-7 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+							/>
+						</div>
+						<p
+							id="input-price-help"
+							class="mt-1 text-[11px] text-muted-foreground"
+						>
+							USD per 1M tokens
+						</p>
+						<p
+							id="input-price-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+
+					<div>
+						<label
+							for="cached-price"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Cached input
+						</label>
+						<div class="relative">
+							<span
+								class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xs text-muted-foreground"
+								aria-hidden="true">$</span
+							>
+							<input
+								id="cached-price"
+								type="number"
+								min="0"
+								step="any"
+								inputmode="decimal"
+								value={defaultPeriod.rates.cachedInput ?? ''}
+								placeholder={defaultPeriod.rates.cachedInput === null
+									? 'Not published'
+									: '0'}
+								aria-describedby="cached-price-help cached-price-error"
+								class="w-full rounded-xl border border-border bg-card py-2 pr-3 pl-7 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+							/>
+						</div>
+						<p
+							id="cached-price-help"
+							class="mt-1 text-[11px] text-muted-foreground"
+						>
+							USD per 1M tokens
+						</p>
+						<p
+							id="cached-price-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+
+					<div>
+						<label
+							for="output-price"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Output
+						</label>
+						<div class="relative">
+							<span
+								class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-xs text-muted-foreground"
+								aria-hidden="true">$</span
+							>
+							<input
+								id="output-price"
+								type="number"
+								min="0"
+								step="any"
+								inputmode="decimal"
+								value={defaultPeriod.rates.output ?? ''}
+								aria-describedby="output-price-help output-price-error"
+								class="w-full rounded-xl border border-border bg-card py-2 pr-3 pl-7 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+							/>
+						</div>
+						<p
+							id="output-price-help"
+							class="mt-1 text-[11px] text-muted-foreground"
+						>
+							USD per 1M tokens
+						</p>
+						<p
+							id="output-price-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Token usage -->
+			<section
+				class="mt-6 border-t border-border/60 pt-5"
+				aria-labelledby="token-usage-title"
+			>
+				<div class="flex flex-wrap items-center justify-between gap-2">
+					<h2
+						id="token-usage-title"
+						class="text-xs font-bold tracking-widest text-primary uppercase"
+					>
+						Token usage
+					</h2>
+
+					<div
+						role="group"
+						aria-label="Token entry mode"
+						class="flex gap-1 rounded-xl border border-border bg-card p-1"
+					>
+						<button
+							type="button"
+							data-mode="exact"
+							aria-pressed="true"
+							class="rounded-lg bg-primary/10 px-3 py-1.5 text-[11px] font-semibold text-primary"
+						>
+							Exact
+						</button>
+						<button
+							type="button"
+							data-mode="simplified"
+							aria-pressed="false"
+							class="rounded-lg px-3 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-primary"
+						>
+							Simplified
+						</button>
+					</div>
+				</div>
+
+				<p class="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+					Enter whole token counts. Cache-hit rate is calculated from the input
+					figures, not entered separately in exact mode.
+				</p>
+
+				<div
+					id="exact-fields"
+					class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2"
+				>
+					<div>
+						<label
+							for="uncached-tokens"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Uncached input tokens
+						</label>
+						<input
+							id="uncached-tokens"
+							type="number"
+							min="0"
+							step="1"
+							inputmode="numeric"
+							value={defaultUsage.uncachedInput}
+							aria-describedby="uncached-tokens-error"
+							class="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+						/>
+						<p
+							id="uncached-tokens-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+
+					<div>
+						<label
+							for="cached-tokens"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Cached input tokens
+						</label>
+						<input
+							id="cached-tokens"
+							type="number"
+							min="0"
+							step="1"
+							inputmode="numeric"
+							value={defaultUsage.cachedInput}
+							aria-describedby="cached-tokens-error"
+							class="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+						/>
+						<p
+							id="cached-tokens-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+				</div>
+
+				<div
+					id="simplified-fields"
+					class="mt-4 hidden grid grid-cols-1 gap-4 sm:grid-cols-2"
+				>
+					<div>
+						<label
+							for="total-input-tokens"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Total input tokens
+						</label>
+						<input
+							id="total-input-tokens"
+							type="number"
+							min="0"
+							step="1"
+							inputmode="numeric"
+							value={defaultUsage.uncachedInput + defaultUsage.cachedInput}
+							aria-describedby="total-input-tokens-help total-input-tokens-error"
+							class="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+						/>
+						<p
+							id="total-input-tokens-help"
+							class="mt-1 text-[11px] text-muted-foreground"
+						>
+							Uncached and cached input combined
+						</p>
+						<p
+							id="total-input-tokens-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+
+					<div>
+						<label
+							for="cache-hit-percent"
+							class="mb-1.5 block text-xs font-semibold"
+						>
+							Cache hit rate (%)
+						</label>
+						<input
+							id="cache-hit-percent"
+							type="number"
+							min="0"
+							max="100"
+							step="0.1"
+							inputmode="decimal"
+							value="75"
+							aria-describedby="cache-hit-percent-help cache-hit-percent-error"
+							class="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+						/>
+						<p
+							id="cache-hit-percent-help"
+							class="mt-1 text-[11px] text-muted-foreground"
+						>
+							Cached input as a share of total input
+						</p>
+						<p
+							id="cache-hit-percent-error"
+							class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+						>
+						</p>
+					</div>
+				</div>
+
+				<div class="mt-4">
+					<label for="output-tokens" class="mb-1.5 block text-xs font-semibold">
+						Output tokens
+					</label>
+					<input
+						id="output-tokens"
+						type="number"
+						min="0"
+						step="1"
+						inputmode="numeric"
+						value={defaultUsage.output}
+						aria-describedby="output-tokens-error"
+						class="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground focus:border-primary/60 focus:ring-2 focus:ring-primary/20 focus:outline-none aria-invalid:border-[color:var(--callout-danger)]"
+					/>
+					<p
+						id="output-tokens-error"
+						class="mt-1 hidden text-[11px] text-[color:var(--callout-danger)]"
+					>
+					</p>
+				</div>
+			</section>
+
+			<!-- Results -->
+			<section
+				class="mt-6 rounded-2xl border border-border/50 bg-card p-5"
+				aria-labelledby="results-title"
+			>
+				<div
+					id="results-summary"
+					aria-live="polite"
+					aria-atomic="true"
+					class="flex flex-wrap items-end justify-between gap-4"
+				>
+					<div>
+						<h2
+							id="results-title"
+							class="text-xs font-bold tracking-widest text-primary uppercase"
+						>
+							Estimated API cost
+						</h2>
+						<p id="total-cost" class="mt-1 text-3xl font-bold text-primary">
+							{formatUSD(initial.totalCost)}
+						</p>
+						<p id="total-note" class="mt-1 text-[11px] text-muted-foreground">
+							{formatTokens(initial.totalInputTokens)} input · {
+								formatTokens(defaultUsage.output)
+							} output tokens
+						</p>
+					</div>
+					<div class="text-right">
+						<p class="text-[11px] text-muted-foreground">Cache hit rate</p>
+						<p id="cache-hit-rate" class="text-lg font-semibold text-primary">
+							{formatPercent(initial.cacheHitRate)}
+						</p>
+					</div>
+				</div>
+
+				<p
+					id="unavailable-note"
+					class="mt-3 hidden rounded-xl border border-border bg-muted/20 p-3 text-[11px] leading-relaxed text-muted-foreground"
+					role="status"
+				>
+				</p>
+
+				<div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+					<div class="rounded-xl border border-border/50 bg-muted/20 p-3">
+						<p class="text-[11px] text-muted-foreground">Uncached input</p>
+						<p id="uncached-cost" class="mt-1 text-sm font-semibold">
+							{formatUSD(initial.uncachedInputCost)}
+						</p>
+						<p
+							id="uncached-tokens-label"
+							class="text-[11px] text-muted-foreground"
+						>
+							{formatTokens(defaultUsage.uncachedInput)} tokens
+						</p>
+					</div>
+					<div class="rounded-xl border border-border/50 bg-muted/20 p-3">
+						<p class="text-[11px] text-muted-foreground">Cached input</p>
+						<p id="cached-cost" class="mt-1 text-sm font-semibold">
+							{formatUSD(initial.cachedInputCost)}
+						</p>
+						<p
+							id="cached-tokens-label"
+							class="text-[11px] text-muted-foreground"
+						>
+							{formatTokens(defaultUsage.cachedInput)} tokens
+						</p>
+					</div>
+					<div class="rounded-xl border border-border/50 bg-muted/20 p-3">
+						<p class="text-[11px] text-muted-foreground">Output</p>
+						<p id="output-cost" class="mt-1 text-sm font-semibold">
+							{formatUSD(initial.outputCost)}
+						</p>
+						<p
+							id="output-tokens-label"
+							class="text-[11px] text-muted-foreground"
+						>
+							{formatTokens(defaultUsage.output)} tokens
+						</p>
+					</div>
+				</div>
+
+				<div class="mt-4">
+					<div
+						id="cost-bar"
+						class="flex h-2 overflow-hidden rounded-full bg-muted"
+						role="img"
+						aria-label={`Cost breakdown: uncached input ${formatUSD(
+							initial.uncachedInputCost
+						)}, cached input ${formatUSD(
+							initial.cachedInputCost
+						)}, output ${formatUSD(initial.outputCost)}`}
+					>
+						<div
+							id="bar-uncached"
+							class="bg-primary"
+							style={`width: ${initialBarWidth(initial.uncachedInputCost)}%`}
+						>
+						</div>
+						<div
+							id="bar-cached"
+							class="bg-primary/60"
+							style={`width: ${initialBarWidth(initial.cachedInputCost)}%`}
+						>
+						</div>
+						<div
+							id="bar-output"
+							class="bg-primary/30"
+							style={`width: ${initialBarWidth(initial.outputCost)}%`}
+						>
+						</div>
+					</div>
+					<div
+						class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground"
+					>
+						<span class="inline-flex items-center gap-1.5">
+							<span class="h-2 w-2 rounded-full bg-primary" aria-hidden="true"
+							></span>
+							Uncached <span id="legend-uncached"
+								>{formatUSD(initial.uncachedInputCost)}</span
+							>
+						</span>
+						<span class="inline-flex items-center gap-1.5">
+							<span
+								class="h-2 w-2 rounded-full bg-primary/60"
+								aria-hidden="true"></span>
+							Cached <span id="legend-cached"
+								>{formatUSD(initial.cachedInputCost)}</span
+							>
+						</span>
+						<span class="inline-flex items-center gap-1.5">
+							<span
+								class="h-2 w-2 rounded-full bg-primary/30"
+								aria-hidden="true"></span>
+							Output <span id="legend-output"
+								>{formatUSD(initial.outputCost)}</span
+							>
+						</span>
+					</div>
+				</div>
+
+				<div
+					class="mt-5 grid grid-cols-1 gap-3 border-t border-border/60 pt-4 sm:grid-cols-3"
+				>
+					<div>
+						<p class="text-[11px] text-muted-foreground">Without caching</p>
+						<p id="cost-without-caching" class="mt-1 text-sm font-semibold">
+							{formatUSD(initial.costWithoutCaching)}
+						</p>
+					</div>
+					<div>
+						<p id="savings-label" class="text-[11px] text-muted-foreground">
+							{initialSavingsLabel}
+						</p>
+						<p
+							id="cache-savings"
+							class="mt-1 text-sm font-semibold text-primary"
+						>
+							{initialSavingsValue}
+						</p>
+					</div>
+					<div>
+						<p class="text-[11px] text-muted-foreground">Total input</p>
+						<p id="total-input-label" class="mt-1 text-sm font-semibold">
+							{formatTokens(initial.totalInputTokens)}
+						</p>
+					</div>
+				</div>
+				<p id="savings-note" class="mt-2 text-[11px] text-muted-foreground">
+					{initialSavingsNote}
+				</p>
+
+				<div
+					id="peak-comparison"
+					class:list={[
+						'mt-5 border-t border-border/60 pt-4',
+						!initialPeak && 'hidden',
+					]}
+				>
+					<p class="text-xs font-bold tracking-widest text-primary uppercase">
+						Peak comparison
+					</p>
+					<div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+						<div>
+							<p
+								id="peak-standard-label"
+								class="text-[11px] text-muted-foreground"
+							>
+								{defaultPeriod.label}
+							</p>
+							<p id="standard-cost" class="mt-1 text-sm font-semibold">
+								{formatUSD(initialComparison?.standard.totalCost ?? null)}
+							</p>
+						</div>
+						<div>
+							<p id="peak-peak-label" class="text-[11px] text-muted-foreground">
+								{initialPeak?.label ?? 'Peak'}
+							</p>
+							<p id="peak-cost" class="mt-1 text-sm font-semibold">
+								{formatUSD(initialComparison?.peak.totalCost ?? null)}
+							</p>
+						</div>
+						<div>
+							<p class="text-[11px] text-muted-foreground">Difference</p>
+							<p
+								id="peak-difference"
+								class="mt-1 text-sm font-semibold text-primary"
+							>
+								{signedUSD(initialComparison?.difference ?? null)}
+								<span
+									id="peak-difference-percent"
+									class="text-[11px] font-normal"
+								>
+									{signedPercent(initialComparison?.differencePercent ?? null)}
+								</span>
+							</p>
+						</div>
+					</div>
+					<p
+						id="peak-note"
+						class="mt-2 text-[11px] leading-relaxed text-muted-foreground"
+					>
+						{
+							initialPeak?.condition
+								? `OpenRouter time-based override · Peak: ${initialPeak.condition}. Difference is peak minus ${defaultPeriod.label.toLowerCase()}.`
+								: ''
+						}
+					</p>
+				</div>
+			</section>
+
+			<!-- Actions -->
+			<div class="mt-5 flex flex-wrap items-center gap-2">
+				<button
+					id="reset-calculator"
+					type="button"
+					class="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+				>
+					<Icon name="mdi:restore" size={14} aria-hidden="true" />
+					Reset calculator
+				</button>
+				<button
+					id="restore-pricing"
+					type="button"
+					class="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/20"
+				>
+					<Icon name="mdi:refresh" size={14} aria-hidden="true" />
+					<span id="restore-label">Restore fetched pricing</span>
+				</button>
+			</div>
+		</section>
+
+		<!-- Pricing conditions -->
+		<section
+			class="rounded-2xl border border-border/50 bg-muted/20 p-5"
+			aria-labelledby="conditions-title"
+		>
+			<h2 id="conditions-title" class="text-sm font-bold">
+				Pricing conditions and assumptions
+			</h2>
+			<ul
+				id="pricing-notes"
+				class="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground"
+			>
+				<li>
+					Estimates cover text input and output tokens only. Multimodal inputs,
+					tool-use fees, cache writes and provider-specific charges are
+					excluded.
+				</li>
+				<li>
+					Prices are USD per million tokens. Source: OpenRouter public models
+					API.
+				</li>
+			</ul>
+		</section>
+
+		<!-- Footer -->
+		<footer
+			class="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-5"
+		>
+			<a
+				href="/projects/building-with-deepseek-harness/"
+				class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+			>
+				Read the development case study
+				<Icon name="mdi:arrow-right" size={14} aria-hidden="true" />
+			</a>
+			<a
+				href="https://openrouter.ai/api/v1/models"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
+			>
+				OpenRouter pricing API
+				<Icon name="mdi:open-in-new" size={11} aria-hidden="true" />
+			</a>
+		</footer>
+
+		<noscript>
+			<p
+				class="rounded-xl border border-border bg-muted/20 p-4 text-xs text-muted-foreground"
+			>
+				The calculator needs JavaScript to update results as you type. The
+				example result above is a static preview.
+			</p>
+		</noscript>
+	</article>
+
+	<script
+		id="pricing-data"
+		type="application/json"
+		is:inline
+		set:html={serialisedPricing}
+	/>
+</Layout>
+
+<script>
+	import {
+		calculateCost,
+		comparePeriods,
+		deriveSimplified,
+		toSimplified,
+		tokenCountError,
+		validateSimplified,
+		validateUsage,
+		type Rates,
+		type SimplifiedUsage,
+		type TokenUsage,
+	} from '@/lib/token-cost'
+	import {
+		formatPercent,
+		formatRate,
+		formatRetrievedAt,
+		formatTokens,
+		formatUSD,
+	} from '@/lib/format'
+	import type { ModelPricing, PricingPeriod } from '@/lib/pricing'
+
+	type Mode = 'exact' | 'simplified'
+
+	interface PricingData {
+		models: ModelPricing[]
+		source: 'live' | 'fallback'
+		retrievedAt: string | null
+		warnings: string[]
+		defaultModelId: string
+		customModelId: string
+	}
+
+	interface ModelState {
+		periods: Record<string, Rates>
+		edited: boolean
+	}
+
+	const DEFAULT_EXACT: TokenUsage = {
+		uncachedInput: 250_000,
+		cachedInput: 750_000,
+		output: 50_000,
+	}
+	const MAX_RATE = 1_000_000_000
+	const ACTIVE_BADGE =
+		'rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary'
+	const CACHED_BADGE =
+		'rounded-full border border-border bg-muted/40 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground'
+	const MANUAL_BADGE =
+		'rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold text-primary'
+	const ACTIVE_PERIOD =
+		'rounded-xl border border-primary/40 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary'
+	const INACTIVE_PERIOD =
+		'rounded-xl border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary'
+
+	function byId<T extends HTMLElement>(id: string): T {
+		const node = document.getElementById(id)
+		if (!node) throw new Error(`Missing element #${id}`)
+		return node as T
+	}
+
+	function optional(id: string): HTMLElement | null {
+		return document.getElementById(id)
+	}
+
+	function setText(id: string, value: string) {
+		const node = optional(id)
+		if (node) node.textContent = value
+	}
+
+	function setHidden(id: string, hidden: boolean) {
+		const node = optional(id)
+		if (!node) return
+		node.classList.toggle('hidden', hidden)
+		node.style.display = hidden ? 'none' : ''
+	}
+
+	function setError(inputId: string, errorId: string, message?: string) {
+		const input = optional(inputId) as HTMLInputElement | null
+		const error = optional(errorId)
+		if (input) {
+			if (message) input.setAttribute('aria-invalid', 'true')
+			else input.removeAttribute('aria-invalid')
+		}
+		if (error) {
+			error.textContent = message ?? ''
+			error.classList.toggle('hidden', !message)
+		}
+	}
+
+	function readNumber(input: HTMLInputElement): number {
+		const raw = input.value.trim()
+		return raw === '' ? Number.NaN : Number(raw)
+	}
+
+	function formatInput(value: number): string {
+		return Number.isFinite(value) ? String(value) : ''
+	}
+
+	function formatPercentInput(value: number): string {
+		if (!Number.isFinite(value)) return ''
+		return String(Math.round(value * 100) / 100)
+	}
+
+	function signedUSD(value: number | null): string {
+		if (value === null) return '—'
+		if (Math.abs(value) < 1e-12) return formatUSD(0)
+		return `${value > 0 ? '+' : ''}${formatUSD(value)}`
+	}
+
+	function signedPercent(value: number | null): string {
+		if (value === null) return ''
+		if (Math.abs(value) < 1e-12) return '(0%)'
+		return `(${value > 0 ? '+' : ''}${formatPercent(value)})`
+	}
+
+	function initCalculator() {
+		const root = document.getElementById('calculator')
+		const dataNode = document.getElementById('pricing-data')
+		if (!root || !dataNode?.textContent || root.dataset.ready === 'true') {
+			return
+		}
+
+		let catalogue: PricingData
+		try {
+			catalogue = JSON.parse(dataNode.textContent) as PricingData
+		} catch {
+			return
+		}
+		if (!Array.isArray(catalogue.models) || catalogue.models.length === 0) {
+			return
+		}
+
+		const modelSelect = byId<HTMLSelectElement>('model-select')
+		const periodControls = byId<HTMLDivElement>('period-controls')
+		const inputPrice = byId<HTMLInputElement>('input-price')
+		const cachedPrice = byId<HTMLInputElement>('cached-price')
+		const outputPrice = byId<HTMLInputElement>('output-price')
+		const uncachedTokens = byId<HTMLInputElement>('uncached-tokens')
+		const cachedTokens = byId<HTMLInputElement>('cached-tokens')
+		const totalInputTokens = byId<HTMLInputElement>('total-input-tokens')
+		const cacheHitPercent = byId<HTMLInputElement>('cache-hit-percent')
+		const outputTokens = byId<HTMLInputElement>('output-tokens')
+		const resetButton = byId<HTMLButtonElement>('reset-calculator')
+		const restoreButton = byId<HTMLButtonElement>('restore-pricing')
+		const modeButtons = [
+			...document.querySelectorAll<HTMLButtonElement>('[data-mode]'),
+		]
+
+		let modelStates = new Map<string, ModelState>()
+		let state = {
+			modelId: catalogue.defaultModelId,
+			periodId: '',
+			mode: 'exact' as Mode,
+			exact: { ...DEFAULT_EXACT },
+			simplified: toSimplified(DEFAULT_EXACT),
+		}
+
+		function findModel(id: string): ModelPricing | undefined {
+			return catalogue.models.find((model) => model.id === id)
+		}
+
+		function currentModel(): ModelPricing {
+			const model = findModel(state.modelId)
+			if (!model) throw new Error('Selected model is unavailable')
+			return model
+		}
+
+		function currentModelState(): ModelState {
+			const model = currentModel()
+			const existing = modelStates.get(model.id)
+			if (existing) return existing
+			const periods: Record<string, Rates> = {}
+			for (const period of model.periods) {
+				periods[period.id] = { ...period.rates }
+			}
+			const created = { periods, edited: false }
+			modelStates.set(model.id, created)
+			return created
+		}
+
+		function currentPeriod(): PricingPeriod {
+			const model = currentModel()
+			return (
+				model.periods.find((period) => period.id === state.periodId) ??
+				model.periods[0]
+			)
+		}
+
+		function currentRates(): Rates {
+			const model = currentModel()
+			const period = currentPeriod()
+			return currentModelState().periods[period.id] ?? { ...period.rates }
+		}
+
+		function currentUsage(): TokenUsage | null {
+			if (state.mode === 'exact') {
+				return Object.keys(validateUsage(state.exact)).length
+					? null
+					: state.exact
+			}
+			return deriveSimplified(
+				state.simplified.totalInput,
+				state.simplified.cacheHitPercent,
+				state.simplified.output
+			)
+		}
+
+		function buildModelStates() {
+			modelStates = new Map()
+			for (const model of catalogue.models) {
+				const periods: Record<string, Rates> = {}
+				for (const period of model.periods) {
+					periods[period.id] = { ...period.rates }
+				}
+				modelStates.set(model.id, { periods, edited: false })
+			}
+		}
+
+		function resetState() {
+			buildModelStates()
+			const model = findModel(catalogue.defaultModelId) ?? catalogue.models[0]
+			state = {
+				modelId: model.id,
+				periodId: model.periods[0].id,
+				mode: 'exact',
+				exact: { ...DEFAULT_EXACT },
+				simplified: toSimplified(DEFAULT_EXACT),
+			}
+			modelSelect.value = model.id
+		}
+
+		function renderPeriods() {
+			const model = currentModel()
+			periodControls.replaceChildren()
+
+			if (model.periods.length === 1) {
+				const label = document.createElement('span')
+				label.className = ACTIVE_PERIOD
+				label.textContent = model.periods[0].label
+				periodControls.append(label)
+			} else {
+				for (const period of model.periods) {
+					const button = document.createElement('button')
+					button.type = 'button'
+					button.dataset.period = period.id
+					button.setAttribute(
+						'aria-pressed',
+						String(period.id === state.periodId)
+					)
+					button.className =
+						period.id === state.periodId ? ACTIVE_PERIOD : INACTIVE_PERIOD
+					button.textContent = period.label
+					periodControls.append(button)
+				}
+			}
+
+			const note = optional('period-mode-note')
+			const period = currentPeriod()
+			const condition =
+				model.periods.length > 1
+					? (period.condition ?? model.timePricingNote ?? '')
+					: ''
+			if (note) {
+				note.textContent =
+					model.periods.length > 1
+						? 'Manual selection · not based on your local time'
+						: 'Single rate · same price all day'
+			}
+			setText('period-condition', condition)
+			setHidden('period-condition', condition.length === 0)
+			setText('editing-period', `Editing: ${period.label}`)
+		}
+
+		function renderPriceInputs() {
+			const rates = currentRates()
+			inputPrice.value = formatInput(rates.input ?? Number.NaN)
+			cachedPrice.value = formatInput(rates.cachedInput ?? Number.NaN)
+			outputPrice.value = formatInput(rates.output ?? Number.NaN)
+			cachedPrice.placeholder =
+				rates.cachedInput === null ? 'Not published' : '0'
+			setText('editing-period', `Editing: ${currentPeriod().label}`)
+		}
+
+		function renderTokenInputs() {
+			uncachedTokens.value = formatInput(state.exact.uncachedInput)
+			cachedTokens.value = formatInput(state.exact.cachedInput)
+			totalInputTokens.value = formatInput(state.simplified.totalInput)
+			cacheHitPercent.value = formatPercentInput(
+				state.simplified.cacheHitPercent
+			)
+			outputTokens.value = formatInput(state.exact.output)
+
+			setHidden('exact-fields', state.mode !== 'exact')
+			setHidden('simplified-fields', state.mode !== 'simplified')
+			for (const button of modeButtons) {
+				button.setAttribute(
+					'aria-pressed',
+					String(button.dataset.mode === state.mode)
+				)
+				button.className =
+					button.dataset.mode === state.mode
+						? 'rounded-lg bg-primary/10 px-3 py-1.5 text-[11px] font-semibold text-primary'
+						: 'rounded-lg px-3 py-1.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-primary'
+			}
+		}
+
+		function clearTokenErrors() {
+			for (const [inputId, errorId] of [
+				['uncached-tokens', 'uncached-tokens-error'],
+				['cached-tokens', 'cached-tokens-error'],
+				['total-input-tokens', 'total-input-tokens-error'],
+				['cache-hit-percent', 'cache-hit-percent-error'],
+				['output-tokens', 'output-tokens-error'],
+			]) {
+				setError(inputId, errorId, '')
+			}
+		}
+
+		function renderValidation() {
+			clearTokenErrors()
+			if (state.mode === 'exact') {
+				const errors = validateUsage(state.exact)
+				setError(
+					'uncached-tokens',
+					'uncached-tokens-error',
+					errors.uncachedInput
+				)
+				setError('cached-tokens', 'cached-tokens-error', errors.cachedInput)
+			} else {
+				const errors = validateSimplified(
+					state.simplified.totalInput,
+					state.simplified.cacheHitPercent,
+					state.simplified.output
+				)
+				setError(
+					'total-input-tokens',
+					'total-input-tokens-error',
+					errors.totalInput
+				)
+				setError(
+					'cache-hit-percent',
+					'cache-hit-percent-error',
+					errors.cacheHitPercent
+				)
+			}
+			setError(
+				'output-tokens',
+				'output-tokens-error',
+				tokenCountError(state.exact.output, 'Output tokens')
+			)
+		}
+
+		function setBarWidth(id: string, width: number) {
+			const node = optional(id)
+			if (node) {
+				node.style.width = `${Math.max(0, Math.min(100, width))}%`
+			}
+		}
+
+		function renderPeakComparison(usage: TokenUsage | null) {
+			const model = currentModel()
+			const standard = model.periods.find(
+				(period) => period.kind === 'standard'
+			)
+			const peak = model.periods.find((period) => period.kind === 'peak')
+			if (!usage || !standard || !peak) {
+				setHidden('peak-comparison', true)
+				return
+			}
+
+			const periods = currentModelState().periods
+			const comparison = comparePeriods(
+				usage,
+				periods[standard.id] ?? standard.rates,
+				periods[peak.id] ?? peak.rates
+			)
+			setHidden('peak-comparison', false)
+			setText('peak-standard-label', standard.label)
+			setText('peak-peak-label', peak.label)
+			setText('standard-cost', formatUSD(comparison.standard.totalCost))
+			setText('peak-cost', formatUSD(comparison.peak.totalCost))
+			setText('peak-difference', signedUSD(comparison.difference))
+			setText(
+				'peak-difference-percent',
+				signedPercent(comparison.differencePercent)
+			)
+			setText(
+				'peak-note',
+				peak.condition
+					? `OpenRouter time-based override · Peak: ${peak.condition}. Difference is peak minus ${standard.label.toLowerCase()}.`
+					: `Difference is peak minus ${standard.label.toLowerCase()}.`
+			)
+		}
+
+		function renderResults() {
+			const usage = currentUsage()
+			const rates = currentRates()
+
+			if (!usage) {
+				setText('total-cost', '—')
+				setText('total-note', 'Check the highlighted inputs.')
+				setText('cache-hit-rate', '—')
+				for (const id of [
+					'uncached-cost',
+					'cached-cost',
+					'output-cost',
+					'cost-without-caching',
+					'cache-savings',
+					'legend-uncached',
+					'legend-cached',
+					'legend-output',
+				]) {
+					setText(id, '—')
+				}
+				setHidden('unavailable-note', true)
+				setText('savings-label', 'Estimated savings')
+				setText('savings-note', 'Check the highlighted inputs.')
+				setText('total-input-label', '—')
+				for (const id of ['bar-uncached', 'bar-cached', 'bar-output']) {
+					setBarWidth(id, 0)
+				}
+				renderPeakComparison(null)
+				return
+			}
+
+			const breakdown = calculateCost(usage, rates)
+			setText('total-cost', formatUSD(breakdown.totalCost))
+			setText(
+				'total-note',
+				`${formatTokens(breakdown.totalInputTokens)} input · ${formatTokens(
+					usage.output
+				)} output tokens`
+			)
+			setText('cache-hit-rate', formatPercent(breakdown.cacheHitRate))
+
+			setText('uncached-cost', formatUSD(breakdown.uncachedInputCost))
+			setText(
+				'uncached-tokens-label',
+				`${formatTokens(usage.uncachedInput)} tokens`
+			)
+			setText('cached-cost', formatUSD(breakdown.cachedInputCost))
+			setText(
+				'cached-tokens-label',
+				`${formatTokens(usage.cachedInput)} tokens`
+			)
+			setText('output-cost', formatUSD(breakdown.outputCost))
+			setText('output-tokens-label', `${formatTokens(usage.output)} tokens`)
+
+			setText('legend-uncached', formatUSD(breakdown.uncachedInputCost))
+			setText('legend-cached', formatUSD(breakdown.cachedInputCost))
+			setText('legend-output', formatUSD(breakdown.outputCost))
+
+			const total = breakdown.totalCost
+			const width = (cost: number | null) =>
+				total !== null && total > 0 && cost !== null ? (cost / total) * 100 : 0
+			setBarWidth('bar-uncached', width(breakdown.uncachedInputCost))
+			setBarWidth('bar-cached', width(breakdown.cachedInputCost))
+			setBarWidth('bar-output', width(breakdown.outputCost))
+
+			const bar = optional('cost-bar')
+			if (bar) {
+				bar.setAttribute(
+					'aria-label',
+					`Cost breakdown: uncached input ${formatUSD(
+						breakdown.uncachedInputCost
+					)}, cached input ${formatUSD(
+						breakdown.cachedInputCost
+					)}, output ${formatUSD(breakdown.outputCost)}`
+				)
+			}
+
+			setText('cost-without-caching', formatUSD(breakdown.costWithoutCaching))
+			const savings = breakdown.cacheSavings
+			setText(
+				'savings-label',
+				savings !== null && savings < 0
+					? 'Caching premium'
+					: 'Estimated savings'
+			)
+			setText(
+				'cache-savings',
+				savings === null ? '—' : formatUSD(Math.abs(savings))
+			)
+			setText(
+				'savings-note',
+				savings !== null && savings < 0
+					? 'Cached-input pricing is higher than uncached pricing.'
+					: 'Compared with charging all input at the uncached rate.'
+			)
+			setText('total-input-label', formatTokens(breakdown.totalInputTokens))
+
+			const unavailable = optional('unavailable-note')
+			if (unavailable) {
+				unavailable.textContent = breakdown.unavailable.join(' ')
+				unavailable.classList.toggle(
+					'hidden',
+					breakdown.unavailable.length === 0
+				)
+			}
+
+			renderPeakComparison(usage)
+		}
+
+		function renderSource() {
+			const model = currentModel()
+			const modelState = currentModelState()
+			const badge = byId<HTMLSpanElement>('pricing-source-badge')
+
+			let label = 'Live OpenRouter'
+			let classes = ACTIVE_BADGE
+			let detail = `Retrieved ${formatRetrievedAt(
+				catalogue.retrievedAt
+			)} at build`
+
+			if (model.source === 'custom') {
+				label = 'Manual rates'
+				classes = MANUAL_BADGE
+				detail = 'User-supplied rates'
+			} else if (modelState.edited) {
+				label = 'Manual rates'
+				classes = MANUAL_BADGE
+				detail = `Edited in this session · fetched ${formatRetrievedAt(
+					catalogue.retrievedAt
+				)}`
+			} else if (model.fromFallback || catalogue.source === 'fallback') {
+				label = 'Cached snapshot'
+				classes = CACHED_BADGE
+				detail = `Retrieved ${formatRetrievedAt(catalogue.retrievedAt)}`
+			}
+
+			badge.textContent = label
+			badge.className = classes
+			setText('pricing-retrieved', detail)
+			setText(
+				'restore-label',
+				model.source === 'custom'
+					? 'Restore example rates'
+					: 'Restore fetched pricing'
+			)
+
+			const link = byId<HTMLAnchorElement>('openrouter-link')
+			if (model.source === 'custom') {
+				link.classList.add('hidden')
+			} else {
+				link.classList.remove('hidden')
+				link.href = `https://openrouter.ai/${model.id}`
+			}
+
+			const warnings = [...catalogue.warnings]
+			if (model.fromFallback && catalogue.source === 'live') {
+				warnings.push(`${model.name} used cached snapshot rates.`)
+			}
+			const warning = optional('pricing-warning')
+			if (warning) {
+				warning.textContent = warnings.join(' ')
+				warning.classList.toggle('hidden', warnings.length === 0)
+			}
+		}
+
+		function renderNotes() {
+			const model = currentModel()
+			const modelState = currentModelState()
+			const notes: string[] = []
+
+			if (model.timePricingNote) notes.push(model.timePricingNote)
+			const peak = model.periods.find((period) => period.kind === 'peak')
+			if (peak) {
+				if (peak.condition) {
+					notes.push(
+						`OpenRouter time-based override: peak rates apply ${peak.condition}.`
+					)
+				}
+				notes.push(
+					'The period is selected manually; it is not inferred from your local time.'
+				)
+			}
+
+			if (model.longContext) {
+				const context = model.longContext
+				const parts = [`input ${formatRate(context.rates.input)}/M`]
+				if (context.rates.cachedInput !== null) {
+					parts.push(`cached ${formatRate(context.rates.cachedInput)}/M`)
+				}
+				parts.push(`output ${formatRate(context.rates.output)}/M`)
+				notes.push(
+					`Long-context pricing applies above ${formatTokens(
+						context.minPromptTokens
+					)} prompt tokens (${parts.join(
+						', '
+					)}). This estimate uses the rates shown and does not switch automatically.`
+				)
+			}
+
+			if (model.cacheWriteRate !== null || model.cacheWrite1hRate !== null) {
+				const cacheRates: string[] = []
+				if (model.cacheWriteRate !== null) {
+					cacheRates.push(`${formatRate(model.cacheWriteRate)}/M`)
+				}
+				if (model.cacheWrite1hRate !== null) {
+					cacheRates.push(
+						`${formatRate(model.cacheWrite1hRate)}/M for 1-hour cache`
+					)
+				}
+				notes.push(
+					`Cache-write charges (${cacheRates.join(
+						'; '
+					)}) are not included. Enter cache-read tokens only.`
+				)
+			}
+
+			if (model.otherConditionalPricing) {
+				notes.push(
+					'This model has additional conditional pricing that this calculator does not model.'
+				)
+			}
+			if (currentRates().cachedInput === null) {
+				notes.push(
+					'No cached-input rate is published; enter one manually before including cached tokens.'
+				)
+			}
+			if (model.source === 'custom') {
+				notes.push(
+					'Custom rates are user-supplied; replace the example values with your provider’s published prices.'
+				)
+			}
+			if (model.fromFallback) {
+				notes.push(
+					'These rates came from the committed OpenRouter snapshot, not a live build-time request.'
+				)
+			}
+			if (modelState.edited) {
+				notes.push(
+					'Rates have been edited in this session. Use Restore fetched pricing to return to the OpenRouter values.'
+				)
+			}
+			notes.push(
+				'Estimates cover text input and output tokens only. Multimodal inputs, tool-use fees, cache writes and provider-specific charges are excluded.'
+			)
+			notes.push(
+				model.source === 'custom'
+					? 'Prices are USD per million tokens. Custom rates are user-supplied.'
+					: 'Prices are USD per million tokens. Source: OpenRouter public models API.'
+			)
+
+			const list = byId<HTMLUListElement>('pricing-notes')
+			list.replaceChildren()
+			for (const note of [...new Set(notes)]) {
+				const item = document.createElement('li')
+				item.textContent = note
+				list.append(item)
+			}
+		}
+
+		function renderAll() {
+			renderPeriods()
+			renderPriceInputs()
+			renderTokenInputs()
+			renderValidation()
+			renderResults()
+			renderSource()
+			renderNotes()
+		}
+
+		function clearRateErrors() {
+			for (const [inputId, errorId] of [
+				['input-price', 'input-price-error'],
+				['cached-price', 'cached-price-error'],
+				['output-price', 'output-price-error'],
+			]) {
+				setError(inputId, errorId, '')
+			}
+		}
+
+		function setMode(mode: Mode) {
+			if (mode === state.mode) return
+			if (mode === 'simplified') {
+				if (Object.keys(validateUsage(state.exact)).length === 0) {
+					state.simplified = toSimplified(state.exact)
+				}
+			} else {
+				const derived = deriveSimplified(
+					state.simplified.totalInput,
+					state.simplified.cacheHitPercent,
+					state.simplified.output
+				)
+				if (derived) state.exact = derived
+			}
+			state.mode = mode
+			renderTokenInputs()
+			renderValidation()
+			renderResults()
+		}
+
+		function bindRateInput(
+			input: HTMLInputElement,
+			key: 'input' | 'cachedInput' | 'output'
+		) {
+			input.addEventListener('input', () => {
+				const modelState = currentModelState()
+				const period = currentPeriod()
+				const rates = modelState.periods[period.id] ?? {
+					...period.rates,
+				}
+				const raw = input.value.trim()
+				let message = ''
+				if (raw === '') {
+					rates[key] = null
+				} else {
+					const value = Number(raw)
+					if (!Number.isFinite(value) || value < 0) {
+						rates[key] = null
+						message = 'Enter a non-negative price.'
+					} else if (value > MAX_RATE) {
+						rates[key] = null
+						message = 'Price is too large.'
+					} else {
+						rates[key] = value
+					}
+				}
+				modelState.periods[period.id] = rates
+				modelState.edited = true
+				setError(input.id, `${input.id}-error`, message)
+				renderSource()
+				renderNotes()
+				renderResults()
+			})
+		}
+
+		modelSelect.addEventListener('change', () => {
+			const model = findModel(modelSelect.value)
+			if (!model) return
+			state.modelId = model.id
+			state.periodId = model.periods[0].id
+			clearRateErrors()
+			renderAll()
+		})
+
+		periodControls.addEventListener('click', (event) => {
+			const target = event.target
+			if (!(target instanceof Element)) return
+			const button = target.closest('button[data-period]')
+			if (!(button instanceof HTMLButtonElement)) return
+			const periodId = button.dataset.period
+			if (!periodId) return
+			state.periodId = periodId
+			clearRateErrors()
+			renderPeriods()
+			renderPriceInputs()
+			renderResults()
+			renderNotes()
+		})
+
+		for (const button of modeButtons) {
+			button.addEventListener('click', () => {
+				setMode(button.dataset.mode as Mode)
+			})
+		}
+
+		uncachedTokens.addEventListener('input', () => {
+			state.exact.uncachedInput = readNumber(uncachedTokens)
+			renderValidation()
+			renderResults()
+		})
+
+		cachedTokens.addEventListener('input', () => {
+			state.exact.cachedInput = readNumber(cachedTokens)
+			renderValidation()
+			renderResults()
+		})
+
+		totalInputTokens.addEventListener('input', () => {
+			state.simplified.totalInput = readNumber(totalInputTokens)
+			renderValidation()
+			renderResults()
+		})
+
+		cacheHitPercent.addEventListener('input', () => {
+			state.simplified.cacheHitPercent = readNumber(cacheHitPercent)
+			renderValidation()
+			renderResults()
+		})
+
+		outputTokens.addEventListener('input', () => {
+			const value = readNumber(outputTokens)
+			state.exact.output = value
+			state.simplified.output = value
+			renderValidation()
+			renderResults()
+		})
+
+		bindRateInput(inputPrice, 'input')
+		bindRateInput(cachedPrice, 'cachedInput')
+		bindRateInput(outputPrice, 'output')
+
+		resetButton.addEventListener('click', () => {
+			resetState()
+			clearRateErrors()
+			clearTokenErrors()
+			renderAll()
+		})
+
+		restoreButton.addEventListener('click', () => {
+			const model = currentModel()
+			const periods: Record<string, Rates> = {}
+			for (const period of model.periods) {
+				periods[period.id] = { ...period.rates }
+			}
+			modelStates.set(model.id, { periods, edited: false })
+			clearRateErrors()
+			renderPriceInputs()
+			renderSource()
+			renderNotes()
+			renderResults()
+		})
+
+		resetState()
+		renderAll()
+		root.dataset.ready = 'true'
+	}
+
+	const calculatorWindow = window as Window & {
+		__aiTokenCalculatorBound?: boolean
+	}
+	if (!calculatorWindow.__aiTokenCalculatorBound) {
+		calculatorWindow.__aiTokenCalculatorBound = true
+		document.addEventListener('astro:page-load', initCalculator)
+	}
+	initCalculator()
+</script>

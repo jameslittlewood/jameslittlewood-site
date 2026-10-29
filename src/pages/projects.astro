@@ -59,7 +59,7 @@ const projects = await getCollection("projects");
 
             <div class="mb-3 flex flex-wrap gap-2">
               {project.data.tech.map((t) => (
-                <span class="font-mono text-xs text-primary/70">
+                <span class="font-mono text-xs text-primary">
                   #{t}
                 </span>
               ))}
@@ -68,10 +68,10 @@ const projects = await getCollection("projects");
             {/* Project overview and external links */}
             <div class="flex flex-wrap gap-2">
 
-              {/* Open WebUI case study */}
-              {project.id === "self-hosted-ai-chatbot" && (
+              {/* Internal project overview */}
+              {project.data.page && (
                 <a
-                  href="/projects/self-hosted-ai-chatbot/"
+                  href={project.data.page}
                   class="inline-flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-medium text-primary transition-colors duration-300 hover:bg-primary/20"
                 >
                   <Icon name="mdi:information-outline" class="h-3 w-3" />

@@ -47,6 +47,7 @@ const projects = defineCollection({
       .enum(["planning", "in-progress", "completed", "archived"])
       .default("completed"),
     image: z.string().optional(),
+    page: z.string().optional(),
   }),
 });
 

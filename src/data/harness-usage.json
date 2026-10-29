@@ -1,0 +1,194 @@
+{
+	"schemaVersion": 2,
+	"capturedAt": "2026-10-29T18:58:15.854Z",
+	"session": {
+		"startedAt": "2026-10-29T17:27:03.493Z",
+		"buildPhaseEndedAt": "2026-10-29T18:11:34.151Z",
+		"lastEventAt": "2026-10-29T18:58:15.709Z",
+		"model": "deepseek-v4.1-flash",
+		"provider": "opencode-go",
+		"reasoningEffort": "high",
+		"contextWindow": 1000000,
+		"agentPreset": "standard"
+	},
+	"buildPhase": {
+		"turns": 1,
+		"steps": 162,
+		"wallClockMinutes": 44.5,
+		"wallClockMs": 2670658,
+		"activity": {
+			"toolCalls": 200,
+			"toolResults": 200,
+			"toolErrors": 3,
+			"nonzeroExitResults": 9,
+			"jobFailures": 1
+		},
+		"providerReported": {
+			"uncachedInputTokens": 311762,
+			"cacheReadTokens": 29874688,
+			"cacheWriteTokens": 0,
+			"outputTokens": 242325,
+			"totalTokens": 30428775
+		},
+		"derived": {
+			"cacheHitRatePercent": 98.97,
+			"contextUsedTokens": 332140,
+			"contextUtilisationPercent": 33.2,
+			"llmMs": 2427805,
+			"toolMs": 230348,
+			"ttftMs": 502548,
+			"ttftSteps": 162,
+			"averageTtftMs": 3102,
+			"decodeMs": 1925257,
+			"decodeTokens": 242325,
+			"tokensPerSecond": 125.87
+		},
+		"cost": {
+			"billedInputTokens": 30186450,
+			"uncachedInputUsd": 0.046764,
+			"cachedInputUsd": 0.089624,
+			"cacheWriteUsd": 0,
+			"outputUsd": 0.145395,
+			"totalUsd": 0.281783,
+			"withoutCachingUsd": 4.673363,
+			"cacheSavingsUsd": 4.391579,
+			"cacheCostReductionPercent": 93.97
+		}
+	},
+	"sessionToDate": {
+		"turns": 2,
+		"steps": 246,
+		"wallClockMinutes": 91.2,
+		"wallClockMs": 5472216,
+		"activity": {
+			"toolCalls": 295,
+			"toolResults": 294,
+			"toolErrors": 4,
+			"nonzeroExitResults": 12,
+			"jobFailures": 1
+		},
+		"providerReported": {
+			"uncachedInputTokens": 425087,
+			"cacheReadTokens": 68034816,
+			"cacheWriteTokens": 0,
+			"outputTokens": 354573,
+			"totalTokens": 68814476
+		},
+		"derived": {
+			"cacheHitRatePercent": 99.38,
+			"contextUsedTokens": 538467,
+			"contextUtilisationPercent": 53.8,
+			"llmMs": 3361939,
+			"toolMs": 279732,
+			"ttftMs": 911281,
+			"ttftSteps": 246,
+			"averageTtftMs": 3704,
+			"decodeMs": 2450658,
+			"decodeTokens": 354573,
+			"tokensPerSecond": 144.68
+		},
+		"cost": {
+			"billedInputTokens": 68459903,
+			"uncachedInputUsd": 0.063763,
+			"cachedInputUsd": 0.204104,
+			"cacheWriteUsd": 0,
+			"outputUsd": 0.212744,
+			"totalUsd": 0.480611,
+			"withoutCachingUsd": 10.481729,
+			"cacheSavingsUsd": 10.001118,
+			"cacheCostReductionPercent": 95.41
+		}
+	},
+	"analysisPhase": {
+		"startedAt": "2026-10-29T18:41:51.428Z",
+		"steps": 84,
+		"tokens": 38385701,
+		"estimatedCostUsd": 0.198828,
+		"note": "Case-study analysis turn; snapshot while the turn was still open."
+	},
+	"workspace": {
+		"filesEdited": 12,
+		"linesAdded": 4921,
+		"source": "Harness turn-end summary (reference screenshot)",
+		"reconstructedExistingWriteTargets": 12,
+		"reconstructedAddedLines": 4802,
+		"note": "The reconstructed write-target count includes one intermediate file that was later deleted; the turn-end UI reports 12 existing files."
+	},
+	"providerPricing": {
+		"provider": "opencode-go",
+		"model": "deepseek-v4.1-flash",
+		"unit": "USD per million tokens",
+		"input": 0.15,
+		"cachedInput": 0.003,
+		"cacheWrite": 0,
+		"output": 0.6,
+		"timeBasedPricing": false,
+		"contextWindow": 1000000,
+		"maxTokens": 384000,
+		"source": "OpenCode Go model catalog embedded in DeepSeek Harness (pi-ai provider data)"
+	},
+	"projection": {
+		"source": "Harness sessionStats/tokenUsage projection cache",
+		"tokenUsage": {
+			"uncachedInputTokens": 424957,
+			"cacheReadTokens": 67496832,
+			"cacheWriteTokens": 0,
+			"outputTokens": 354220
+		},
+		"sessionStats": {
+			"turns": 2,
+			"steps": 245,
+			"llmMs": 3354581,
+			"toolMs": 279732,
+			"ttftMs": 905822,
+			"ttftSteps": 245,
+			"decodeMs": 2448759,
+			"decodeTokens": 354220
+		},
+		"modelSelection": {
+			"provider": "opencode-go",
+			"model": "deepseek-v4.1-flash",
+			"reasoningEffort": "high"
+		},
+		"contextPressure": {
+			"surfaceTokens": 459110,
+			"pressureTokens": 536203,
+			"contextWindow": 1000000
+		},
+		"subagentCount": 0
+	},
+	"referenceSnapshot": {
+		"source": "Earlier Harness screenshot supplied with the milestone brief",
+		"totalTokens": 30428775,
+		"uncachedInputTokens": 311762,
+		"cacheReadTokens": 29874688,
+		"outputTokens": 242325,
+		"cacheHitDisplayed": "99%",
+		"tokensPerSecond": 126,
+		"llmTime": "40m 28s",
+		"toolTime": "3m 50s",
+		"averageTtft": "3.1s",
+		"steps": 162,
+		"filesEdited": 12,
+		"linesAdded": 4921,
+		"contextUtilisation": "~332K / 1M",
+		"matchesBuildPhase": true
+	},
+	"verification": {
+		"tokenCounts": "Provider-reported usage recorded in the Harness session log and validated against the tokenUsage projection.",
+		"rates": "Provider-declared rates from the OpenCode Go model catalog embedded in DeepSeek Harness.",
+		"expenditure": "Calculated estimate from provider-declared rates; provider invoice not verified.",
+		"cacheWriteTokens": "Reported as 0 by the session tokenUsage projection; the declared cache-write rate is $0/M.",
+		"contextVsCumulative": "Context utilisation is the latest request total; cumulative billed tokens are the sum across all requests.",
+		"perMilestoneAttribution": "Unavailable; usage is recorded per model step, not per milestone."
+	},
+	"notes": [
+		"Build phase = turn 1, which ended at 18:11:34 UTC after the calculator and first case study were completed.",
+		"Case-study analysis = turn 2, which began at 18:41:51 UTC; its usage is reported separately and is not part of the build-phase cost.",
+		"No background jobs ran between turn 1 end and turn 2 start.",
+		"The reference screenshot matches turn 1 exactly for token totals and step count; timing figures agree within rounding.",
+		"Token counts are cumulative provider-reported usage, not context-window occupancy.",
+		"No subagents were used for this project.",
+		"All session frames were read successfully."
+	]
+}
