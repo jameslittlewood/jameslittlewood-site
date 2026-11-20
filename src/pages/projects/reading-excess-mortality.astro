@@ -1,0 +1,232 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const title = "Excess Mortality in Reading";
+const description =
+  "A Python analysis of public health data comparing Reading’s mortality gap with England and nearby areas.";
+---
+
+<Layout title={title} description={description}>
+  <article class="reading-case-study">
+    <div class="case-study-wrap">
+      <nav class="project-nav" aria-label="Project navigation">
+        <a href="/projects/">← Back to Projects</a>
+      </nav>
+
+      <header class="case-study-hero">
+        <div class="eyebrow">Case study · Public health analytics</div>
+        <h1>Excess Mortality in Reading</h1>
+        <p class="project-intro">I used Python and public health data to explore Reading’s mortality gap and compare it with the England benchmark.</p>
+        <p>The data came from Fingertips, a public health data service. The measure compares adults aged 18–74 who had a qualifying recorded referral to secondary mental health services with adults who did not have that referral history.</p>
+      </header>
+      <section class="finding" aria-labelledby="finding">
+        <h2 id="finding">The mortality gap remained substantial</h2>
+        <p>In 2022–2024, Reading recorded <strong>458.6% excess mortality</strong>. This means the death rate for adults in the referral group was about <strong>5.6 times</strong> the rate for adults in the comparison group.</p>
+        <p>Reading’s estimate fell from the previous period but remained significantly above the England benchmark.</p>
+      </section>
+      <section class="case-study-section">
+        <div class="chart">
+          <h3>How did Reading change over time?</h3>
+          <p>I used a line chart to show how Reading and England changed across several reporting periods. The England line gives a national benchmark to compare with Reading.</p>
+          <figure>
+            <img src="/images/projects/reading-excess-mortality/mortality-trend.svg" width="612" height="373" loading="lazy" decoding="async" alt="Line chart comparing excess mortality in Reading and England from 2015–2017 to 2022–2024, with a shaded confidence interval for Reading.">
+            <figcaption>Reading’s estimate rose to a peak in 2020–2022 and was lower in 2022–2024. The periods overlap, so some of the same years count towards more than one estimate. More data would help show whether the decline is sustained.</figcaption>
+          </figure>
+          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-chart1/">View the trend notebook and code</a>
+        </div>
+        <div class="chart">
+          <h3>How did Reading compare with England and nearby areas?</h3>
+          <p>I used a dot chart to compare areas over the same period, 2022–2024. England provides the national benchmark, and the South East gives regional context. Reading, West Berkshire and Wokingham are the three unitary authorities that make up the <a href="https://thamesvalley.icb.nhs.uk/policies-and-documents/how-we-make-decisions/board-papers/nhs-buckingham-oxfordshire-and-berkshire-west-bob-icb-july-2022-september-2025/nhs-bob-icb-board-meetings-2024/september-4/379-10-place-update-berkshire-west/file">Berkshire West health and care area</a>.</p>
+          <figure>
+            <img src="/images/projects/reading-excess-mortality/geographical-comparison.svg" width="721" height="372" loading="lazy" decoding="async" alt="Dot-and-interval chart for 2022–2024. England 378.5%, South East 423.6%, Reading 458.6%, West Berkshire 471.5% and Wokingham 642.3%.">
+            <figcaption>Reading’s estimate was higher than the South East’s and lower than those for West Berkshire and Wokingham.</figcaption>
+          </figure>
+          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-geo-comparison/reading_geo">View the area comparison notebook and code</a>
+        </div>
+      </section>
+      <section class="case-study-section" aria-labelledby="reading-charts">
+        <h2 id="reading-charts">Reading the charts</h2>
+        <p>The shaded band on the first chart and the lines around the dots on the second chart are 95% confidence intervals. They show how much uncertainty there is around the estimates. A wider interval means the estimate is less precise.</p>
+      </section>
+      <section class="case-study-section" aria-labelledby="conclusion">
+        <h2 id="conclusion">What the findings mean for Reading</h2>
+        <p>Reading’s mortality gap remains a public health concern. The latest estimate was lower than in the previous period, but it stayed above the England benchmark. We’d need to see a decline over several more reporting periods before we could confidently identify a downward trend.</p>
+        <p>I’d next look at which age groups have the largest mortality gap and who might face barriers to getting support. I’d also explore whether the borough-wide figure hides differences between neighbourhoods and how factors such as income, ethnicity and access to services relate to those differences.</p>
+        <p>I’d also look at other Fingertips profiles such as the Adult Mental Health and Wellbeing and Suicide Prevention profiles alongside this mortality data. Together, these sources could help build a clearer picture of local needs and inform recommendations for Reading’s public health team and NHS partners.</p>
+      </section>
+      <footer class="project-footer">Built with Python, Matplotlib and Jupyter · <a href="https://fingertips.phe.org.uk/profile/mortality-profile">Fingertips mortality data</a></footer>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .reading-case-study {
+    --case-line: color-mix(in oklab, var(--border) 50%, transparent);
+    --case-tint: color-mix(in oklab, var(--muted) 20%, var(--card));
+    position: relative;
+    isolation: isolate;
+    padding: 34px 26px 56px;
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .reading-case-study::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 auto;
+    height: 440px;
+    background: radial-gradient(ellipse 85% 90% at 100% 0, oklch(0.76 0.14 285 / 0.2), transparent 80%);
+    content: "";
+    pointer-events: none;
+  }
+
+  :global(.dark) .reading-case-study::before {
+    opacity: 0.6;
+  }
+
+  .case-study-wrap {
+    max-width: 750px;
+    margin: auto;
+  }
+
+  .project-nav {
+    margin-bottom: 43px;
+    font-size: 13px;
+  }
+
+  a {
+    color: var(--primary);
+    font-weight: 650;
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .eyebrow {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 12px 0 18px;
+    font-size: clamp(31px, 5vw, 46px);
+    line-height: 1.13;
+    letter-spacing: -0.04em;
+  }
+
+  h2 {
+    margin: 8px 0 15px;
+    font-size: 25px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    margin-bottom: 7px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  p,
+  figcaption {
+    color: var(--muted-foreground);
+  }
+
+  p + p {
+    margin-top: 13px;
+  }
+
+  p strong {
+    color: var(--foreground);
+    font-weight: 650;
+  }
+
+  .case-study-hero p {
+    max-width: 660px;
+  }
+
+  .case-study-hero .project-intro {
+    max-width: 650px;
+    margin-bottom: 17px;
+    color: var(--foreground);
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  .finding {
+    margin-top: 43px;
+    padding: 28px;
+    border: 1px solid var(--case-line);
+    border-radius: 15px;
+    background: var(--case-tint);
+  }
+
+  .case-study-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--case-line);
+  }
+
+  .chart {
+    margin-top: 26px;
+  }
+
+  figure {
+    margin: 23px 0 0;
+  }
+
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--case-line);
+    border-radius: 12px;
+    background: white;
+  }
+
+  figcaption {
+    margin-top: 9px;
+    font-size: 12px;
+  }
+
+  .notebook-link {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 15px;
+    border: 1px solid var(--case-line);
+    border-radius: 9px;
+    background: var(--case-tint);
+    font-size: 14px;
+  }
+
+  .project-footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--case-line);
+    color: var(--muted-foreground);
+    font-size: 13px;
+  }
+
+  @media (max-width: 560px) {
+    .reading-case-study {
+      padding: 25px 18px 40px;
+    }
+
+    .reading-case-study::before {
+      height: 300px;
+      opacity: 0.55;
+    }
+
+    .finding {
+      padding: 23px;
+    }
+  }
+</style>
