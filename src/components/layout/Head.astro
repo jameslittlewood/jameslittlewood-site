@@ -1,7 +1,7 @@
 ---
 import site from "@/config/site";
 import type { HeadProps } from "@/types";
-import { Font } from "astro:assets";
+import displayFont from "@/assets/fonts/space-grotesk-400.woff2?url";
 import { ClientRouter } from "astro:transitions";
 
 type Props = HeadProps;
@@ -102,7 +102,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <script src="/pagefind/pagefind-ui.js" is:inline></script>
 
   <!-- Font -->
-  <Font cssVariable="--font-display" preload />
+  <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin="anonymous" />
 
   <!-- View Transitions -->
   <ClientRouter />

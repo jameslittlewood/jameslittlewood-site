@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField, fontProviders } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
@@ -44,12 +44,4 @@ export default defineConfig({
       }),
     },
   },
-
-  fonts: [
-    {
-      provider: fontProviders.fontsource(),
-      name: "Space Grotesk",
-      cssVariable: "--font-display",
-    },
-  ],
 });
