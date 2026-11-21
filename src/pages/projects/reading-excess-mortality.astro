@@ -1,7 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 
-const title = "Excess Mortality in Reading";
+const title = "Mental health and excess mortality in Reading";
 const description =
   "A Python analysis of public health data comparing Reading’s mortality gap with England and nearby areas.";
 ---
@@ -15,46 +15,39 @@ const description =
 
       <header class="case-study-hero">
         <div class="eyebrow">Case study · Public health analytics</div>
-        <h1>Excess Mortality in Reading</h1>
-        <p class="project-intro">I used Python and public health data to explore Reading’s mortality gap and compare it with the England benchmark.</p>
-        <p>The data came from Fingertips, a public health data service. The measure compares adults aged 18–74 who had a qualifying recorded referral to secondary mental health services with adults who did not have that referral history.</p>
+        <h1>{title}</h1>
+        <p class="project-intro">In 2022–2024, the death rate among Reading residents aged 18–74 with a qualifying recorded referral to secondary mental health services was <strong>about 5.6 times</strong> the rate among those without that referral history. This equates to <strong>458.6% excess mortality</strong>, significantly above the England benchmark of <strong>378.5%</strong>.</p>
+        <p>I used Python and public health data from Fingertips to explore how this gap changed over time and how Reading compared with neighbouring areas.</p>
       </header>
-      <section class="finding" aria-labelledby="finding">
-        <h2 id="finding">The mortality gap remained substantial</h2>
-        <p>In 2022–2024, Reading recorded <strong>458.6% excess mortality</strong>. This means the death rate for adults in the referral group was about <strong>5.6 times</strong> the rate for adults in the comparison group.</p>
-        <p>Reading’s estimate fell from the previous period but remained significantly above the England benchmark.</p>
-      </section>
-      <section class="case-study-section">
+      <section class="case-study-section chart-sections">
         <div class="chart">
-          <h2>How did Reading change over time?</h2>
-          <p>I used a line chart to show how Reading and England changed across several reporting periods. The England line gives a national benchmark to compare with Reading.</p>
+          <h2>How has the gap changed over time?</h2>
           <figure>
             <img src="/images/projects/reading-excess-mortality/mortality-trend.svg" width="612" height="373" loading="lazy" decoding="async" alt="Line chart comparing excess mortality in Reading and England from 2015–2017 to 2022–2024, with a shaded confidence interval for Reading.">
-            <figcaption>Reading’s estimate rose to a peak in 2020–2022 and was lower in 2022–2024. The periods overlap, so some of the same years count towards more than one estimate. More data would help show whether the decline is sustained.</figcaption>
+            <figcaption>Reading’s estimate peaked at <strong>505.8% in 2020–2022</strong> and fell to <strong>458.6% by 2022–2024</strong>. Each point on the chart covers three years, so consecutive estimates share two years of data. It is too early to tell whether the gap is narrowing consistently.</figcaption>
           </figure>
-          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-chart1/">View the trend notebook and code</a>
+          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-chart1/">View the trend notebook and Python code</a>
         </div>
         <div class="chart">
-          <h2>How did Reading compare with England and nearby areas?</h2>
-          <p>I used a dot chart to compare areas over the same period, 2022–2024. England provides the national benchmark, and the South East gives regional context. Reading, West Berkshire and Wokingham are the three unitary authorities that make up the Berkshire West health and care area.</p>
+          <h2>How does Reading compare with nearby areas?</h2>
           <figure>
             <img src="/images/projects/reading-excess-mortality/geographical-comparison.svg" width="721" height="372" loading="lazy" decoding="async" alt="Dot-and-interval chart for 2022–2024. England 378.5%, South East 423.6%, Reading 458.6%, West Berkshire 471.5% and Wokingham 642.3%.">
-            <figcaption>Reading’s estimate was higher than the South East’s and lower than those for West Berkshire and Wokingham.</figcaption>
+            <figcaption>In 2022–2024, Reading’s estimate was higher than the <strong>South East figure of 423.6%</strong>. Both neighbouring authorities in Berkshire West recorded higher estimates than Reading. West Berkshire’s was <strong>471.5%</strong>, while Wokingham had the highest estimate of the areas shown at <strong>642.3%</strong>.</figcaption>
           </figure>
-          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-geo-comparison/reading_geo">View the area comparison notebook and code</a>
+          <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-geo-comparison/reading_geo">View the area comparison notebook and Python code</a>
         </div>
       </section>
-      <section class="case-study-section" aria-labelledby="reading-charts">
-        <h2 id="reading-charts">Reading the charts</h2>
-        <p>The shaded band on the first chart and the lines around the dots on the second chart are 95% confidence intervals. They show how much uncertainty there is around the estimates. A wider interval means the estimate is less precise.</p>
-      </section>
+      <div class="case-study-section">
+        <p><strong>Reading the charts.</strong> The shaded band on the trend chart and the horizontal lines on the area chart show 95% confidence intervals. Wider intervals indicate greater uncertainty around an estimate.</p>
+      </div>
       <section class="case-study-section" aria-labelledby="conclusion">
-        <h2 id="conclusion">What the findings mean for Reading</h2>
-        <p>Reading’s mortality gap remains a public health concern. The latest estimate was lower than in the previous period, but it stayed above the England benchmark. We’d need to see a decline over several more reporting periods before we could confidently identify a downward trend.</p>
-        <p>I’d next look at which age groups have the largest mortality gap and who might face barriers to getting support. I’d also explore whether the borough-wide figure hides differences between neighbourhoods and how factors such as income, ethnicity and access to services relate to those differences.</p>
-        <p>I’d also look at other Fingertips profiles such as the Adult Mental Health and Wellbeing and Suicide Prevention profiles alongside this mortality data. Together, these sources could help build a clearer picture of local needs and inform recommendations for Reading’s public health team and NHS partners.</p>
+        <h2 id="conclusion">What would I investigate next?</h2>
+        <p>Reading’s mortality gap remains a public health concern. The latest estimate was lower than in the previous period, but the gap remained significantly wider than England’s. I’d follow future reporting periods to see whether the decline continues.</p>
+        <p>I’d look for more detailed local data to see which age groups and neighbourhoods in Reading have the largest mortality gaps. For example, I’d explore whether the gap varies with income or deprivation, how it differs between ethnic groups, and how those patterns relate to access to healthcare.</p>
+        <p>I’d also look more closely at who the referral records capture. Someone who receives mental health support solely through their GP or a voluntary group may fall into the comparison group if they have no qualifying recorded referral to secondary mental health services. Understanding who appears in each group would help me interpret the figures.</p>
+        <p>Finally, I’d incorporate other Fingertips profiles into the analysis, such as <em>Adult Mental Health and Wellbeing</em> and <em>Suicide Prevention</em>. Looking at these alongside the mortality figures would give a fuller picture of local needs and help inform recommendations for Reading’s public health team and NHS partners.</p>
       </section>
-      <footer class="project-footer">Built with Python, Matplotlib and Jupyter · <a href="https://fingertips.phe.org.uk/profile/mortality-profile">Fingertips mortality data</a></footer>
+      <footer class="project-footer"><em>Tools: Python, Matplotlib and Jupyter. Source: <a href="https://fingertips.phe.org.uk/profile/mortality-profile">Fingertips mortality data</a>, indicator 93582.</em></footer>
     </div>
   </article>
 </Layout>
@@ -137,32 +130,20 @@ const description =
   }
 
   p + p {
-    margin-top: 13px;
+    margin-top: 16px;
   }
 
-  p strong {
+  p strong,
+  figcaption strong {
     color: var(--foreground);
     font-weight: 650;
   }
 
-  .case-study-hero p {
-    max-width: 660px;
-  }
-
-  .case-study-hero .project-intro {
+  .project-intro {
     max-width: 650px;
-    margin-bottom: 17px;
     color: var(--foreground);
     font-size: 18px;
     line-height: 1.6;
-  }
-
-  .finding {
-    margin-top: 43px;
-    padding: 28px;
-    border: 1px solid var(--case-line);
-    border-radius: 15px;
-    background: var(--case-tint);
   }
 
   .case-study-section {
@@ -171,12 +152,21 @@ const description =
     border-top: 1px solid var(--case-line);
   }
 
+  .chart-sections {
+    margin-top: calc(var(--section-gap) / 2);
+    padding-top: calc(var(--section-gap) / 2 - 1px);
+  }
+
   .chart + .chart {
     margin-top: var(--section-gap);
   }
 
+  .chart h2 {
+    margin-bottom: 16px;
+  }
+
   figure {
-    margin: 23px 0 0;
+    margin: 0;
   }
 
   figure img {
@@ -189,13 +179,13 @@ const description =
   }
 
   figcaption {
-    margin-top: 9px;
-    font-size: 12px;
+    margin-top: 12px;
   }
 
   .notebook-link {
-    display: inline-block;
-    margin-top: 16px;
+    display: block;
+    width: fit-content;
+    margin-top: 10px;
     padding: 10px 15px;
     border: 1px solid var(--case-line);
     border-radius: 9px;
@@ -225,11 +215,6 @@ const description =
 
     .project-nav {
       margin-bottom: var(--section-gap);
-    }
-
-    .finding {
-      margin-top: var(--section-gap);
-      padding: 23px;
     }
   }
 </style>
