@@ -26,7 +26,7 @@ const description =
       </section>
       <section class="case-study-section">
         <div class="chart">
-          <h3>How did Reading change over time?</h3>
+          <h2>How did Reading change over time?</h2>
           <p>I used a line chart to show how Reading and England changed across several reporting periods. The England line gives a national benchmark to compare with Reading.</p>
           <figure>
             <img src="/images/projects/reading-excess-mortality/mortality-trend.svg" width="612" height="373" loading="lazy" decoding="async" alt="Line chart comparing excess mortality in Reading and England from 2015–2017 to 2022–2024, with a shaded confidence interval for Reading.">
@@ -35,8 +35,8 @@ const description =
           <a class="notebook-link" href="https://jameslittlewood.net/notebooks/reading-chart1/">View the trend notebook and code</a>
         </div>
         <div class="chart">
-          <h3>How did Reading compare with England and nearby areas?</h3>
-          <p>I used a dot chart to compare areas over the same period, 2022–2024. England provides the national benchmark, and the South East gives regional context. Reading, West Berkshire and Wokingham are the three unitary authorities that make up the <a href="https://thamesvalley.icb.nhs.uk/policies-and-documents/how-we-make-decisions/board-papers/nhs-buckingham-oxfordshire-and-berkshire-west-bob-icb-july-2022-september-2025/nhs-bob-icb-board-meetings-2024/september-4/379-10-place-update-berkshire-west/file">Berkshire West health and care area</a>.</p>
+          <h2>How did Reading compare with England and nearby areas?</h2>
+          <p>I used a dot chart to compare areas over the same period, 2022–2024. England provides the national benchmark, and the South East gives regional context. Reading, West Berkshire and Wokingham are the three unitary authorities that make up the Berkshire West health and care area.</p>
           <figure>
             <img src="/images/projects/reading-excess-mortality/geographical-comparison.svg" width="721" height="372" loading="lazy" decoding="async" alt="Dot-and-interval chart for 2022–2024. England 378.5%, South East 423.6%, Reading 458.6%, West Berkshire 471.5% and Wokingham 642.3%.">
             <figcaption>Reading’s estimate was higher than the South East’s and lower than those for West Berkshire and Wokingham.</figcaption>
@@ -63,6 +63,8 @@ const description =
   .reading-case-study {
     --case-line: color-mix(in oklab, var(--border) 50%, transparent);
     --case-tint: color-mix(in oklab, var(--muted) 20%, var(--card));
+    --section-gap: 36px;
+    --section-inset: 28px;
     position: relative;
     isolation: isolate;
     padding: 34px 26px 56px;
@@ -123,16 +125,10 @@ const description =
   }
 
   h2 {
-    margin: 8px 0 15px;
+    margin: 0 0 15px;
     font-size: 25px;
     line-height: 1.25;
     letter-spacing: -0.025em;
-  }
-
-  h3 {
-    margin-bottom: 7px;
-    font-size: 16px;
-    line-height: 1.4;
   }
 
   p,
@@ -170,13 +166,13 @@ const description =
   }
 
   .case-study-section {
-    margin-top: 40px;
-    padding-top: 40px;
+    margin-top: var(--section-gap);
+    padding-top: var(--section-inset);
     border-top: 1px solid var(--case-line);
   }
 
-  .chart {
-    margin-top: 26px;
+  .chart + .chart {
+    margin-top: var(--section-gap);
   }
 
   figure {
@@ -208,7 +204,7 @@ const description =
   }
 
   .project-footer {
-    margin-top: 40px;
+    margin-top: var(--section-gap);
     padding-top: 16px;
     border-top: 1px solid var(--case-line);
     color: var(--muted-foreground);
@@ -217,6 +213,8 @@ const description =
 
   @media (max-width: 560px) {
     .reading-case-study {
+      --section-gap: 28px;
+      --section-inset: 20px;
       padding: 25px 18px 40px;
     }
 
@@ -225,7 +223,12 @@ const description =
       opacity: 0.55;
     }
 
+    .project-nav {
+      margin-bottom: var(--section-gap);
+    }
+
     .finding {
+      margin-top: var(--section-gap);
       padding: 23px;
     }
   }

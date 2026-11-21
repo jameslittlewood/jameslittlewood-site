@@ -7,6 +7,15 @@ import site from "@/config/site";
 import { Icon } from "astro-icon/components";
 
 const projects = await getCollection("projects");
+const projectPriority = new Map([
+  ["reading-excess-mortality", 0],
+  ["self-hosted-ai-chatbot", 1],
+]);
+projects.sort(
+  (a, b) =>
+    (projectPriority.get(a.id) ?? projectPriority.size) -
+    (projectPriority.get(b.id) ?? projectPriority.size),
+);
 ---
 
 <Layout title={site.labels.projectsTitle} description={site.labels.projectsDescription}>
